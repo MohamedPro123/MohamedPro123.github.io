@@ -1,3 +1,5 @@
+@import url('https://googleapis.com');
+
 /* Keep your background properties */
 body {
     background-image: url('https://i.imgur.com/UF7o3Ku.jpeg');
@@ -5,7 +7,6 @@ body {
     background-position: center;   
     background-attachment: fixed;  
     background-repeat: no-repeat;  
-    font-family: Tahoma, Verdana, sans-serif;  
 }
 
 /* Make the text color lighter to stand out, then add a crisp shadow */
@@ -16,5 +17,10 @@ h1, p {
                   1px -1px 0 rgba(0, 0, 0, 0.8),
                  -1px  1px 0 rgba(0, 0, 0, 0.8),
                   1px  1px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* Apply it to your elements */
+body {
+  font-family: 'Poppins', sans-serif;
 }
 
