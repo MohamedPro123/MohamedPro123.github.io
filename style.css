@@ -1,5 +1,5 @@
 body {
-    background-image: url('windows_xp_bliss-wide.jpg');
+    background-image: url('images/windows_xp_bliss-wide.jpg');
     background-size: cover;       /* Fills the whole screen */
     background-position: center;   /* Centers the iconic hill */
     background-attachment: fixed;  /* Keeps the background still while scrolling */
