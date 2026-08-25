@@ -1,7 +1,11 @@
 body {
     background-image: url('https://i.imgur.com/UF7o3Ku.jpeg');
     background-size: cover;       /* Fills the whole screen */
-    background-position: center;   /* Centers the iconic hill */
+    background-position: center;   
     background-attachment: fixed;  /* Keeps the background still while scrolling */
     background-repeat: no-repeat;  /* Prevents the image from tiling */
+}
+
+body {
+    font-family: Tahoma, Verdana, sans-serif;
 }
