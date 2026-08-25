@@ -9,6 +9,10 @@ body {
     background-repeat: no-repeat;  
 }
 
+h2, p {
+    margin: 0;
+}
+
 /* Apply it to your elements */
 body {
   font-family: 'Poppins', sans-serif;
