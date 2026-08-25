@@ -1,35 +1,52 @@
-    const windowElement = document.querySelector('.window');
-    const titleBar = document.querySelector('.title-bar');
+  let isDragging = false;
+  let startX, startY, initialLeft, initialTop;
+  let activeWindow = null;
+  let activeTitleBar = null;
 
-    let isDragging = false;
-    let startX, startY, initialLeft, initialTop;
+  // Listen globally on the document to capture clicks on any .title-bar
+  document.addEventListener('mousedown', (e) => {
+    const titleBar = e.target.closest('.title-bar');
+    if (!titleBar) return;
 
-    titleBar.addEventListener('mousedown', (e) => {
-      if (e.target.closest('.title-bar-controls')) return;
+    // Ignore dragging if clicking user interface action buttons
+    if (e.target.closest('.title-bar-controls')) return;
 
-      isDragging = true;
-      titleBar.style.cursor = 'grabbing';
+    // Dynamically find the .window container relative to clicked title bar
+    activeTitleBar = titleBar;
+    activeWindow = titleBar.closest('.window');
+    if (!activeWindow) return;
 
-      startX = e.clientX;
-      startY = e.clientY;
-      initialLeft = windowElement.offsetLeft;
-      initialTop = windowElement.offsetTop;
+    isDragging = true;
+    activeTitleBar.style.cursor = 'grabbing';
 
-      document.addEventListener('mousemove', dragWindow);
-      document.addEventListener('mouseup', stopDragging);
-    });
+    // Store current coordinates
+    startX = e.clientX;
+    startY = e.clientY;
+    initialLeft = activeWindow.offsetLeft;
+    initialTop = activeWindow.offsetTop;
 
-    function dragWindow(e) {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      windowElement.style.left = `${initialLeft + dx}px`;
-      windowElement.style.top = `${initialTop + dy}px`;
+    document.addEventListener('mousemove', dragWindow);
+    document.addEventListener('mouseup', stopDragging);
+  });
+
+  function dragWindow(e) {
+    if (!isDragging || !activeWindow) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    activeWindow.style.left = `${initialLeft + dx}px`;
+    activeWindow.style.top = `${initialTop + dy}px`;
+  }
+
+  function stopDragging() {
+    if (activeTitleBar) {
+      activeTitleBar.style.cursor = 'grab';
     }
+    isDragging = false;
+    activeWindow = null;
+    activeTitleBar = null;
 
-    function stopDragging() {
-      isDragging = false;
-      titleBar.style.cursor = 'grab';
-      document.removeEventListener('mousemove', dragWindow);
-      document.removeEventListener('mouseup', stopDragging);
-    }
+    document.removeEventListener('mousemove', dragWindow);
+    document.removeEventListener('mouseup', stopDragging);
+  }
