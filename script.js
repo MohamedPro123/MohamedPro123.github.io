@@ -87,6 +87,7 @@ document.addEventListener("mouseup", () => {
 
 
 // button
+document.addEventListener("DOMContentLoaded", () => {
 
 const openBtn = document.getElementById("openWindowBtn");
 const myWindow = document.querySelector(".window");
@@ -99,3 +100,5 @@ openBtn.addEventListener("click", () => {
 closeBtn.addEventListener("click", () => {
   myWindow.style.display = "none";
 });
+  });
+
