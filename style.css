@@ -103,4 +103,24 @@ hr {
             transition-delay: 0.5s;
         }
 
+.window {
+  display: none; /* hidden initially */
+  position: absolute; /* for dragging */
+  top: 50px;
+  left: 50px;
+  max-width: 600px;
+}
 
+
+.title-bar {
+  cursor: move;
+}
+.window {
+  max-width: 450px;
+}
+
+.window-body {
+  max-height: 780px;
+  overflow-y: auto;
+  padding: 8px;
+}
