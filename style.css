@@ -10,17 +10,6 @@ body {
     font-family: 'Roboto', sans-serif !important; 
 }
 
-/* Normal text */
-p,
-li,
-span,
-div,
-label,
-td,
-th {
-  font-family: "MS Sans Serif", sans-serif;
-}
-
 h2, h3, h4, h5, h1, p {
     margin: 0;
 }
@@ -44,7 +33,7 @@ hr {
         /* 1. Target the text element */
         .rgb-text {
             font-size: 3rem;
-            font-family: Arial, sans-serif;
+            font-family: Roboto, sans-serif;
             font-weight: bold;
             /* 2. Apply the animation name, duration, and set it to loop indefinitely */
             animation: rgb-cycle 1s infinite linear;
