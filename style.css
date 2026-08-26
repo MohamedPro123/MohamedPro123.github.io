@@ -45,7 +45,7 @@ hr {
             font-family: Arial, sans-serif;
             font-weight: bold;
             /* 2. Apply the animation name, duration, and set it to loop indefinitely */
-            animation: rgb-cycle 6s infinite linear;
+            animation: rgb-cycle 3s infinite linear;
         }
 
         /* 3. Define the color frames */
