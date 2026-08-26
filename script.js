@@ -45,7 +45,6 @@ document.addEventListener("mouseup", () => {
 ;
 
 // Startup sound
-<script>
     document.addEventListener('click', function() {
         const audio = document.getElementById('welcome-sound');
         
@@ -68,5 +67,4 @@ document.addEventListener("mouseup", () => {
         }, fadeInterval);
 
     }, { once: true });
-</script>
 
