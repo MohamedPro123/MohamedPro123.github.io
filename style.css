@@ -21,6 +21,10 @@ h2, p {
     margin: 0.1;
 }
 
+a {
+    color: white;
+}
+
  .mytooltip {
             position: relative;
             display: inline-block;
