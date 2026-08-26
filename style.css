@@ -17,6 +17,45 @@ h2, p {
     margin: 0.1;
 }
 
+ .mytooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+      .mytooltip .mytooltiptext {
+    width: 150px;
+    background: rgba(0, 0, 0, 0.7); /* black, 70% opacity*/
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 99;
+    bottom: 125%; /* show above the element */
+    left: 50%;
+    transform: translateX(-50%); /* center horizontally */
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px solid white;
+    pointer-events: none;
+    font-size: 13px !important;
+    line-height: 1.5em !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+}
+
+
+        .mytooltip .mytooltiptext img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .mytooltip:hover .mytooltiptext {
+            opacity: 1;
+            transition-delay: 0.5s;
+        }
 
 /* Apply it to your elements */
 body {
