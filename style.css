@@ -14,7 +14,7 @@ h2, p {
 }
 
 .title-bar-text {
-    margin-top: 8px; /* Adjust the pixel (px) value to change the spacing */
+    margin-bottom: 8px; /* Adjust the pixel (px) value to change the spacing */
 }
 
 
