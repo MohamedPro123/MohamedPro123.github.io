@@ -10,12 +10,19 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-h2, p {
-    margin: 0;
+/* Normal text */
+p,
+li,
+span,
+div,
+label,
+td,
+th {
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
 }
 
-.title-bar-text, p {
-    margin: 0.1;
+h2, p {
+    margin: 0;
 }
 
 a {
