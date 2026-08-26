@@ -8,9 +8,6 @@ body {
     background-attachment: fixed;  
     background-repeat: no-repeat; 
     font-family: 'Poppins', sans-serif;
-
-}
- 
 }
 
 h2, p {
@@ -23,6 +20,18 @@ h2, p {
 
 a {
     color: white;
+}
+
+hr {
+  height: 2px;
+  border: 0;
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #ffffff;
+  background: #d4d0c8;
+  box-shadow:
+    0 1px 0 #404040,
+    0 2px 0 #ffffff;
+  margin: 8px 0;
 }
 
  .mytooltip {
