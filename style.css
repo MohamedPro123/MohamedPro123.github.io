@@ -34,22 +34,34 @@ hr {
   margin: 8px 0;
 }
 
-        /* 1. Target the text element */
-        .rgb-text {
-            font-size: 3rem;
-            font-family: Roboto, sans-serif;
-            font-weight: bold;
-            /* 2. Apply the animation name, duration, and set it to loop indefinitely */
-            animation: rgb-cycle 3s infinite linear;
-        }
+      .rgb-text {
+    font-size: 3rem;
+    font-family: Roboto, sans-serif;
+    font-weight: bold;
+    /* Apply the animation name, duration, and set it to loop indefinitely */
+    animation: rgb-cycle 6s infinite linear;
+}
 
-        /* 3. Define the color frames */
-        @keyframes rgb-cycle {
-            0%   { color: rgb(255, 0, 0); }    /* Red */
-            33%  { color: rgb(0, 255, 0); }    /* Green */
-            66%  { color: rgb(0, 0, 255); }    /* Blue */
-            100% { color: rgb(255, 0, 0); }    /* Loops back to Red smoothly */
-        }
+/* Define the color frames with matching text-shadow glows */
+@keyframes rgb-cycle {
+    0% { 
+        color: rgb(255, 0, 0); 
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+    33% { 
+        color: rgb(0, 255, 0); 
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.5);
+    }
+    66% { 
+        color: rgb(0, 0, 255); 
+        text-shadow: 0 0 10px rgba(0, 0, 255, 0.7), 0 0 20px rgba(0, 0, 255, 0.5);
+    }
+    100% { 
+        color: rgb(255, 0, 0); 
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+}
+
 
  .mytooltip {
             position: relative;
