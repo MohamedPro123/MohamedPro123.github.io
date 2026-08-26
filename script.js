@@ -18,6 +18,7 @@ windowEl.style.top = rect.top + "px";
 titleBar.addEventListener("mousedown", (e) => {
   isDragging = true;
 
+  
   const rect = windowEl.getBoundingClientRect();
   offsetX = e.clientX - rect.left;
   offsetY = e.clientY - rect.top;
@@ -44,6 +45,14 @@ document.addEventListener("mouseup", () => {
 });
 ;
 
+
+
+
+
+
+
+
+
 // Startup sound
     document.addEventListener('click', function() {
         const audio = document.getElementById('welcome-sound');
@@ -68,3 +77,25 @@ document.addEventListener("mouseup", () => {
 
     }, { once: true });
 
+
+
+
+
+
+
+
+
+
+// button
+
+const openBtn = document.getElementById("openWindowBtn");
+const myWindow = document.querySelector(".window");
+const closeBtn = myWindow.querySelector('[aria-label="Close"]');
+
+openBtn.addEventListener("click", () => {
+  myWindow.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+  myWindow.style.display = "none";
+});
