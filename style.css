@@ -1,3 +1,6 @@
+/* Must be the first line in your CSS file */
+@import url('https://googleapis.com');
+
 /* Keep your background properties */
 body {
     background-image: url('https://i.imgur.com/UF7o3Ku.jpeg');
@@ -5,7 +8,7 @@ body {
     background-position: center;   
     background-attachment: fixed;  
     background-repeat: no-repeat; 
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 /* Normal text */
