@@ -21,33 +21,6 @@ h2, p {
     margin: 0.1;
 }
 
- #tt {
-            position: absolute;
-            visibility: hidden;
-            z-index: 1000;
-            max-width: 230px;
-            font-size: 14px;
-            white-space: normal;
-            word-wrap: break-word;
-            padding: 8px;
-            background-color: #333333;
-            color: #ffffff;
-            border-radius: 5px;
-            border: 1px solid #444444;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            pointer-events: none; /* Prevents the tooltip from flickering under the cursor */
-        }
-
-        /* The highlighted trigger words inside your text */
-        .tooltip-trigger {
-            cursor: pointer;
-            background-color: #6f747d;
-            color: #ffffff;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-
  .mytooltip {
             position: relative;
             display: inline-block;
