@@ -39,6 +39,32 @@ hr {
   margin: 8px 0;
 }
 
+ body {
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 1. Target the text element */
+        .rgb-text {
+            font-size: 3rem;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            /* 2. Apply the animation name, duration, and set it to loop indefinitely */
+            animation: rgb-cycle 6s infinite linear;
+        }
+
+        /* 3. Define the color frames */
+        @keyframes rgb-cycle {
+            0%   { color: rgb(255, 0, 0); }    /* Red */
+            33%  { color: rgb(0, 255, 0); }    /* Green */
+            66%  { color: rgb(0, 0, 255); }    /* Blue */
+            100% { color: rgb(255, 0, 0); }    /* Loops back to Red smoothly */
+        }
+
  .mytooltip {
             position: relative;
             display: inline-block;
