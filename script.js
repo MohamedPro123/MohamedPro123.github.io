@@ -44,4 +44,12 @@ document.addEventListener("mouseup", () => {
 });
 ;
 
+// Startup sound
+<script>
+    // Plays the sound on the user's first click
+    document.addEventListener('click', function() {
+        const audio = document.getElementById('welcome-sound');
+        audio.play();
+    }, { once: true }); // "once: true" ensures it only plays on the very first click
+</script>
 
