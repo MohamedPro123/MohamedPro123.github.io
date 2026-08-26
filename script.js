@@ -45,9 +45,28 @@ document.addEventListener("mouseup", () => {
 ;
 
 // Startup sound
-    // Plays the sound on the user's first click
+<script>
     document.addEventListener('click', function() {
         const audio = document.getElementById('welcome-sound');
+        
+        // Start playing silently
+        audio.volume = 0;
         audio.play();
-    }, { once: true }); // "once: true" ensures it only plays on the very first click
+
+        // Settings for the fade-in effect
+        const fadeDuration = 2000; // Time in milliseconds (2 seconds)
+        const fadeInterval = 50;   // How often to increase volume (50ms)
+        const volumeStep = fadeInterval / fadeDuration; // Amount to increase each step
+
+        const fade = setInterval(function() {
+            if (audio.volume < 1.0 - volumeStep) {
+                audio.volume += volumeStep;
+            } else {
+                audio.volume = 1.0; // Ensure it finishes exactly at max volume
+                clearInterval(fade); // Stop the timer
+            }
+        }, fadeInterval);
+
+    }, { once: true });
+</script>
 
