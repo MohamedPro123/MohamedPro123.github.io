@@ -186,36 +186,38 @@ titleBar.addEventListener("dragstart", (e) => {
 
 
 
-
+// BUTTONS
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Select the new credits link and the window elements
-  const creditsLink = document.querySelector('.xp-task-item'); 
+  // 1. Select ALL buttons with the class and the window elements
+  const allButtons = document.querySelectorAll('.xp-task-item'); 
   const myWindow = document.querySelector(".window");
-  const closeBtn = myWindow.querySelector('[aria-label="Close"]');
+  const closeBtn = myWindow?.querySelector('[aria-label="Close"]');
 
   // 2. Create the audio object
-  const clickSound = new Audio('https://audio.jukehost.co.uk/01a043b9-4c37-722d-bcaa-60ca739db842');
+  const clickSound = new Audio('path/to/your/audio-file.mp3');
 
-  // 3. Open window and play sound when credits link is clicked
-  if (creditsLink) {
-    creditsLink.addEventListener('click', (event) => {
+  // 3. Loop through every single button
+  allButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
       event.preventDefault(); // Prevents page jumping
       
-      // Play audio
+      // EVERY button plays the sound when clicked
       clickSound.currentTime = 0; 
       clickSound.play();
       
-      // Show the window
-      if (myWindow) {
+      // ONLY the button that says "Credits" opens the window
+      // .includes() makes it safe even if there are spaces or icons inside
+      if (button.textContent.includes("Credits") && myWindow) {
         myWindow.style.display = "block";
+        console.log("Credits clicked: Audio played and window opened!");
+      } else {
+        console.log(`${button.textContent.trim()} clicked: Audio played!`);
       }
-      
-      console.log("Credits clicked: Audio played and window opened!");
     });
-  }
+  });
 
-  // 4. Close window logic remains the same
+  // 4. Close window logic
   if (closeBtn && myWindow) {
     closeBtn.addEventListener("click", () => {
       myWindow.style.display = "none";
