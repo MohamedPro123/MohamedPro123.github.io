@@ -272,3 +272,49 @@ main, .content-container {
 body {
     padding-top: 40px;
 }
+
+/* --- START LOGO STYLING --- */
+.xp-start-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Adds clean spacing between the logo and the word 'start' */
+    padding: 0 20px 0 12px;
+    text-decoration: none;
+    background: linear-gradient(to bottom, #60b044 0%, #4c9c2e 14%, #38841a 86%, #286e0a 100%);
+    border-right: 1px solid #286e0a;
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4), 2px 0 5px rgba(0,0,0,0.2);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.start-logo {
+    width: 18px;  /* Classic size for the flag icon */
+    height: 18px;
+    object-fit: contain;
+}
+
+/* --- CUSTOM TASK ICON STYLING --- */
+.task-custom-icon {
+    width: 16px;  /* Traditional Windows 16x16 pixel icon dimension */
+    height: 16px;
+    object-fit: contain;
+}
+
+/* Ensure the text scales perfectly next to your image icons */
+.xp-task-item {
+    height: 30px;
+    max-width: 150px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Clean spacing between image and text */
+    padding: 0 10px;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 11px; /* Slightly smaller font mimics old desktop window setups better */
+    color: white;
+    background: linear-gradient(to bottom, #3c7be6 0%, #215dc6 100%);
+    border: 1px solid #1a428a;
+    box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
+}
