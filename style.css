@@ -367,7 +367,7 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.frosted-card p {
+.frosted-card p, li, ul {
   font-size: 1.5rem;                 /* Significantly larger body text */
   line-height: 1.6;
   margin-bottom: 0;
