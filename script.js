@@ -187,52 +187,40 @@ titleBar.addEventListener("dragstart", (e) => {
 
 
 
-// Startup sound
-    document.addEventListener('click', function() {
-        const audio = document.getElementById('welcome-sound');
-        
-        // Start playing silently
-        audio.volume = 0;
-        audio.play();
 
-        // Settings for the fade-in effect
-        const fadeDuration = 2000; // Time in milliseconds (2 seconds)
-        const fadeInterval = 50;   // How often to increase volume (50ms)
-        const volumeStep = fadeInterval / fadeDuration; // Amount to increase each step
-
-        const fade = setInterval(function() {
-            if (audio.volume < 1.0 - volumeStep) {
-                audio.volume += volumeStep;
-            } else {
-                audio.volume = 1.0; // Ensure it finishes exactly at max volume
-                clearInterval(fade); // Stop the timer
-            }
-        }, fadeInterval);
-
-    }, { once: true });
-
-
-
-
-
-
-
-
-
-
-// button
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. Select the new credits link and the window elements
+  const creditsLink = document.querySelector('.xp-task-item'); 
+  const myWindow = document.querySelector(".window");
+  const closeBtn = myWindow.querySelector('[aria-label="Close"]');
 
-const openBtn = document.getElementById("openWindowBtn");
-const myWindow = document.querySelector(".window");
-const closeBtn = myWindow.querySelector('[aria-label="Close"]');
+  // 2. Create the audio object
+  const clickSound = new Audio('https://audio.jukehost.co.uk/01a043b9-4c37-722d-bcaa-60ca739db842');
 
-openBtn.addEventListener("click", () => {
-  myWindow.style.display = "block";
+  // 3. Open window and play sound when credits link is clicked
+  if (creditsLink) {
+    creditsLink.addEventListener('click', (event) => {
+      event.preventDefault(); // Prevents page jumping
+      
+      // Play audio
+      clickSound.currentTime = 0; 
+      clickSound.play();
+      
+      // Show the window
+      if (myWindow) {
+        myWindow.style.display = "block";
+      }
+      
+      console.log("Credits clicked: Audio played and window opened!");
+    });
+  }
+
+  // 4. Close window logic remains the same
+  if (closeBtn && myWindow) {
+    closeBtn.addEventListener("click", () => {
+      myWindow.style.display = "none";
+    });
+  }
 });
 
-closeBtn.addEventListener("click", () => {
-  myWindow.style.display = "none";
-});
-  });
 
