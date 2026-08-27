@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows eXPerience</title> <!-- Website Title -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/T0xTpue.png"> <!-- Favicon -->
+    
+    <!-- Link your script.js file here -->
+    <script src="script.js" defer></script>
+
+
+
+<!-- CUSTOM STYLES -->
+
+
+
+    
+    <!-- Windows XP Framework Stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/xp.css">
+    <!-- Your Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+
+<span style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">
+    
+<body>
+
+<header class="xp-navbar">
+    <div class="xp-navbar-container">
+        
+        <!-- Updated Start Button with Logo Image -->
+        <a href="/" class="xp-start-button">
+            <img src="Images/XP_Logo" alt="" class="start-logo">
+            <span class="start-text">start</span>
+        </a>
+        
+        <!-- Updated Navigation Links with Custom Image Icons -->
+        <nav class="xp-nav-tasks">
+            <a href="workinprogress" class="xp-task-item">
+                <img src="Images/Windows-Media-Player-icon.png" alt="" class="task-custom-icon">
+                <span class="task-text">Features</span>
+            </a>
+            <a href="" class="xp-task-item">
+                <img src="Images/hWgjp1e.png" alt="" class="task-custom-icon">
+                <span class="task-text">Credits</span>
+            </a>
+            <a href="workinprogress" class="xp-task-item">
+                <img src="Images/0dJoZTG.png" alt="" class="task-custom-icon">
+                <span class="task-text">Contact</span>
+            </a>
+
+                        <a href="challenge" class="xp-task-item">
+                <img src="Images/RjMRqmK.png" alt="" class="task-custom-icon">
+                <span class="task-text"><i>The Challenge</i></span>
+            </a>
+
+            <a href="https://visualtimer.com/timers/summer-countdown/" target="_blank" class="xp-task-item">
+                <img src="Images/QuKJ3Fu.png" alt="" class="task-custom-icon">
+         <span class="rgb-text">    <span class="task-text">Click me!</span></span>
+            </a>
+        </nav>
+        
+        <!-- Right Side Call-To-Action -->
+        <div class="xp-system-tray">
+            <a href="workinprogress" class="xp-cta-tray-btn">Get Started</a>
+        </div>
+        
+    </div>
+</header>
+
+
+<div id="isolated-segment">
+    <div class="blurred-overlay-card">
+    <!-- This style block lives here and only targets things inside #isolated-segment -->
+    <style>
+        #isolated-segment h2, #isolated-segment h3, #isolated-segment h4, 
+        #isolated-segment h5, #isolated-segment h1, #isolated-segment p, 
+        #isolated-segment li, #isolated-segment ul, #isolated-segment hr {
+            margin: 0;
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+ .error-msg {
+            color: #cc0000;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+        }
+
+      .login-card {
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 350px;
+            width: 100%;
+        }
+    </style>
+
+  
+
+      
+
+ <script>
+    function checkPassword() {
+        // 1. Get the value the user typed in the textbox
+        const userInput = document.getElementById("passwordInput").value;
+        const errorDiv = document.getElementById("error");
+        
+        // 2. Set your actual password here
+        const realPassword = "SuperSecret123"; 
+        
+        // 3. Set your secret destination URL here
+        const secretUrl = "https://example.com";
+
+        // 4. Verify the input
+        if (userInput === realPassword) {
+            errorDiv.style.display = "none";
+            window.location.href = secretUrl; // Redirect them
+        } else {
+            errorDiv.style.display = "block"; // Show the error message
+            document.getElementById("passwordInput").value = ""; // Clear the box
+        }
+    }
+
+    // Optional: Allow the user to press "Enter" on their keyboard to submit
+    document.getElementById("passwordInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            checkPassword();
+        }
+    });
+    </script>
+      
+
+    <p style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Want to see my super 'secret' blog? If so, enter the password.</p><br>
+
+    <div class="login-card">
+        <h2>Restricted Access</h2>
+        <p>Please enter your password to proceed.</p>
+        <input type="password" id="passwordInput" placeholder="Enter password...">
+              <button onclick="checkPassword()">Submit</button>
+              <div id="error" class="error-msg">Incorrect password. Try again.</div>
+    </div>
+          
+      
+    </div>
+</div>
+</span>
+
+<br><br>
+<br>
+    
+      <div class="window" style="width: 325px">
+  <div class="title-bar">
+    <div class="title-bar-text">Credits</div>
+    <div class="title-bar-controls">
+      <button aria-label="Minimize"></button>
+      <button aria-label="Maximize"></button>
+      <button aria-label="Close"></button>
+    </div>
+  </div>
+  <div class="window-body">
+    <p>Created by Mohamed Abdalrahman using: <br> - HyperText Markup Language 5<br> - Javascript<br> - Deployed with Github Pages
+    <br><br>
+<img style="max-width: 100%; height: auto; border: 2px solid #808080;" src="https://i.imgur.com/HKRQbsJ.png"/>
+ <br> <i>This is the outside of the GWEC Campus.</i>
+    </p>
+  </div>
+</div>
+<br>
+
+    
+<audio id="welcome-sound" src="https://www.winhistory.de/more/winstart/mp3/winxp.mp3" volume="0"></audio>
+</body>
+    
+</html>
