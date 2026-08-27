@@ -31,14 +31,17 @@ a {
     color: white;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  position: relative; /* Gives .window a boundary context */
+}
+
 .window {
-  display: none; /* hidden initially */
-  
-  /* Centering logic */
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: none; /* Kept hidden initially */
 }
 
 
