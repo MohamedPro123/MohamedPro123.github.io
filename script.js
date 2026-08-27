@@ -1,6 +1,6 @@
 // DRAGGING
 
-console.log("drag script loaded, update v1.1 working");
+console.log("drag script loaded, update v1.2 working");
 
 const windowEl = document.querySelector(".window");
 const titleBar = windowEl.querySelector(".title-bar");
