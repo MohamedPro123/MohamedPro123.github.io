@@ -9,31 +9,42 @@ let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
 
-// Ensure the window has initial left/top
-const rect = windowEl.getBoundingClientRect();
-windowEl.style.position = "absolute";
-windowEl.style.left = rect.left + "px";
-windowEl.style.top = rect.top + "px";
+// 1. CREATE A FUNCTION TO INITIALIZE POSITION ONLY WHEN OPENED
+function initWindowPosition() {
+  // Show it first so the browser can calculate its real size
+  windowEl.style.display = "block"; 
+  
+  // Get the perfectly centered coordinates from the CSS layout
+  const rect = windowEl.getBoundingClientRect();
+  
+  // Lock them in as absolute pixels so dragging works smoothly
+  windowEl.style.position = "absolute";
+  windowEl.style.left = rect.left + "px";
+  windowEl.style.top = rect.top + "px";
+  
+  // Remove the centering layout so it doesn't fight the drag coordinates
+  windowEl.style.transform = "none"; 
+  windowEl.style.margin = "0";
+}
 
+// Call this function whenever you trigger the window to open!
+// For example: openButton.addEventListener("click", initWindowPosition);
+
+
+// --- Your existing dragging logic (kept exactly the same) ---
 titleBar.addEventListener("mousedown", (e) => {
   isDragging = true;
-
-  
   const rect = windowEl.getBoundingClientRect();
   offsetX = e.clientX - rect.left;
   offsetY = e.clientY - rect.top;
-
   document.body.style.userSelect = "none";
-  windowEl.style.zIndex = 1000; // bring to front while dragging
+  windowEl.style.zIndex = 1000;
 });
 
 document.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
-
-  // Clamp to viewport (optional, prevents moving off-screen)
   const newLeft = e.clientX - offsetX;
   const newTop = e.clientY - offsetY;
-
   windowEl.style.left = Math.max(0, newLeft) + "px";
   windowEl.style.top = Math.max(0, newTop) + "px";
 });
@@ -43,7 +54,7 @@ document.addEventListener("mouseup", () => {
   isDragging = false;
   document.body.style.userSelect = "";
 });
-;
+
 
 
 
