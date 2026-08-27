@@ -10,8 +10,9 @@ body {
     font-family: 'Roboto', sans-serif !important; 
 }
 
-h2, h3, h4, h5, h1, p {
+h2, h3, h4, h5, h1, p, li, ul {
     margin: 0;
+    margin-left: 20px;
 }
 
 a {
@@ -20,6 +21,11 @@ a {
 
 .window {
   display: none; /* hidden initially */
+     /* Positioning rules */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 hr {
@@ -36,7 +42,7 @@ hr {
 
       .rgb-text {
     /* Apply the animation name, duration, and set it to loop indefinitely */
-    animation: rgb-cycle 6s infinite linear;
+    animation: rgb-cycle 4.5s infinite linear;
 }
 
 /* Define the color frames with matching text-shadow glows */
