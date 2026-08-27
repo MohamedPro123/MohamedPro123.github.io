@@ -118,3 +118,80 @@ hr {
     z-index: -1;       /* Keeps it safely behind your content */
 }
 
+/* Reset basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Navbar Layout */
+.navbar-header {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    backdrop-filter: blur(10px);               /* Modern blurred glass effect */
+    position: sticky;                          /* Keeps navbar fixed at the top */
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid #eef2f5;         /* Very faint, clean separator */
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;            /* Logo left, Menu right */
+    align-items: center;                       /* Vertically centers items */
+}
+
+/* Logo Styling */
+.nav-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+/* Menu & Links Styling */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 30px;                                 /* Generous, clean spacing between links */
+}
+
+.nav-link {
+    font-size: 15px;
+    font-weight: 500;
+    color: #64748b;                            /* Soft slate gray, less harsh than pure black */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+/* Hover & Active States */
+.nav-link:hover, 
+.nav-link.active {
+    color: #1e293b;                            /* Darkens gracefully when active/hovered */
+}
+
+/* Call-To-Action Button */
+.nav-btn {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    background-color: #0f172a;                 /* Deep slate black button */
+    padding: 8px 16px;
+    border-radius: 6px;                        /* Slightly rounded, modern edges */
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #334155;                 /* Soft transition to dark gray */
+}
