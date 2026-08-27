@@ -318,3 +318,45 @@ body {
     border: 1px solid #1a428a;
     box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Setup a colorful background so you can see the blur effect clearly */
+.background-container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff007f, #7f00ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The core frosted blur styling */
+.frosted-card {
+  padding: 2rem;
+  width: 350px;
+  border-radius: 16px;
+  color: white;
+  
+  /* 1. Semi-transparent background color (crucial for the effect) */
+  background: rgba(255, 255, 255, 0.15); 
+  
+  /* 2. The blur effect applied to the area behind the card */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* Safari support */
+  
+  /* 3. Subtle borders and shadows to give it a 3D glass depth */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
