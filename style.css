@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 /* Keep your background properties */
 body {
-    background-image: url('Images/windows_xp_bliss-wide.jpg');
     background-size: cover;       
     background-position: center;   
     background-attachment: fixed;  
@@ -161,7 +160,7 @@ main, .content-container {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: url('your-image.jpg') no-repeat center center/cover;
+    background: url('Images/windows_xp_bliss-wide.jpg') no-repeat center center/cover;
     filter: blur(8px); /* Adjust the pixels to control the blur intensity */
     z-index: -1;       /* Keeps it safely behind your content */
 }
