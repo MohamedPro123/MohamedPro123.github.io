@@ -102,3 +102,19 @@ hr {
             opacity: 1;
             transition-delay: 0.5s;
         }
+
+.container {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Blur the background using a pseudo-element so it doesn't blur your text */
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('your-image.jpg') no-repeat center center/cover;
+    filter: blur(8px); /* Adjust the pixels to control the blur intensity */
+    z-index: -1;       /* Keeps it safely behind your content */
+}
+
