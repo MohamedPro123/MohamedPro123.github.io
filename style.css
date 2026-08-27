@@ -334,7 +334,6 @@ body {
 .background-container {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #ff007f, #7f00ff);
   display: flex;
   justify-content: center;
   align-items: center;
