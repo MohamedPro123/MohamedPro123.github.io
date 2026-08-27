@@ -353,3 +353,32 @@ body {
 
 
 
+
+/* blurred card */
+
+.blurred-overlay-card {
+    /* Slight dark tint to help white text stand out */
+    background-color: rgba(0, 0, 0, 0.4); 
+    
+    /* The blur effect applied ONLY to the background image underneath */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px); /* Safari support */
+    
+    /* Layout styling (adjust spacing and rounded corners as needed) */
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 20px auto;
+    
+    /* Optional: subtle border to make the blurred card pop */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+}
+
+/* 2. Target the white text inside the card */
+.blurred-overlay-card h1,
+.blurred-overlay-card h2,
+.blurred-overlay-card p {
+    color: #ffffff !important; /* Forces the text to be white */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Tiny shadow for extra readability */
+}
+
