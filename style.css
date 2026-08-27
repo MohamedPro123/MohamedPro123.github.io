@@ -20,6 +20,10 @@ body {
 p, ul, li {
     font-size: 1.15em;
 }
+
+p {
+    font-size: 1.25em;
+}
     
 a {
     color: white;
