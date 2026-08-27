@@ -9,27 +9,32 @@ let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
 
-// CALL THIS FUNCTION TO SHOW THE WINDOW
+// CALL THIS FUNCTION TO SHOW AND CENTER THE WINDOW PERFECTLY
 function openWindow() {
-  windowEl.style.display = "block"; // 1. Make it visible in the center
+  windowEl.style.display = "block"; // Make visible so dimensions are readable
   
-  const rect = windowEl.getBoundingClientRect(); // 2. Grab its real screen coordinates
+  // Calculate the perfect center based on the actual viewport size
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const windowWidth = windowEl.offsetWidth;
+  const windowHeight = windowEl.offsetHeight;
   
-  // 3. Lock it into absolute pixel positions
-  windowEl.style.left = rect.left + window.scrollX + "px";
-  windowEl.style.top = rect.top + window.scrollY + "px";
+  // Math: (Screen space - Window space) / 2 + current scroll offset
+  const centerLeft = (viewportWidth - windowWidth) / 2 + window.scrollX;
+  const centerTop = (viewportHeight - windowHeight) / 2 + window.scrollY;
   
-  // 4. Remove the transform so it doesn't fight the dragging math
-  windowEl.style.transform = "none";
+  // Apply raw pixel positions directly
+  windowEl.style.left = centerLeft + "px";
+  windowEl.style.top = centerTop + "px";
 }
 
-// --- Dragging Logic ---
+// --- Dragging Logic (Recalculated on mousedown to prevent jumping) ---
 titleBar.addEventListener("mousedown", (e) => {
   isDragging = true;
   
-  const rect = windowEl.getBoundingClientRect();
-  offsetX = e.clientX - rect.left;
-  offsetY = e.clientY - rect.top;
+  // Use offsetLeft/offsetTop directly to match style settings perfectly
+  offsetX = e.clientX - windowEl.offsetLeft;
+  offsetY = e.clientY - windowEl.offsetTop;
 
   document.body.style.userSelect = "none";
   windowEl.style.zIndex = 1000;
@@ -38,7 +43,6 @@ titleBar.addEventListener("mousedown", (e) => {
 document.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
 
-  // Calculates new position based on cursor and offset
   const newLeft = e.clientX - offsetX;
   const newTop = e.clientY - offsetY;
 
@@ -51,6 +55,7 @@ document.addEventListener("mouseup", () => {
   isDragging = false;
   document.body.style.userSelect = "";
 });
+
 
 
 
