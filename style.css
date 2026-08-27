@@ -32,6 +32,11 @@ a {
   position: absolute;
 }
 
+.title-bar {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
 
 hr {
   height: 2px;
