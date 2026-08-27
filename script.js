@@ -3,7 +3,7 @@
 console.log("drag script loaded, update v1.2 working");
 const windowEl = document.querySelector(".window");
 const titleBar = windowEl.querySelector(".title-bar");
-const navbar = document.querySelector(".navbar");
+const navbar = document.querySelector(".xp-navbar");
 
 let isDragging = false;
 let pointerId = null;
