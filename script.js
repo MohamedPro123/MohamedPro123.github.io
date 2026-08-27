@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = myWindow?.querySelector('[aria-label="Close"]');
 
   // 2. Create the audio object (Double-check this path matches your file!)
-  const clickSound = new Audio('path/to/your/audio-file.mp3');
+  const clickSound = new Audio('https://audio.jukehost.co.uk/01a043b9-4c37-722d-bcaa-60ca739db842');
 
   // 3. Loop through every single button
   allButtons.forEach((button) => {
