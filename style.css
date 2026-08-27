@@ -103,6 +103,19 @@ hr {
             transition-delay: 0.5s;
         }
 
+
+
+
+
+/* Add this to your CSS file to fix the clipped "BrandName" text */
+main, .content-container {
+    padding-top: 60px; /* Creates breathing room below the fixed 40px navbar */
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+
 .container {
     position: relative;
     overflow: hidden;
