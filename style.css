@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 /* Keep your background properties */
 body {
+    background-image: url('Images/windows_xp_bliss-wide.jpg');
     background-size: cover;       
     background-position: center;   
     background-attachment: fixed;  
@@ -160,7 +161,7 @@ main, .content-container {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: url('Images/windows_xp_bliss-wide.jpg') no-repeat center center/cover;
+    background: url('your-image.jpg') no-repeat center center/cover;
     filter: blur(8px); /* Adjust the pixels to control the blur intensity */
     z-index: -1;       /* Keeps it safely behind your content */
 }
@@ -345,39 +346,3 @@ body {
     border: 1px solid #1a428a;
     box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
 }
-
-
-
-
-
-
-
-
-/* blurred card */
-
-.blurred-overlay-card {
-    /* Slight dark tint to help white text stand out */
-    background-color: rgba(0, 0, 0, 0.4); 
-    
-    /* The blur effect applied ONLY to the background image underneath */
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px); /* Safari support */
-    
-    /* Layout styling (adjust spacing and rounded corners as needed) */
-    padding: 2rem;
-    border-radius: 12px;
-    max-width: 600px;
-    margin: 20px auto;
-    
-    /* Optional: subtle border to make the blurred card pop */
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-}
-
-/* 2. Target the white text inside the card */
-.blurred-overlay-card h1,
-.blurred-overlay-card h2,
-.blurred-overlay-card p {
-    color: #ffffff !important; /* Forces the text to be white */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Tiny shadow for extra readability */
-}
-
