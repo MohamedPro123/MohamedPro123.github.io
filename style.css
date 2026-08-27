@@ -28,9 +28,20 @@ a {
 /* Your existing website styles stay completely untouched! */
 
 .window {
-  display: none; /* Hidden initially */
+    display: none;
   position: absolute;
 }
+
+.title-bar {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
 
 .title-bar {
   cursor: grab;
