@@ -17,12 +17,6 @@ body {
     box-sizing: border-box;
 }
 
-h2, h3, h4, h5, h1, p, li, ul, hr {
-    margin: 0;
-    margin-left: 20px;
-    margin-top: 5px;
-}
-
 p, ul, li {
     font-size: 1.15em;
 }
