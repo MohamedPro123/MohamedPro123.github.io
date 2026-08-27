@@ -35,9 +35,6 @@ hr {
 }
 
       .rgb-text {
-    font-size: 3rem;
-    font-family: Roboto, sans-serif;
-    font-weight: bold;
     /* Apply the animation name, duration, and set it to loop indefinitely */
     animation: rgb-cycle 6s infinite linear;
 }
@@ -61,6 +58,13 @@ hr {
         text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5);
     }
 }
+
+
+
+
+
+
+
 
 
  .mytooltip {
