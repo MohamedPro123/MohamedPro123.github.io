@@ -10,9 +10,10 @@ body {
     font-family: 'Roboto', sans-serif !important; 
 }
 
-h2, h3, h4, h5, h1, p, li, ul {
+h2, h3, h4, h5, h1, p, li, ul, hr {
     margin: 0;
     margin-left: 20px;
+    margin-top: 10px;
 }
 
 a {
