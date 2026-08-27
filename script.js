@@ -9,44 +9,41 @@ let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
 
-// 1. CREATE A FUNCTION TO INITIALIZE POSITION ONLY WHEN OPENED
-function initWindowPosition() {
-  // Show it first so the browser can calculate its real size
-  windowEl.style.display = "block"; 
+// CALL THIS FUNCTION TO SHOW THE WINDOW
+function openWindow() {
+  windowEl.style.display = "block"; // 1. Make it visible in the center
   
-  // Get the perfectly centered coordinates from the CSS layout
-  const rect = windowEl.getBoundingClientRect();
+  const rect = windowEl.getBoundingClientRect(); // 2. Grab its real screen coordinates
   
-  // Lock them in as absolute pixels so dragging works smoothly
-  windowEl.style.position = "absolute";
-  windowEl.style.left = rect.left + "px";
-  windowEl.style.top = rect.top + "px";
+  // 3. Lock it into absolute pixel positions
+  windowEl.style.left = rect.left + window.scrollX + "px";
+  windowEl.style.top = rect.top + window.scrollY + "px";
   
-  // Remove the centering layout so it doesn't fight the drag coordinates
-  windowEl.style.transform = "none"; 
-  windowEl.style.margin = "0";
+  // 4. Remove the transform so it doesn't fight the dragging math
+  windowEl.style.transform = "none";
 }
 
-// Call this function whenever you trigger the window to open!
-// For example: openButton.addEventListener("click", initWindowPosition);
-
-
-// --- Your existing dragging logic (kept exactly the same) ---
+// --- Dragging Logic ---
 titleBar.addEventListener("mousedown", (e) => {
   isDragging = true;
+  
   const rect = windowEl.getBoundingClientRect();
   offsetX = e.clientX - rect.left;
   offsetY = e.clientY - rect.top;
+
   document.body.style.userSelect = "none";
   windowEl.style.zIndex = 1000;
 });
 
 document.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
+
+  // Calculates new position based on cursor and offset
   const newLeft = e.clientX - offsetX;
   const newTop = e.clientY - offsetY;
-  windowEl.style.left = Math.max(0, newLeft) + "px";
-  windowEl.style.top = Math.max(0, newTop) + "px";
+
+  windowEl.style.left = newLeft + "px";
+  windowEl.style.top = newTop + "px";
 });
 
 document.addEventListener("mouseup", () => {
