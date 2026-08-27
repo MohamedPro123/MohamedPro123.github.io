@@ -194,25 +194,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const myWindow = document.querySelector(".window");
   const closeBtn = myWindow?.querySelector('[aria-label="Close"]');
 
-  // 2. Create the audio object
-  const clickSound = new Audio('https://audio.jukehost.co.uk/01a043b9-4c37-722d-bcaa-60ca739db842');
+  // 2. Create the audio object (Double-check this path matches your file!)
+  const clickSound = new Audio('path/to/your/audio-file.mp3');
 
   // 3. Loop through every single button
   allButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
-      event.preventDefault(); // Prevents page jumping
+      // 🔊 EVERY button still plays the sound when clicked
+      try {
+        clickSound.currentTime = 0; 
+        clickSound.play().catch(err => {
+          console.warn("Audio failed to play, but script will continue:", err.message);
+        });
+      } catch (audioError) {
+        console.warn("Audio error caught:", audioError.message);
+      }
       
-      // EVERY button plays the sound when clicked
-      clickSound.currentTime = 0; 
-      clickSound.play();
-      
-      // ONLY the button that says "Credits" opens the window
-      // .includes() makes it safe even if there are spaces or icons inside
-      if (button.textContent.includes("Credits") && myWindow) {
-        myWindow.style.display = "block";
-        console.log("Credits clicked: Audio played and window opened!");
-      } else {
-        console.log(`${button.textContent.trim()} clicked: Audio played!`);
+      // 🔒 ONLY target the button that says "Credits"
+      if (button.textContent.includes("Credits")) {
+        event.preventDefault(); // ONLY disable the link for the Credits button!
+        
+        if (myWindow) {
+          myWindow.style.display = "block";
+          console.log("Credits clicked: Link disabled and window opened!");
+        }
       }
     });
   });
@@ -224,5 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
 
