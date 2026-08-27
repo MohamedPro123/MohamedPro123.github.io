@@ -1,6 +1,5 @@
 // DRAGGING
 
-console.log("drag script loaded, update v1.2 working");
 const windowEl = document.querySelector(".window");
 const titleBar = windowEl.querySelector(".title-bar");
 const navbar = document.querySelector(".xp-navbar");
@@ -46,9 +45,8 @@ function clampPosition(left, top) {
   const visibleTitleBarWidth = 40;
   const visibleTitleBarHeight = 10;
 
-  // These values describe where the title bar sits
-  // relative to the window itself. They stay constant
-  // during the drag.
+  // Position of the title bar relative to the window.
+  // These offsets don't change while dragging.
   const titleLeftOffset =
     titleRect.left - windowRect.left;
 
@@ -61,6 +59,10 @@ function clampPosition(left, top) {
   const titleBottomOffset =
     titleRect.bottom - windowRect.top;
 
+  // ------------------------------------------------
+  // HORIZONTAL LIMITS
+  // ------------------------------------------------
+
   const minLeft =
     window.scrollX -
     titleRightOffset +
@@ -72,10 +74,32 @@ function clampPosition(left, top) {
     titleLeftOffset -
     visibleTitleBarWidth;
 
-  const minTop =
+  // ------------------------------------------------
+  // VERTICAL LIMITS
+  // ------------------------------------------------
+
+  // Normal viewport top boundary.
+  let minTop =
     window.scrollY -
     titleTopOffset;
 
+  // If the navbar exists, its bottom becomes the
+  // REAL top boundary for the draggable window.
+  if (navbar) {
+    const navbarRect = navbar.getBoundingClientRect();
+
+    const navbarBottom =
+      navbarRect.bottom + window.scrollY;
+
+    // The title bar cannot enter the navbar.
+    minTop =
+      Math.max(
+        minTop,
+        navbarBottom - titleTopOffset
+      );
+  }
+
+  // Bottom of the viewport.
   const maxTop =
     window.scrollY +
     window.innerHeight -
@@ -89,55 +113,38 @@ function clampPosition(left, top) {
 }
 
 // --------------------------------------------------
-// SHOULD THIS POINTER START A DRAG?
+// START DRAGGING
 // --------------------------------------------------
 
-function canStartDrag(e) {
-  // Only primary mouse button.
+titleBar.addEventListener("pointerdown", (e) => {
+  // Only allow the primary mouse button.
   if (e.pointerType === "mouse" && e.button !== 0) {
-    return false;
+    return;
   }
 
-  // Never drag from the navbar.
-  if (navbar && navbar.contains(e.target)) {
-    return false;
-  }
-
-  // Don't drag when clicking interactive controls.
+  // Don't start dragging from controls.
   if (
     e.target.closest(
       "button, a, input, textarea, select, option, [contenteditable='true']"
     )
   ) {
-    return false;
-  }
-
-  return true;
-}
-
-// --------------------------------------------------
-// START DRAGGING
-// --------------------------------------------------
-
-titleBar.addEventListener("pointerdown", (e) => {
-  if (!canStartDrag(e)) {
     return;
   }
 
   const rect = windowEl.getBoundingClientRect();
 
+  // Preserve the exact point where the user grabbed
+  // the window. This prevents the window from jumping.
   pointerOffsetX = e.clientX - rect.left;
   pointerOffsetY = e.clientY - rect.top;
 
   isDragging = true;
   pointerId = e.pointerId;
 
-  // Capture the pointer on the title bar so dragging
-  // continues even if the pointer leaves it.
   try {
     titleBar.setPointerCapture(e.pointerId);
   } catch {
-    // Ignore unsupported pointer capture.
+    // Ignore pointer capture failures.
   }
 
   previousUserSelect = document.body.style.userSelect;
@@ -145,7 +152,7 @@ titleBar.addEventListener("pointerdown", (e) => {
 
   titleBar.style.cursor = "grabbing";
 
-  // Bring the window to the front.
+  // Bring window to the front.
   windowEl.style.zIndex = "1000";
 
   e.preventDefault();
@@ -185,7 +192,6 @@ function stopDragging(e) {
     return;
   }
 
-  // If this came from a pointer event, ignore unrelated pointers.
   if (
     e?.pointerId != null &&
     pointerId != null &&
@@ -205,7 +211,7 @@ function stopDragging(e) {
         titleBar.releasePointerCapture(activePointerId);
       }
     } catch {
-      // Pointer capture may already have been released.
+      // Pointer capture may already be released.
     }
   }
 
@@ -217,7 +223,6 @@ titleBar.addEventListener("pointerup", stopDragging);
 titleBar.addEventListener("pointercancel", stopDragging);
 titleBar.addEventListener("lostpointercapture", stopDragging);
 
-// Stop dragging if the browser window loses focus.
 window.addEventListener("blur", stopDragging);
 
 // Prevent native browser dragging.
@@ -225,13 +230,9 @@ titleBar.addEventListener("dragstart", (e) => {
   e.preventDefault();
 });
 
-// --------------------------------------------------
-// OPTIONAL: MAKE DRAGGING MORE CONSISTENT
-// --------------------------------------------------
-
-// Prevent touch scrolling/gesture handling on the title bar
-// while the user is attempting to drag.
+// Makes pointer/touch dragging more reliable.
 titleBar.style.touchAction = "none";
+
 
 
 
