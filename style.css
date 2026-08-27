@@ -331,7 +331,6 @@ body {
 
 
 
-/* Setup a colorful background so you can see the blur effect clearly */
 .background-container {
   width: 100vw;
   height: 100vh;
@@ -343,20 +342,35 @@ body {
 
 /* The core frosted blur styling */
 .frosted-card {
-  padding: 2rem;
-  width: 350px;
-  border-radius: 16px;
+  padding: 3rem;                     /* Increased padding for larger text */
+  width: 85%;                        /* Spans most of the horizontal screen */
+  max-width: 1200px;                 /* Prevents it from getting absurdly wide on ultra-wide monitors */
+  border-radius: 24px;
   color: white;
+  box-sizing: border-box;            /* Ensures padding doesn't break the layout width */
   
-  /* 1. Semi-transparent background color (crucial for the effect) */
-  background: rgba(255, 255, 255, 0.15); 
+  /* 1. Highly transparent background so it doesn't tint or override the canvas colors */
+  background: rgba(255, 255, 255, 0.03); 
   
-  /* 2. The blur effect applied to the area behind the card */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px); /* Safari support */
+  /* 2. Heavy blur effect applied to the area behind the card */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px); /* Safari support */
   
-  /* 3. Subtle borders and shadows to give it a 3D glass depth */
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  /* 3. Subtle borders and shadows to keep the edge distinct despite high transparency */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* 4. Enlarged typography settings */
+.frosted-card h2 {
+  font-size: 3rem;                   /* Significantly larger heading */
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.frosted-card p {
+  font-size: 1.5rem;                 /* Significantly larger body text */
+  line-height: 1.6;
+  margin-bottom: 0;
 }
 
