@@ -10,14 +10,16 @@ let pointerOffsetX = 0;
 let pointerOffsetY = 0;
 let previousUserSelect = "";
 
-// Make sure the window can actually be positioned with left/top.
+// Make sure the window can be positioned with left/top.
 windowEl.style.position = windowEl.style.position || "absolute";
 
-// CALL THIS FUNCTION TO SHOW AND CENTER THE WINDOW
+// --------------------------------------------------
+// OPEN + CENTER WINDOW
+// --------------------------------------------------
+
 function openWindow() {
   windowEl.style.display = "block";
 
-  // Get the actual rendered dimensions.
   const rect = windowEl.getBoundingClientRect();
 
   const left =
@@ -30,41 +32,66 @@ function openWindow() {
   windowEl.style.top = `${top}px`;
 }
 
-// Convert the window's current viewport position into document coordinates.
-function getWindowPosition() {
-  const rect = windowEl.getBoundingClientRect();
+// --------------------------------------------------
+// KEEP WINDOW ACCESSIBLE
+// --------------------------------------------------
+//
+// The title bar can never completely leave the screen.
+// The rest of the window is allowed to go off-screen.
+//
+// Change this if you want more/less of the title bar
+// to remain visible.
+//
 
-  return {
-    left: rect.left + window.scrollX,
-    top: rect.top + window.scrollY
-  };
-}
-
-// Keep at least part of the window visible.
 function clampPosition(left, top) {
-  const rect = windowEl.getBoundingClientRect();
+  const windowRect = windowEl.getBoundingClientRect();
+  const titleRect = titleBar.getBoundingClientRect();
 
-  const minVisible = 40;
+  const visibleTitleBarWidth = 40;
+  const visibleTitleBarHeight = 10;
 
-  const minLeft = window.scrollX - rect.width + minVisible;
-  const maxLeft = window.scrollX + window.innerWidth - minVisible;
+  // How far left the window can move.
+  // At least 40px of the title bar stays visible.
+  const minLeft =
+    window.scrollX -
+    (titleRect.right - windowRect.left) +
+    visibleTitleBarWidth;
 
-  const minTop = window.scrollY;
-  const maxTop = window.scrollY + window.innerHeight - minVisible;
+  // How far right the window can move.
+  const maxLeft =
+    window.scrollX +
+    window.innerWidth -
+    (windowRect.right - titleRect.left) -
+    visibleTitleBarWidth;
+
+  // Keep the title bar vertically on-screen.
+  const minTop =
+    window.scrollY -
+    (titleRect.top - windowRect.top);
+
+  const maxTop =
+    window.scrollY +
+    window.innerHeight -
+    (titleRect.bottom - windowRect.top) -
+    visibleTitleBarHeight;
 
   return {
-    left: Math.min(Math.max(left, minLeft), maxLeft),
-    top: Math.min(Math.max(top, minTop), maxTop)
+    left: Math.max(minLeft, Math.min(left, maxLeft)),
+    top: Math.max(minTop, Math.min(top, maxTop))
   };
 }
+
+// --------------------------------------------------
+// START DRAGGING
+// --------------------------------------------------
 
 titleBar.addEventListener("pointerdown", (e) => {
-  // Only start dragging with the primary mouse button.
+  // Only allow the primary mouse button.
   if (e.pointerType === "mouse" && e.button !== 0) {
     return;
   }
 
-  // Don't hijack interactive controls inside the title bar.
+  // Don't start dragging when clicking controls.
   if (e.target.closest("button, a, input, textarea, select")) {
     return;
   }
@@ -73,39 +100,54 @@ titleBar.addEventListener("pointerdown", (e) => {
 
   const rect = windowEl.getBoundingClientRect();
 
-  // Exact cursor position inside the window.
+  // Remember exactly where inside the window
+  // the user grabbed it.
   pointerOffsetX = e.clientX - rect.left;
   pointerOffsetY = e.clientY - rect.top;
 
   isDragging = true;
 
-  // Capture the pointer so dragging continues even outside the title bar.
+  // Keep receiving pointer events even if the pointer
+  // leaves the title bar.
   titleBar.setPointerCapture?.(e.pointerId);
 
+  // Prevent text selection while dragging.
   previousUserSelect = document.body.style.userSelect;
   document.body.style.userSelect = "none";
 
-  // Prevent browser-native dragging/selection behavior.
+  // Visual feedback.
   titleBar.style.cursor = "grabbing";
 
   // Bring the window to the front.
   windowEl.style.zIndex = "1000";
 });
 
+// --------------------------------------------------
+// DRAGGING
+// --------------------------------------------------
+
 titleBar.addEventListener("pointermove", (e) => {
   if (!isDragging) return;
 
   const newLeft =
-    e.clientX + window.scrollX - pointerOffsetX;
+    e.clientX +
+    window.scrollX -
+    pointerOffsetX;
 
   const newTop =
-    e.clientY + window.scrollY - pointerOffsetY;
+    e.clientY +
+    window.scrollY -
+    pointerOffsetY;
 
   const position = clampPosition(newLeft, newTop);
 
   windowEl.style.left = `${position.left}px`;
   windowEl.style.top = `${position.top}px`;
 });
+
+// --------------------------------------------------
+// STOP DRAGGING
+// --------------------------------------------------
 
 function stopDragging(e) {
   if (!isDragging) return;
@@ -128,10 +170,10 @@ titleBar.addEventListener("pointerup", stopDragging);
 titleBar.addEventListener("pointercancel", stopDragging);
 titleBar.addEventListener("lostpointercapture", stopDragging);
 
-// If the page loses focus while dragging, don't leave the window stuck.
+// Stop dragging if the browser window loses focus.
 window.addEventListener("blur", stopDragging);
 
-// Don't let the browser start selecting/dragging the title bar itself.
+// Prevent native browser dragging.
 titleBar.addEventListener("dragstart", (e) => {
   e.preventDefault();
 });
