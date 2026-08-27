@@ -36,15 +36,6 @@ a {
 .window {
   display: none; /* Hidden initially */
   position: absolute;
-  
-  /* Put the window's top-left corner in the middle of the screen */
-  top: 50%;
-  left: 50%;
-  
-  /* Pull the window back by exactly half its own width and height */
-  transform: translate(-50%, -50%);
-  
-
 }
 
 
