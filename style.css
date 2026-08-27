@@ -31,17 +31,23 @@ a {
     color: white;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  position: relative; /* Gives .window a boundary context */
-}
+/* Your existing website styles stay completely untouched! */
 
 .window {
-  display: none; /* Kept hidden initially */
+  display: none; /* Hidden initially */
+  position: absolute;
+  
+  /* Put the window's top-left corner in the middle of the screen */
+  top: 50%;
+  left: 50%;
+  
+  /* Pull the window back by exactly half its own width and height */
+  transform: translate(-50%, -50%);
+  
+  /* Crucial: Define a size so the browser can calculate the middle */
+  width: 400px;  
+  height: 300px;
+  z-index: 100;
 }
 
 
