@@ -125,73 +125,137 @@ hr {
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #f9f9f9;
-}
-
-/* Navbar Layout */
-.navbar-header {
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-    backdrop-filter: blur(10px);               /* Modern blurred glass effect */
-    position: sticky;                          /* Keeps navbar fixed at the top */
-    top: 0;
+/* Core setup for the navigation bar */
+.xp-navbar {
     width: 100%;
-    z-index: 1000;
-    border-bottom: 1px solid #eef2f5;         /* Very faint, clean separator */
+    /* Royal blue gradient signature to Windows XP */
+    background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #1b4ea3 92%, #163e8c 100%);
+    border-bottom: 2px solid #1d4088;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: fixed; /* Keeps it locked at the very top of your website */
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    font-family: 'Tahoma', 'Segoe UI', sans-serif;
+    user-select: none;
 }
 
-.navbar-container {
-    max-width: 1200px;
+.xp-navbar-container {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 15px 25px;
-    display: flex;
-    justify-content: space-between;            /* Logo left, Menu right */
-    align-items: center;                       /* Vertically centers items */
-}
-
-/* Logo Styling */
-.nav-logo {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a1a1a;
-    text-decoration: none;
-    letter-spacing: -0.5px;
-}
-
-/* Menu & Links Styling */
-.nav-menu {
+    height: 40px; /* Authentic slim taskbar height */
     display: flex;
     align-items: center;
-    gap: 30px;                                 /* Generous, clean spacing between links */
+    justify-content: space-between;
 }
 
-.nav-link {
-    font-size: 15px;
-    font-weight: 500;
-    color: #64748b;                            /* Soft slate gray, less harsh than pure black */
+/* --- THE START BUTTON --- */
+.xp-start-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 25px 0 15px;
     text-decoration: none;
-    transition: color 0.2s ease;
+    /* Iconic green gradient button */
+    background: linear-gradient(to bottom, #60b044 0%, #4c9c2e 14%, #38841a 86%, #286e0a 100%);
+    border-right: 1px solid #286e0a;
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4), 2px 0 5px rgba(0,0,0,0.2);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    transition: filter 0.1s ease;
 }
 
-/* Hover & Active States */
-.nav-link:hover, 
-.nav-link.active {
-    color: #1e293b;                            /* Darkens gracefully when active/hovered */
+.xp-start-button:hover {
+    /* Slight glow effect on hover, mimicking the original behavior */
+    filter: brightness(1.15) contrast(1.1);
 }
 
-/* Call-To-Action Button */
-.nav-btn {
-    font-size: 14px;
-    font-weight: 600;
+.start-text {
     color: white;
-    background-color: #0f172a;                 /* Deep slate black button */
-    padding: 8px 16px;
-    border-radius: 6px;                        /* Slightly rounded, modern edges */
-    text-decoration: none;
-    transition: background-color 0.2s ease;
+    font-size: 19px;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 1px 1px 2px #103000;
+    letter-spacing: 0.5px;
 }
 
-.nav-btn:hover {
-    background-color: #334155;                 /* Soft transition to dark gray */
+/* --- THE NAVIGATION LINKS (TASKS) --- */
+.xp-nav-tasks {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 6px;
+    padding: 0 15px;
+    height: 100%;
+}
+
+.xp-task-item {
+    height: 30px;
+    max-width: 150px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 12px;
+    color: white;
+    /* Soft blue styling for background tabs */
+    background: linear-gradient(to bottom, #3c7be6 0%, #215dc6 100%);
+    border: 1px solid #1a428a;
+    box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
+}
+
+.xp-task-item:hover {
+    background: linear-gradient(to bottom, #5a96f8 0%, #3a76df 100%);
+}
+
+/* Active page indicator state */
+.xp-task-item.active {
+    background: linear-gradient(to bottom, #18418a 0%, #2659b4 100%);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
+    border-color: #0c2454;
+}
+
+.task-icon {
+    font-size: 14px;
+}
+
+.task-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- THE SYSTEM TRAY (CTA AREA) --- */
+.xp-system-tray {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    /* Deep blue system tray backdrop styling */
+    background: linear-gradient(to bottom, #0c8df6 0%, #006ef0 14%, #0050d0 86%, #003cc0 100%);
+    border-left: 1px solid #003cc0;
+}
+
+.xp-cta-tray-btn {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    background: #e68b2c; /* Classic Windows alert orange for the CTA button */
+    border: 1px solid #b75b00;
+    border-radius: 3px;
+    box-shadow: inset 1px 1px 0px rgba(255,255,255,0.3);
+}
+
+.xp-cta-tray-btn:hover {
+    background: #ff9d3b;
+}
+
+/* Remind your body text to respect the fixed navbar layout height */
+body {
+    padding-top: 40px;
 }
