@@ -182,7 +182,6 @@ main, .content-container {
 }
 
 .xp-navbar-container {
-    max-width: 1400px;
     margin: 0 auto;
     height: 40px; /* Authentic slim taskbar height */
     display: flex;
