@@ -22,8 +22,23 @@
     <link rel="stylesheet" href="https://unpkg.com/xp.css">
     <!-- Your Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
+
+    
     
 </head>
+
+    <div id="isolated-segment">
+    <div class="blurred-overlay-card">
+    <!-- This style block lives here and only targets things inside #isolated-segment -->
+    <style>
+        #isolated-segment h2, #isolated-segment h3, #isolated-segment h4, 
+        #isolated-segment h5, #isolated-segment h1, #isolated-segment p, 
+        #isolated-segment li, #isolated-segment ul, #isolated-segment hr {
+            margin: 0;
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+    </style>
 
 <span style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">
     
