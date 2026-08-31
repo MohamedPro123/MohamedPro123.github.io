@@ -1,347 +1,277 @@
-/* Must be the first line in your CSS file */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-/* Keep your background properties */
-body {
-    background-image: url('Images/Picsart_26-08-27_12-44-19-807.jpg');
-    background-size: cover;       
-    background-position: center;   
-    background-attachment: fixed;  
-    background-repeat: no-repeat; 
-    font-family: 'Roboto', sans-serif !important; 
-}
+/* Must be the first line in your CSS file */ 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'); 
 
-/* Reset basic styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Keep your background properties */ 
+body { 
+  background-image: url('Images/Picsart_26-08-27_12-44-19-807.jpg'); 
+  background-size: cover; 
+  background-position: center; 
+  background-attachment: fixed; 
+  background-repeat: no-repeat; 
+  font-family: 'Roboto', sans-serif !important; 
+  padding-top: 40px; /* Remind your body text to respect the fixed navbar layout height */
+} 
 
-p, ul, li {
-    font-size: 1.15em;
-}
+/* Reset basic styles */ 
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+} 
 
-p {
-    font-size: 1.25em;
-}
+p, ul, li { 
+  font-size: 1.15em; 
+} 
 
-a {
-    color: white;
-}
+p { 
+  font-size: 1.25em; 
+} 
 
-/* Your existing website styles stay completely untouched! */
+a { 
+  color: white; 
+} 
 
-.window {
-    display: none;
+/* --- WINDOW STYLING --- */
+.window { 
+  display: none; 
+  position: absolute; 
+  z-index: 100; /* Increased to ensure windows stay securely on top of the selection box */
+} 
+
+.title-bar { 
+  cursor: grab; 
+  user-select: none; 
+  touch-action: none; 
+} 
+
+.title-bar:active { 
+  cursor: grabbing; 
+} 
+
+hr { 
+  height: 2px; 
+  border: 0; 
+  border-top: 1px solid #808080; 
+  border-bottom: 1px solid #ffffff; 
+  background: #d4d0c8; 
+  box-shadow: 0 1px 0 #404040, 0 2px 0 #ffffff; 
+  margin: 8px 0; 
+} 
+
+.rgb-text { 
+  animation: rgb-cycle 4.5s infinite linear; 
+} 
+
+/* Define the color frames with matching text-shadow glows */ 
+@keyframes rgb-cycle { 
+  0% { color: rgb(255, 0, 0); text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5); } 
+  33% { color: rgb(0, 255, 0); text-shadow: 0 0 10px rgba(0, 255, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.5); } 
+  66% { color: rgb(0, 0, 255); text-shadow: 0 0 10px rgba(0, 0, 255, 0.7), 0 0 20px rgba(0, 0, 255, 0.5); } 
+  100% { color: rgb(255, 0, 0); text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5); } 
+} 
+
+.mytooltip { 
+  position: relative; 
+  display: inline-block; 
+  cursor: pointer; 
+  text-decoration: underline; 
+} 
+
+.mytooltip .mytooltiptext { 
+  width: 150px; 
+  background: rgba(0, 0, 0, 0.46); 
+  color: white; 
+  text-align: center; 
+  border-radius: 6px; 
+  padding: 10px; 
+  position: absolute; 
+  z-index: 99; 
+  bottom: 125%; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  opacity: 0; 
+  transition: opacity 0.3s; 
+  border: 1px solid white; 
+  pointer-events: none; 
+  font-size: 13px !important; 
+  line-height: 1.5em !important; 
+  font-weight: normal !important; 
+  font-style: normal !important; 
+} 
+
+.mytooltip .mytooltiptext img { 
+  max-width: 150px; 
+  height: auto; 
+} 
+
+.mytooltip:hover .mytooltiptext { 
+  opacity: 1; 
+  transition-delay: 0.5s; 
+} 
+
+main, .content-container { 
+  padding-top: 80px; 
+  padding-left: 30px; 
+  padding-right: 30px; 
+} 
+
+.container { 
+  position: relative; 
+  overflow: hidden; 
+} 
+
+.container::before { 
+  content: ""; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  background: url('your-image.jpg') no-repeat center center/cover; 
+  filter: blur(8px); 
+  z-index: -1; 
+} 
+
+/* --- CORE NAVIGATION BAR (XP-NAVBAR) --- */ 
+.xp-navbar { 
+  width: 100%; 
+  background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #1b4ea3 92%, #163e8c 100%); 
+  border-bottom: 2px solid #1d4088; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  z-index: 9999; /* Kept high to stay strictly on top of windows and selection boxes */
+  font-family: 'Tahoma', 'Segoe UI', sans-serif; 
+  user-select: none; 
+} 
+
+.xp-navbar-container { 
+  margin: 0 auto; 
+  height: 40px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+} 
+
+/* --- THE START BUTTON --- */ 
+.xp-start-button { 
+  height: 100%; 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  padding: 0 20px 0 12px; 
+  text-decoration: none; 
+  background: linear-gradient(to bottom, #60b044 0%, #4c9c2e 14%, #38841a 86%, #286e0a 100%); 
+  border-right: 1px solid #286e0a; 
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4), 2px 0 5px rgba(0,0,0,0.2); 
+  border-top-right-radius: 8px; 
+  border-bottom-right-radius: 8px; 
+} 
+
+.xp-start-button:hover { 
+  filter: brightness(1.15) contrast(1.1); 
+} 
+
+.start-text { 
+  color: white; 
+  font-size: 19px; 
+  font-weight: bold; 
+  font-style: italic; 
+  text-shadow: 1px 1px 2px #103000; 
+  letter-spacing: 0.5px; 
+} 
+
+.start-logo { 
+  width: 18px; 
+  height: 18px; 
+  object-fit: contain; 
+} 
+
+/* --- THE NAVIGATION LINKS (TASKS) --- */ 
+.xp-nav-tasks { 
+  display: flex; 
+  flex-grow: 1; 
+  align-items: center; 
+  gap: 6px; 
+  padding: 0 15px; 
+  height: 100%; 
+} 
+
+.xp-task-item { 
+  height: 30px; 
+  max-width: 150px; 
+  width: 100%; 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  padding: 0 10px; 
+  text-decoration: none; 
+  border-radius: 3px; 
+  font-size: 11px; 
+  color: white; 
+  background: linear-gradient(to bottom, #3c7be6 0%, #215dc6 100%); 
+  border: 1px solid #1a428a; 
+  box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2); 
+} 
+
+.xp-task-item:hover { 
+  background: linear-gradient(to bottom, #5a96f8 0%, #3a76df 100%); 
+} 
+
+.xp-task-item.active { 
+  background: linear-gradient(to bottom, #18418a 0%, #2659b4 100%); 
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5); 
+  border-color: #0c2454; 
+} 
+
+.task-icon { 
+  font-size: 14px; 
+} 
+
+.task-custom-icon { 
+  width: 16px; 
+  height: 16px; 
+  object-fit: contain; 
+} 
+
+.task-text { 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+} 
+
+/* --- THE SYSTEM TRAY (CTA AREA) --- */ 
+.xp-system-tray { 
+  height: 100%; 
+  display: flex; 
+  align-items: center; 
+  padding: 0 15px; 
+  background: linear-gradient(to bottom, #0c8df6 0%, #006ef0 14%, #0050d0 86%, #003cc0 100%); 
+  border-left: 1px solid #003cc0; 
+} 
+
+.xp-cta-tray-btn { 
+  color: #ffffff; 
+  text-decoration: none; 
+  font-size: 12px; 
+  font-weight: bold; 
+  padding: 4px 12px; 
+  background: #e68b2c; 
+  border: 1px solid #b75b00; 
+  border-radius: 3px; 
+  box-shadow: inset 1px 1px 0px rgba(255,255,255,0.3); 
+} 
+
+.xp-cta-tray-btn:hover { 
+  background: #ff9d3b; 
+} 
+
+/* --- NEW FEATURE: WINDOWS DRAG SELECTION BOX --- */
+.selection-box {
   position: absolute;
-}
-
-.title-bar {
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-}
-
-.title-bar:active {
-  cursor: grabbing;
-}
-
-
-.title-bar {
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-}
-
-hr {
-  height: 2px;
-  border: 0;
-  border-top: 1px solid #808080;
-  border-bottom: 1px solid #ffffff;
-  background: #d4d0c8;
-  box-shadow:
-    0 1px 0 #404040,
-    0 2px 0 #ffffff;
-  margin: 8px 0;
-}
-
-      .rgb-text {
-    /* Apply the animation name, duration, and set it to loop indefinitely */
-    animation: rgb-cycle 4.5s infinite linear;
-}
-
-/* Define the color frames with matching text-shadow glows */
-@keyframes rgb-cycle {
-    0% { 
-        color: rgb(255, 0, 0); 
-        text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5);
-    }
-    33% { 
-        color: rgb(0, 255, 0); 
-        text-shadow: 0 0 10px rgba(0, 255, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.5);
-    }
-    66% { 
-        color: rgb(0, 0, 255); 
-        text-shadow: 0 0 10px rgba(0, 0, 255, 0.7), 0 0 20px rgba(0, 0, 255, 0.5);
-    }
-    100% { 
-        color: rgb(255, 0, 0); 
-        text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(255, 0, 0, 0.5);
-    }
-}
-
-
-
-
-
-
-
-
-
- .mytooltip {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-      .mytooltip .mytooltiptext {
-    width: 150px;
-    background: rgba(0, 0, 0, 0.46); /* black, 100% opacity*/
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    padding: 10px;
-    position: absolute;
-    z-index: 99;
-    bottom: 125%; /* show above the element */
-    left: 50%;
-    transform: translateX(-50%); /* center horizontally */
-    opacity: 0;
-    transition: opacity 0.3s;
-    border: 1px solid white;
-    pointer-events: none;
-    font-size: 13px !important;
-    line-height: 1.5em !important;
-    font-weight: normal !important;
-    font-style: normal !important;
-}
-
-
-        .mytooltip .mytooltiptext img {
-            max-width: 150px;
-            height: auto;
-        }
-
-        .mytooltip:hover .mytooltiptext {
-            opacity: 1;
-            transition-delay: 0.5s;
-        }
-
-
-
-
-
-/* Add this to your CSS file to fix the clipped "BrandName" text */
-main, .content-container {
-    padding-top: 80px; /* Creates breathing room below the fixed 40px navbar */
-    padding-left: 30px;
-    padding-right: 30px;
-}
-
-
-
-.container {
-    position: relative;
-    overflow: hidden;
-}
-
-/* Blur the background using a pseudo-element so it doesn't blur your text */
-.container::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: url('your-image.jpg') no-repeat center center/cover;
-    filter: blur(8px); /* Adjust the pixels to control the blur intensity */
-    z-index: -1;       /* Keeps it safely behind your content */
-}
-
-/* Core setup for the navigation bar */
-.xp-navbar {
-    width: 100%;
-    /* Royal blue gradient signature to Windows XP */
-    background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #1b4ea3 92%, #163e8c 100%);
-    border-bottom: 2px solid #1d4088;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    position: fixed; /* Keeps it locked at the very top of your website */
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    font-family: 'Tahoma', 'Segoe UI', sans-serif;
-    user-select: none;
-}
-
-.xp-navbar-container {
-    margin: 0 auto;
-    height: 40px; /* Authentic slim taskbar height */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* --- THE START BUTTON --- */
-.xp-start-button {
-    height: 108%;
-    display: flex;
-    align-items: center;
-    padding: 0 25px 0 15px;
-    text-decoration: none;
-    /* Iconic green gradient button */
-    background: linear-gradient(to bottom, #60b044 0%, #4c9c2e 14%, #38841a 86%, #286e0a 100%);
-    border-right: 1px solid #286e0a;
-    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4), 2px 0 5px rgba(0,0,0,0.2);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    transition: filter 0.1s ease;
-}
-
-.xp-start-button:hover {
-    /* Slight glow effect on hover, mimicking the original behavior */
-    filter: brightness(1.15) contrast(1.1);
-}
-
-.start-text {
-    color: white;
-    font-size: 19px;
-    font-weight: bold;
-    font-style: italic;
-    text-shadow: 1px 1px 2px #103000;
-    letter-spacing: 0.5px;
-}
-
-/* --- THE NAVIGATION LINKS (TASKS) --- */
-.xp-nav-tasks {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    gap: 6px;
-    padding: 0 15px;
-    height: 100%;
-}
-
-.xp-task-item {
-    height: 30px;
-    max-width: 150px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 8px;
-    text-decoration: none;
-    border-radius: 3px;
-    font-size: 12px;
-    color: white;
-    /* Soft blue styling for background tabs */
-    background: linear-gradient(to bottom, #3c7be6 0%, #215dc6 100%);
-    border: 1px solid #1a428a;
-    box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
-}
-
-.xp-task-item:hover {
-    background: linear-gradient(to bottom, #5a96f8 0%, #3a76df 100%);
-}
-
-/* Active page indicator state */
-.xp-task-item.active {
-    background: linear-gradient(to bottom, #18418a 0%, #2659b4 100%);
-    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
-    border-color: #0c2454;
-}
-
-.task-icon {
-    font-size: 14px;
-}
-
-.task-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* --- THE SYSTEM TRAY (CTA AREA) --- */
-.xp-system-tray {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    /* Deep blue system tray backdrop styling */
-    background: linear-gradient(to bottom, #0c8df6 0%, #006ef0 14%, #0050d0 86%, #003cc0 100%);
-    border-left: 1px solid #003cc0;
-}
-
-.xp-cta-tray-btn {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 4px 12px;
-    background: #e68b2c; /* Classic Windows alert orange for the CTA button */
-    border: 1px solid #b75b00;
-    border-radius: 3px;
-    box-shadow: inset 1px 1px 0px rgba(255,255,255,0.3);
-}
-
-.xp-cta-tray-btn:hover {
-    background: #ff9d3b;
-}
-
-/* Remind your body text to respect the fixed navbar layout height */
-body {
-    padding-top: 40px;
-}
-
-/* --- START LOGO STYLING --- */
-.xp-start-button {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 6px; /* Adds clean spacing between the logo and the word 'start' */
-    padding: 0 20px 0 12px;
-    text-decoration: none;
-    background: linear-gradient(to bottom, #60b044 0%, #4c9c2e 14%, #38841a 86%, #286e0a 100%);
-    border-right: 1px solid #286e0a;
-    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4), 2px 0 5px rgba(0,0,0,0.2);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-.start-logo {
-    width: 18px;  /* Classic size for the flag icon */
-    height: 18px;
-    object-fit: contain;
-}
-
-/* --- CUSTOM TASK ICON STYLING --- */
-.task-custom-icon {
-    width: 16px;  /* Traditional Windows 16x16 pixel icon dimension */
-    height: 16px;
-    object-fit: contain;
-}
-
-/* Ensure the text scales perfectly next to your image icons */
-.xp-task-item {
-    height: 30px;
-    max-width: 150px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Clean spacing between image and text */
-    padding: 0 10px;
-    text-decoration: none;
-    border-radius: 3px;
-    font-size: 11px; /* Slightly smaller font mimics old desktop window setups better */
-    color: white;
-    background: linear-gradient(to bottom, #3c7be6 0%, #215dc6 100%);
-    border: 1px solid #1a428a;
-    box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2);
+  border: 1px solid #004eac; /* Windows classic blue selection edge */
+  background-color: rgba(0, 120, 215, 0.25); /* Translucent blue fill */
+  z-index: 10; /* Placed lower than the windows (100) and navbar (9999) */
+  pointer-events: none; /* Crucial so it doesn't block the cursor or drag logic */
 }
