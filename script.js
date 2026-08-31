@@ -289,3 +289,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+
+
+
+
+
+
+// SELECTION TRIANGLE
+document.addEventListener('mousedown', (e) => {
+  // Prevent selection marquee if clicking inside a window, the taskbar, or buttons
+  if (e.target.closest('.window') || e.target.closest('.xp-navbar') || e.target.closest('button') || e.target.closest('a')) {
+    return;
+  }
+
+  // Record initial mouse positions relative to the document page
+  const startX = e.pageX;
+  const startY = e.pageY;
+
+  // Create the marquee element
+  const box = document.createElement('div');
+  box.className = 'selection-box';
+  box.style.left = `${startX}px`;
+  box.style.top = `${startY}px`;
+  box.style.width = '0px';
+  box.style.height = '0px';
+  document.body.appendChild(box);
+
+  function onMouseMove(moveEvent) {
+    // Calculate new size and handle dragging in all 4 directional quadrants
+    const currentX = moveEvent.pageX;
+    const currentY = moveEvent.pageY;
+
+    const left = Math.min(startX, currentX);
+    const top = Math.min(startY, currentY);
+    const width = Math.abs(startX - currentX);
+    const height = Math.abs(startY - currentY);
+
+    box.style.left = `${left}px`;
+    box.style.top = `${top}px`;
+    box.style.width = `${width}px`;
+    box.style.height = `${height}px`;
+  }
+
+  function onMouseUp() {
+    // Clean up box element and remove event listeners when user releases mouse
+    if (box.parentNode) {
+      box.parentNode.removeChild(box);
+    }
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+
+  // Attach drag trackers to the document layer
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
