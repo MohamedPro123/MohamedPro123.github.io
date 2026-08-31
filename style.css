@@ -24,15 +24,6 @@ p, ul, li {
 p {
     font-size: 1.25em;
 }
-    body {
-        cursor: url('cursors/normal_select.cur'),
-        auto; }
-
-a, button, .xp-task-item { 
-    
-cursor: url('cursors/link_select.cur'),
-    
-         pointer; }
 
 a {
     color: white;
