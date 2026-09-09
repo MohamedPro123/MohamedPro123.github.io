@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows eXPerience</title> <!-- Website Title -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/T0xTpue.png"> <!-- Favicon -->
+    
+    <!-- Link your script.js file here -->
+    <script src="script.js" defer></script>
+
+
+
+<!-- CUSTOM STYLES -->
+
+
+
+    
+    <!-- Windows XP Framework Stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/xp.css">
+    <!-- Your Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+
+<title>Strategy Wars</title>
+<style>
+  /* ============ Windows XP themed shell ============ */
+  .swx-root, .swx-root * { box-sizing: border-box; }
+  .swx-root {
+    font-family: Tahoma, "Segoe UI", Verdana, sans-serif;
+    font-size: 11px;
+    color: #000;
+    max-width: 860px;
+    margin: 16px auto;
+    user-select: none;
+  }
+  .swx-window {
+    border: 1px solid #0831D9;
+    border-radius: 8px 8px 4px 4px;
+    box-shadow: 3px 3px 12px rgba(0,0,0,0.45);
+    background: #ECE9D8;
+    overflow: hidden;
+  }
+  .swx-titlebar {
+    height: 30px;
+    background: linear-gradient(180deg, #1c5adb 0%, #3f8cf3 6%, #2f7bf0 40%, #1662e6 86%, #0f4cc7 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 3px 0 6px;
+    gap: 6px;
+  }
+  .swx-titlebar-icon {
+    width: 16px; height: 16px;
+    background: linear-gradient(135deg,#ffd25c,#e08a12);
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.3) inset;
+    flex-shrink: 0;
+  }
+  .swx-titlebar-text {
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .swx-titlebar-btns { display: flex; gap: 2px; }
+  .swx-tbtn {
+    width: 21px; height: 20px;
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: linear-gradient(180deg,#5b9df9,#1a5adf);
+    color: #fff; font-weight: bold; font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .swx-tbtn:hover { background: linear-gradient(180deg,#7fb4ff,#3b78f5); }
+  .swx-tbtn.close { background: linear-gradient(180deg,#f3897c,#d5301c); }
+  .swx-tbtn.close:hover { background: linear-gradient(180deg,#ff9d8f,#ef4a34); }
+
+  .swx-menubar {
+    background: #ECE9D8;
+    border-bottom: 1px solid #ACA899;
+    display: flex;
+    gap: 14px;
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+  .swx-menuitem { cursor: default; padding: 1px 4px; border-radius: 2px; }
+  .swx-menuitem:hover { background: #316AC5; color: #fff; }
+
+  .swx-body { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; background: #ECE9D8; }
+
+  .swx-groupbox {
+    border: 1px solid #ACA899;
+    border-radius: 5px;
+    background: #F3F2E9;
+    padding: 6px 8px 8px 8px;
+    position: relative;
+    margin-top: 8px;
+  }
+  .swx-groupbox > legend {
+    position: absolute; top: -9px; left: 8px;
+    background: #ECE9D8;
+    padding: 0 5px;
+    font-weight: bold;
+    font-size: 11px;
+    color: #003399;
+  }
+
+  .swx-btn {
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    background: linear-gradient(180deg,#fefefe,#e7e4d6 60%, #d9d6c6);
+    border: 1px solid #8f8b7d;
+    border-radius: 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
+    text-align: left;
+    min-width: 150px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .swx-btn:hover:not(:disabled) { border-color: #3a93ff; background: linear-gradient(180deg,#fffef8,#dcedff 60%,#bcdcff); }
+  .swx-btn:active:not(:disabled) { background: linear-gradient(180deg,#cfe6ff,#a9cdf2); box-shadow: 0 1px 2px rgba(0,0,0,0.3) inset; }
+  .swx-btn:disabled { color: #8a8a8a; cursor: default; box-shadow:none; background:#e4e1d4; }
+  .swx-btn .cost { float: right; color: #a35b00; font-weight: bold; }
+  .swx-btn small { display:block; color:#555; font-size:9.5px; font-weight:normal; }
+
+  .swx-select {
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    border: 1px solid #8f8b7d;
+    border-radius: 2px;
+    padding: 2px;
+    background: #fff;
+  }
+
+  .swx-canvas-wrap { position: relative; border: 2px inset #c9c6ba; background:#000; }
+  canvas { display: block; background: #4b7a3a; }
+
+  .swx-statusbar {
+    display: flex;
+    border-top: 1px solid #ACA899;
+    background: #ECE9D8;
+    font-size: 11px;
+  }
+  .swx-status-seg {
+    padding: 3px 8px;
+    border-right: 1px solid #ACA899;
+    box-shadow: 1px 0 0 #fff inset;
+    white-space: nowrap;
+  }
+  .swx-status-seg.grow { flex: 1; white-space: normal; overflow:hidden; text-overflow: ellipsis; }
+  .swx-status-seg b { color: #003399; }
+
+  .swx-legend-row { display:flex; align-items:center; gap:5px; margin-bottom:3px; }
+  .swx-chip {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:16px; height:16px; border-radius:3px; color:#fff; font-weight:bold; font-size:9px;
+    flex-shrink:0;
+  }
+
+  .swx-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center; justify-content: center;
+  }
+  .swx-msgbox {
+    width: 300px;
+    border: 1px solid #0831D9;
+    border-radius: 6px;
+    box-shadow: 3px 3px 14px rgba(0,0,0,0.6);
+    overflow: hidden;
+  }
+  .swx-msgbox .swx-titlebar { border-radius: 5px 5px 0 0; }
+  .swx-msgbox-body {
+    background: #ECE9D8; padding: 16px 14px; font-size: 12px; text-align:center;
+  }
+  .swx-msgbox-body .icon { font-size: 28px; display:block; margin-bottom:6px; }
+  .swx-msgbox-footer { padding: 8px 14px 14px; text-align:center; background:#ECE9D8; }
+  .swx-msgbox-footer button { min-width: 80px; display:inline-block; }
+
+  .swx-tip {
+    font-size: 10.5px; color:#444; background:#FFFBD6; border:1px solid #E5D98A;
+    border-radius: 3px; padding: 4px 7px; margin: 0 8px 8px 8px;
+  }
+</style>
+</head>
+<body>
+
+  <header class="xp-navbar">
+    <div class="xp-navbar-container">
+        
+        <!-- Updated Start Button with Logo Image -->
+        <a href="/" class="xp-start-button">
+            <img src="Images/XP_Logo" alt="" class="start-logo">
+            <span class="start-text">start</span>
+        </a>
+        
+        <!-- Updated Navigation Links with Custom Image Icons -->
+        <nav class="xp-nav-tasks">
+            <a href="strategygame" class="xp-task-item">
+                <img src="Images/Windows-Media-Player-icon.png" alt="" class="task-custom-icon">
+                <span class="task-text">Features</span>
+            </a>
+            <a href="" class="xp-task-item">
+                <img src="Images/hWgjp1e.png" alt="" class="task-custom-icon">
+                <span class="task-text">Credits</span>
+            </a>
+            <a href="workinprogress" class="xp-task-item">
+                <img src="Images/0dJoZTG.png" alt="" class="task-custom-icon">
+                <span class="task-text">Contact</span>
+            </a>
+
+                        <a href="challenge" class="xp-task-item">
+                <img src="Images/RjMRqmK.png" alt="" class="task-custom-icon">
+                <span class="task-text">The Challenge</span>
+            </a>
+
+            <a href="https://visualtimer.com/timers/summer-countdown/" target="_blank" class="xp-task-item">
+                <img src="Images/QuKJ3Fu.png" alt="" class="task-custom-icon">
+         <span class="rgb-text">    <span class="task-text">Click me!</span></span>
+            </a>
+        </nav>
+        
+        <!-- Right Side Call-To-Action -->
+        <div class="xp-system-tray">
+            <a href="workinprogress" class="xp-cta-tray-btn">Get Started</a>
+        </div>
+        
+    </div>
+</header>
+
+
+<div id="isolated-segment">
+  
+
+
+    
+    <h2 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Strategy Game</h2>
+    <hr>
+    <p style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Want to test your skills? Try to win this strategy game I made. More features coming soon - check back in eventually! - M</p><br>
+       
+    </div>
+</span>
+
+<br><br>
+<br>
+<div class="swx-root">
+  <div class="swx-window">
+    <div class="swx-titlebar">
+      <div class="swx-titlebar-icon"></div>
+      <div class="swx-titlebar-text">Strategy Wars.exe - Medieval Frontier Map</div>
+      <div class="swx-titlebar-btns">
+        <div class="swx-tbtn" id="swxMin" title="Minimize">_</div>
+        <div class="swx-tbtn" id="swxMax" title="Maximize">&#9633;</div>
+        <div class="swx-tbtn close" id="swxClose" title="Close">&times;</div>
+      </div>
+    </div>
+    <div class="swx-menubar">
+      <div class="swx-menuitem" id="swxFileMenu">File</div>
+      <div class="swx-menuitem">Game</div>
+      <div class="swx-menuitem">View</div>
+      <div class="swx-menuitem">Help</div>
+    </div>
+
+    <div class="swx-tip">Tip: Balance gold between growing your Economy and training troops. Counter cycle: Footman beats Knight, Archer beats Footman, Knight beats Archer. Siege units wreck bases but are fragile in the open field. Hold the center gold deposit for bonus income.</div>
+
+    <div id="swxBody" class="swx-body">
+      <!-- LEFT CONTROL COLUMN -->
+      <div style="width:190px; flex-shrink:0;">
+
+        <div class="swx-groupbox">
+          <legend>Economy</legend>
+          <button class="swx-btn" id="btnEcon">Upgrade Economy <span class="cost" id="econCost">80g</span>
+            <small id="econLevelTxt">Level 1 &middot; +6g/s</small>
+          </button>
+        </div>
+
+        <div class="swx-groupbox">
+          <legend>Train Troops</legend>
+          <button class="swx-btn" id="btnFootman">&#9876; Footman <span class="cost">50g</span><small>Balanced. Strong vs Knights.</small></button>
+          <button class="swx-btn" id="btnArcher">&#127993; Archer <span class="cost">70g</span><small>Ranged. Strong vs Footmen.</small></button>
+          <button class="swx-btn" id="btnKnight">&#9820; Knight <span class="cost">110g</span><small>Fast. Strong vs Archers.</small></button>
+          <button class="swx-btn" id="btnSiege">&#128163; Siege <span class="cost">160g</span><small>Wrecks bases. Fragile.</small></button>
+        </div>
+
+        <div class="swx-groupbox">
+          <legend>Orders</legend>
+          <button class="swx-btn" id="btnAttack">&#9698; Attack Enemy Base</button>
+          <button class="swx-btn" id="btnRecall">&#8634; Recall Army Home</button>
+        </div>
+
+        <div class="swx-groupbox">
+          <legend>Match Setup</legend>
+          <div style="margin-bottom:6px;">
+            <label>Difficulty:
+              <select class="swx-select" id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
+          </div>
+          <button class="swx-btn" id="btnNewGame">&#9199; New Game</button>
+        </div>
+
+      </div>
+
+      <!-- MAP -->
+      <div style="flex:1; min-width:420px;">
+        <div class="swx-canvas-wrap">
+          <canvas id="swxCanvas" width="800" height="480"></canvas>
+          <div class="swx-overlay" id="swxOverlay">
+            <div class="swx-msgbox">
+              <div class="swx-titlebar">
+                <div class="swx-titlebar-icon"></div>
+                <div class="swx-titlebar-text">Strategy Wars</div>
+                <div class="swx-titlebar-btns"><div class="swx-tbtn close" id="swxOverlayClose">&times;</div></div>
+              </div>
+              <div class="swx-msgbox-body">
+                <span class="icon" id="swxOverlayIcon">&#127942;</span>
+                <div id="swxOverlayText">Game over.</div>
+              </div>
+              <div class="swx-msgbox-footer">
+                <button class="swx-btn" style="display:inline-block;min-width:80px;" id="swxOverlayOk">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swx-groupbox" style="margin-top:8px;">
+          <legend>Troop Cycle</legend>
+          <div class="swx-legend-row"><span class="swx-chip" style="background:#3a6dcf;">F</span> Footman &rarr; beats &rarr; <span class="swx-chip" style="background:#7a4fbf;">K</span> Knight &rarr; beats &rarr; <span class="swx-chip" style="background:#c0682e;">A</span> Archer &rarr; beats &rarr; Footman</div>
+          <div class="swx-legend-row"><span class="swx-chip" style="background:#555;">S</span> Siege: huge damage vs bases, takes extra damage from all units.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="swx-statusbar">
+      <div class="swx-status-seg">Gold: <b id="statGold">200</b> (<span id="statIncome">+6</span>/s)</div>
+      <div class="swx-status-seg">Your Army: <b id="statArmy">0</b></div>
+      <div class="swx-status-seg">Enemy Army: <b id="statEnemyArmy">0</b></div>
+      <div class="swx-status-seg">Queue: <b id="statQueue">0/6</b></div>
+      <div class="swx-status-seg grow" id="statMsg">Welcome, commander. Build your economy or army!</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var canvas = document.getElementById('swxCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  // ---------- Unit definitions ----------
+  var UNIT_TYPES = {
+    footman: { cost:50,  hp:50, dmg:8,  range:22,  speed:70,  atkCooldown:900,  trainTime:2200, label:'F', bonusVs:{ knight:1.5 } },
+    archer:  { cost:70,  hp:28, dmg:9,  range:120, speed:65,  atkCooldown:1000, trainTime:2800, label:'A', bonusVs:{ footman:1.6 } },
+    knight:  { cost:110, hp:90, dmg:11, range:24,  speed:130, atkCooldown:950,  trainTime:3400, label:'K', bonusVs:{ archer:1.8 } },
+    siege:   { cost:160, hp:50, dmg:6,  range:70,  speed:40,  atkCooldown:1600, trainTime:4200, label:'S', baseDmgMult:7, takesExtraDmg:1.6 }
+  };
+
+  var OWNER_COLOR = { player:'#2f5fce', enemy:'#c23b2b' };
+  var OWNER_COLOR_DARK = { player:'#193a8c', enemy:'#7c1f14' };
+
+  var BASE_POS = { player:{x:55,y:240}, enemy:{x:745,y:240} };
+  var BASE_MAX_HP = 600;
+  var RESOURCE_POINT = { x:400, y:230, r:42 };
+  var DEFEND_RADIUS = 170;
+  var AGGRO_RADIUS = 150;
+  var OCCUPATION_BONUS = 5;
+
+  var DIFFICULTY = {
+    easy:   { aiInterval:3600, attackChance:0.13, incomeMod:-1 },
+    normal: { aiInterval:2200, attackChance:0.26, incomeMod:0 },
+    hard:   { aiInterval:1300, attackChance:0.40, incomeMod:1 }
+  };
+
+  var COUNTER_OF = { footman:'archer', archer:'knight', knight:'footman', siege:'footman' };
+
+  var scenery = [];
+  (function buildScenery(){
+    var seed = [ [140,80],[180,420],[640,70],[610,430],[400,60],[400,420],[260,340],[540,150] ];
+    for (var i=0;i<seed.length;i++){
+      scenery.push({ x:seed[i][0], y:seed[i][1], r: 10 + (i%3)*4, type: i%2===0?'tree':'rock' });
+    }
+  })();
+
+  var state, uid, aiTimer, lastTime, running;
+
+  function freshState(){
+    return {
+      gold: { player:200, enemy:200 },
+      baseIncome: { player:6, enemy:6 },
+      econLevel: { player:1, enemy:1 },
+      baseHP: { player:BASE_MAX_HP, enemy:BASE_MAX_HP },
+      units: [],
+      queue: { player:[], enemy:[] },
+      gameOver: false,
+      log: []
+    };
+  }
+
+  function resetGame(){
+    state = freshState();
+    var diffSel = document.getElementById('difficulty').value;
+    state.baseIncome.enemy += DIFFICULTY[diffSel].incomeMod;
+    uid = 1;
+    aiTimer = 0;
+    lastTime = null;
+    running = true;
+    hideOverlay();
+    logMsg('New game started. Good luck, commander.');
+    updateButtons();
+  }
+
+  function logMsg(msg){
+    state.log.push(msg);
+    if (state.log.length > 1) state.log.shift();
+    document.getElementById('statMsg').textContent = msg;
+  }
+
+  function otherOwner(o){ return o === 'player' ? 'enemy' : 'player'; }
+
+  function econCost(owner){
+    return Math.floor(80 * Math.pow(1.55, state.econLevel[owner]-1));
+  }
+
+  function dist(a,b){
+    var dx = a.x-b.x, dy = a.y-b.y;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+
+  function rallyPoint(owner, idx){
+    var base = BASE_POS[owner];
+    var dir = owner === 'player' ? 1 : -1;
+    var col = idx % 4, row = Math.floor(idx/4) % 4;
+    return { x: base.x + dir*(40 + col*16), y: base.y - 45 + row*22 };
+  }
+
+  function spawnUnit(owner, type){
+    var def = UNIT_TYPES[type];
+    var base = BASE_POS[owner];
+    var idx = state.units.filter(function(u){ return u.owner===owner; }).length;
+    var rp = rallyPoint(owner, idx);
+    var off = { x:(Math.random()-0.5)*70, y:(Math.random()-0.5)*90 };
+    state.units.push({
+      id: uid++,
+      owner: owner,
+      type: type,
+      hp: def.hp,
+      maxhp: def.hp,
+      x: base.x + (owner==='player'?18:-18) + (Math.random()-0.5)*10,
+      y: base.y + (Math.random()-0.5)*30,
+      state: 'idle',
+      lastAttack: 0,
+      rallyX: rp.x,
+      rallyY: rp.y,
+      offX: off.x,
+      offY: off.y
+    });
+  }
+
+  function tryTrain(owner, type){
+    var def = UNIT_TYPES[type];
+    if (state.queue[owner].length >= 6) {
+      if (owner==='player') logMsg('Training queue is full.');
+      return false;
+    }
+    if (state.gold[owner] < def.cost) {
+      if (owner==='player') logMsg('Not enough gold to train ' + type + '.');
+      return false;
+    }
+    state.gold[owner] -= def.cost;
+    state.queue[owner].push({ type:type, remaining: def.trainTime });
+    return true;
+  }
+
+  function tryUpgradeEconomy(owner){
+    var cost = econCost(owner);
+    if (state.gold[owner] < cost) {
+      if (owner==='player') logMsg('Not enough gold to upgrade economy.');
+      return false;
+    }
+    state.gold[owner] -= cost;
+    state.econLevel[owner] += 1;
+    state.baseIncome[owner] += 4;
+    if (owner==='player') logMsg('Economy upgraded to level ' + state.econLevel[owner] + '.');
+    return true;
+  }
+
+  function attackEnemyBase(owner){
+    var count = 0;
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.owner===owner && u.state==='idle'){ u.state='attacking'; count++; }
+    }
+    if (owner==='player'){
+      if (count>0) logMsg('Your army marches on the enemy base! (' + count + ' units)');
+      else logMsg('No idle units available to send.');
+    }
+  }
+
+  function recallArmy(owner){
+    var count = 0;
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.owner===owner && u.state==='attacking'){ u.state='idle'; count++; }
+    }
+    if (owner==='player' && count>0) logMsg('Army recalled home.');
+  }
+
+  function findNearestEnemy(unit, withinRadiusOfPoint){
+    var best = null, bestD = Infinity;
+    for (var i=0;i<state.units.length;i++){
+      var e = state.units[i];
+      if (e.owner === unit.owner || e.hp<=0) continue;
+      var d = dist(unit, e);
+      if (withinRadiusOfPoint){
+        if (dist(withinRadiusOfPoint.point, e) > withinRadiusOfPoint.r) continue;
+      }
+      if (d < bestD){ bestD = d; best = e; }
+    }
+    return best;
+  }
+
+  function moveToward(u, tx, ty, dt){
+    var dx = tx-u.x, dy = ty-u.y;
+    var d = Math.sqrt(dx*dx+dy*dy);
+    if (d < 2) return;
+    var def = UNIT_TYPES[u.type];
+    var step = def.speed * dt;
+    if (step > d) step = d;
+    u.x += (dx/d)*step;
+    u.y += (dy/d)*step;
+    u.y = Math.max(20, Math.min(H-20, u.y));
+    u.x = Math.max(15, Math.min(W-15, u.x));
+  }
+
+  function applyDamage(attacker, defender, now){
+    var adef = UNIT_TYPES[attacker.type];
+    var dmg = adef.dmg;
+    if (adef.bonusVs && adef.bonusVs[defender.type]) dmg *= adef.bonusVs[defender.type];
+    var ddef = UNIT_TYPES[defender.type];
+    if (ddef.takesExtraDmg) dmg *= ddef.takesExtraDmg;
+    defender.hp -= dmg;
+    if (defender.hp <= 0){
+      state.gold[attacker.owner] += 6;
+      if (attacker.owner==='player') logMsg('Your ' + attacker.type + ' defeated an enemy ' + defender.type + '.');
+      else if (defender.owner==='player') logMsg('You lost a ' + defender.type + ' in battle.');
+    }
+  }
+
+  function damageBase(attacker, now){
+    var enemyOwner = otherOwner(attacker.owner);
+    var adef = UNIT_TYPES[attacker.type];
+    var dmg = adef.dmg;
+    if (adef.baseDmgMult) dmg *= adef.baseDmgMult;
+    state.baseHP[enemyOwner] -= dmg;
+    if (state.baseHP[enemyOwner] < 0) state.baseHP[enemyOwner] = 0;
+    if (state.baseHP[enemyOwner] <= 0 && !state.gameOver){
+      state.gameOver = true;
+      showOverlay(attacker.owner === 'player');
+    }
+  }
+
+  function updateUnit(u, dt, now){
+    if (u.hp <= 0) return;
+    var def = UNIT_TYPES[u.type];
+
+    var nearest;
+    if (u.state === 'idle'){
+      nearest = findNearestEnemy(u, { point: BASE_POS[u.owner], r: DEFEND_RADIUS });
+    } else {
+      nearest = findNearestEnemy(u, { point: u, r: AGGRO_RADIUS });
+    }
+
+    if (nearest){
+      var d = dist(u, nearest);
+      if (d <= def.range){
+        if (now - u.lastAttack >= def.atkCooldown){
+          applyDamage(u, nearest, now);
+          u.lastAttack = now;
+        }
+      } else {
+        moveToward(u, nearest.x, nearest.y, dt);
+      }
+      return;
+    }
+
+    if (u.state === 'attacking'){
+      var basePos = BASE_POS[otherOwner(u.owner)];
+      var tx = basePos.x + u.offX, ty = basePos.y + u.offY;
+      var db = dist(u, { x: tx, y: ty });
+      var reachDist = def.range + 12;
+      if (dist(u, basePos) <= def.range + 20){
+        if (now - u.lastAttack >= def.atkCooldown){
+          damageBase(u, now);
+          u.lastAttack = now;
+        }
+      } else {
+        moveToward(u, tx, ty, dt);
+      }
+    } else {
+      moveToward(u, u.rallyX, u.rallyY, dt);
+    }
+  }
+
+  function isOccupiedBy(){
+    var playerHere = false, enemyHere = false;
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.hp<=0) continue;
+      if (dist(u, RESOURCE_POINT) <= RESOURCE_POINT.r){
+        if (u.owner==='player') playerHere = true; else enemyHere = true;
+      }
+    }
+    if (playerHere && !enemyHere) return 'player';
+    if (enemyHere && !playerHere) return 'enemy';
+    return null;
+  }
+
+  function countArmyPower(owner){
+    var count=0, power=0;
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.owner===owner && u.hp>0){
+        count++;
+        power += u.hp * 0.3 + UNIT_TYPES[u.type].dmg;
+      }
+    }
+    return { count:count, power:power };
+  }
+
+  function mostCommonType(owner){
+    var counts = { footman:0, archer:0, knight:0, siege:0 };
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.owner===owner && u.hp>0) counts[u.type]++;
+    }
+    var best = null, bestN = -1;
+    for (var t in counts){ if (counts[t] > bestN){ bestN = counts[t]; best = t; } }
+    return bestN > 0 ? best : null;
+  }
+
+  function aiTick(){
+    var diffSel = document.getElementById('difficulty').value;
+    var diff = DIFFICULTY[diffSel];
+    var owner = 'enemy';
+    var gold = state.gold[owner];
+
+    var playerCommon = mostCommonType('player');
+    var wantType = playerCommon && Math.random() < 0.55 ? COUNTER_OF[playerCommon] : null;
+
+    var doEcon = Math.random() < 0.35 && gold >= econCost(owner);
+
+    if (doEcon){
+      tryUpgradeEconomy(owner);
+    } else {
+      var choices = ['footman','archer','knight','siege'];
+      var type = wantType || choices[Math.floor(Math.random()*choices.length)];
+      if (state.gold[owner] < UNIT_TYPES[type].cost){
+        // fall back to cheapest affordable
+        var cheapest = null;
+        for (var i=0;i<choices.length;i++){
+          if (UNIT_TYPES[choices[i]].cost <= state.gold[owner]) { cheapest = choices[i]; break; }
+        }
+        type = cheapest;
+      }
+      if (type) tryTrain(owner, type);
+      else if (gold >= econCost(owner)) tryUpgradeEconomy(owner);
+    }
+
+    var my = countArmyPower('enemy');
+    var their = countArmyPower('player');
+    if (my.count >= 5 && my.power > their.power*0.85 && Math.random() < diff.attackChance){
+      attackEnemyBase('enemy');
+    }
+  }
+
+  function update(dt, now){
+    if (!state.gameOver){
+      var occ = isOccupiedBy();
+      state.gold.player += (state.baseIncome.player + (occ==='player'?OCCUPATION_BONUS:0)) * dt;
+      state.gold.enemy  += (state.baseIncome.enemy  + (occ==='enemy'?OCCUPATION_BONUS:0)) * dt;
+
+      ['player','enemy'].forEach(function(owner){
+        var q = state.queue[owner];
+        for (var i=q.length-1;i>=0;i--){
+          q[i].remaining -= dt*1000;
+          if (q[i].remaining <= 0){
+            spawnUnit(owner, q[i].type);
+            q.splice(i,1);
+          }
+        }
+      });
+
+      for (var i=0;i<state.units.length;i++){
+        updateUnit(state.units[i], dt, now);
+      }
+      state.units = state.units.filter(function(u){ return u.hp > 0; });
+
+      aiTimer += dt*1000;
+      var diffSel = document.getElementById('difficulty').value;
+      if (aiTimer >= DIFFICULTY[diffSel].aiInterval){
+        aiTimer = 0;
+        aiTick();
+      }
+    }
+    updateHud(occOf());
+  }
+
+  function occOf(){ return isOccupiedBy(); }
+
+  // ---------- Rendering ----------
+  function drawScenery(){
+    for (var i=0;i<scenery.length;i++){
+      var s = scenery[i];
+      if (s.type==='tree'){
+        ctx.fillStyle = '#2d5a27';
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#4a3320';
+        ctx.fillRect(s.x-2, s.y+s.r-2, 4, 8);
+      } else {
+        ctx.fillStyle = '#8a8577';
+        ctx.beginPath(); ctx.ellipse(s.x, s.y, s.r, s.r*0.7, 0, 0, Math.PI*2); ctx.fill();
+      }
+    }
+  }
+
+  function drawBase(owner){
+    var p = BASE_POS[owner];
+    var hp = state.baseHP[owner];
+    ctx.fillStyle = OWNER_COLOR_DARK[owner];
+    ctx.fillRect(p.x-24, p.y-30, 48, 60);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(p.x-24, p.y-30, 48, 60);
+    ctx.fillStyle = OWNER_COLOR[owner];
+    ctx.fillRect(p.x-18, p.y-22, 36, 44);
+    // flag
+    ctx.strokeStyle = '#333'; ctx.beginPath(); ctx.moveTo(p.x, p.y-30); ctx.lineTo(p.x, p.y-46); ctx.stroke();
+    ctx.fillStyle = OWNER_COLOR[owner];
+    ctx.beginPath(); ctx.moveTo(p.x,p.y-46); ctx.lineTo(p.x+14,p.y-41); ctx.lineTo(p.x,p.y-36); ctx.closePath(); ctx.fill();
+    // hp bar
+    var barW = 54;
+    ctx.fillStyle = '#222'; ctx.fillRect(p.x-barW/2, p.y-56, barW, 6);
+    ctx.fillStyle = hp/BASE_MAX_HP > 0.4 ? '#3fbf3f' : '#d94a2b';
+    ctx.fillRect(p.x-barW/2+1, p.y-55, (barW-2)*Math.max(0,hp/BASE_MAX_HP), 4);
+    ctx.fillStyle = '#fff';
+    ctx.font = '9px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.fillText(owner==='player' ? 'YOUR BASE' : 'ENEMY BASE', p.x, p.y+42);
+  }
+
+  function drawResourcePoint(){
+    var occ = isOccupiedBy();
+    ctx.beginPath();
+    ctx.arc(RESOURCE_POINT.x, RESOURCE_POINT.y, RESOURCE_POINT.r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,215,60,0.18)';
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = occ==='player' ? OWNER_COLOR.player : occ==='enemy' ? OWNER_COLOR.enemy : 'rgba(200,200,200,0.7)';
+    ctx.setLineDash(occ ? [] : [5,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#e0b020';
+    ctx.beginPath(); ctx.arc(RESOURCE_POINT.x, RESOURCE_POINT.y, 10, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#8a6a10'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.fillText('+' + OCCUPATION_BONUS, RESOURCE_POINT.x, RESOURCE_POINT.y+26);
+  }
+
+  function drawUnit(u){
+    var def = UNIT_TYPES[u.type];
+    ctx.beginPath();
+    ctx.arc(u.x, u.y, 8, 0, Math.PI*2);
+    ctx.fillStyle = OWNER_COLOR[u.owner];
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 8px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.fillText(def.label, u.x, u.y+3);
+    if (u.hp < u.maxhp){
+      ctx.fillStyle = '#222'; ctx.fillRect(u.x-9, u.y-15, 18, 3);
+      ctx.fillStyle = '#3fbf3f'; ctx.fillRect(u.x-8, u.y-14, 16*Math.max(0,u.hp/u.maxhp), 1.6);
+    }
+    if (u.state === 'attacking'){
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.beginPath(); ctx.moveTo(u.x, u.y-17); ctx.lineTo(u.x-3, u.y-21); ctx.lineTo(u.x+3, u.y-21); ctx.closePath(); ctx.fill();
+    }
+  }
+
+  function render(){
+    ctx.fillStyle = '#4b7a3a';
+    ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+    for (var gx=0; gx<W; gx+=40){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+    for (var gy=0; gy<H; gy+=40){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+    drawScenery();
+    drawResourcePoint();
+    drawBase('player');
+    drawBase('enemy');
+    for (var i=0;i<state.units.length;i++) drawUnit(state.units[i]);
+  }
+
+  // ---------- HUD ----------
+  function updateHud(occ){
+    document.getElementById('statGold').textContent = Math.floor(state.gold.player);
+    var incomeShown = state.baseIncome.player + (occ==='player'?OCCUPATION_BONUS:0);
+    document.getElementById('statIncome').textContent = '+' + incomeShown;
+    document.getElementById('statArmy').textContent = countArmyPower('player').count;
+    document.getElementById('statEnemyArmy').textContent = countArmyPower('enemy').count;
+    document.getElementById('statQueue').textContent = state.queue.player.length + '/6';
+    document.getElementById('econCost').textContent = econCost('player') + 'g';
+    document.getElementById('econLevelTxt').textContent = 'Level ' + state.econLevel.player + ' \u00b7 +' + state.baseIncome.player + 'g/s';
+    updateButtons();
+  }
+
+  function updateButtons(){
+    document.getElementById('btnEcon').disabled = state.gold.player < econCost('player');
+    document.getElementById('btnFootman').disabled = state.gold.player < UNIT_TYPES.footman.cost || state.queue.player.length>=6;
+    document.getElementById('btnArcher').disabled = state.gold.player < UNIT_TYPES.archer.cost || state.queue.player.length>=6;
+    document.getElementById('btnKnight').disabled = state.gold.player < UNIT_TYPES.knight.cost || state.queue.player.length>=6;
+    document.getElementById('btnSiege').disabled = state.gold.player < UNIT_TYPES.siege.cost || state.queue.player.length>=6;
+  }
+
+  // ---------- Overlay (game over) ----------
+  function showOverlay(playerWon){
+    var overlay = document.getElementById('swxOverlay');
+    document.getElementById('swxOverlayIcon').innerHTML = playerWon ? '&#127942;' : '&#128128;';
+    document.getElementById('swxOverlayText').textContent = playerWon ?
+      'Victory! You have destroyed the enemy base.' :
+      'Defeat. Your base has fallen.';
+    overlay.style.display = 'flex';
+  }
+  function hideOverlay(){
+    document.getElementById('swxOverlay').style.display = 'none';
+  }
+
+  // ---------- Main loop ----------
+  function loop(ts){
+    if (lastTime === null) lastTime = ts;
+    var dt = (ts - lastTime) / 1000;
+    if (dt > 0.05) dt = 0.05;
+    lastTime = ts;
+    update(dt, ts);
+    render();
+    if (running) requestAnimationFrame(loop);
+  }
+
+  // ---------- Wiring ----------
+  document.getElementById('btnEcon').addEventListener('click', function(){ tryUpgradeEconomy('player'); updateButtons(); });
+  document.getElementById('btnFootman').addEventListener('click', function(){ tryTrain('player','footman'); updateButtons(); });
+  document.getElementById('btnArcher').addEventListener('click', function(){ tryTrain('player','archer'); updateButtons(); });
+  document.getElementById('btnKnight').addEventListener('click', function(){ tryTrain('player','knight'); updateButtons(); });
+  document.getElementById('btnSiege').addEventListener('click', function(){ tryTrain('player','siege'); updateButtons(); });
+  document.getElementById('btnAttack').addEventListener('click', function(){ attackEnemyBase('player'); });
+  document.getElementById('btnRecall').addEventListener('click', function(){ recallArmy('player'); });
+  document.getElementById('btnNewGame').addEventListener('click', resetGame);
+  document.getElementById('swxOverlayOk').addEventListener('click', hideOverlay);
+  document.getElementById('swxOverlayClose').addEventListener('click', hideOverlay);
+
+  canvas.addEventListener('click', function(e){
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var x = (e.clientX - rect.left) * scaleX;
+    var y = (e.clientY - rect.top) * scaleY;
+    if (dist({x:x,y:y}, BASE_POS.enemy) < 60) attackEnemyBase('player');
+    else if (dist({x:x,y:y}, BASE_POS.player) < 60) recallArmy('player');
+  });
+
+  // Window chrome interactivity
+  var minimized = false, maximized = false;
+  document.getElementById('swxMin').addEventListener('click', function(){
+    var body = document.getElementById('swxBody');
+    var statusbar = document.querySelector('.swx-statusbar');
+    minimized = !minimized;
+    body.style.display = minimized ? 'none' : 'flex';
+    statusbar.style.display = minimized ? 'none' : 'flex';
+  });
+  document.getElementById('swxMax').addEventListener('click', function(){
+    var root = document.querySelector('.swx-root');
+    maximized = !maximized;
+    root.style.maxWidth = maximized ? '100%' : '860px';
+  });
+  document.getElementById('swxClose').addEventListener('click', function(){
+    var proceed = window.confirm('Are you sure you want to close Strategy Wars?');
+    if (proceed){
+      running = false;
+      document.querySelector('.swx-window').style.display = 'none';
+    }
+  });
+  document.getElementById('swxFileMenu').addEventListener('click', function(){
+    if (window.confirm('Start a New Game? (Restarts the current match)')) resetGame();
+  });
+
+  document.getElementById('difficulty').addEventListener('change', function(){
+    logMsg('Difficulty set. Start a New Game for it to fully apply.');
+  });
+
+  resetGame();
+  requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+    
+</html>
