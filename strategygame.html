@@ -93,14 +93,14 @@
     font-family: Tahoma, "Segoe UI", Verdana, sans-serif;
     font-size: 11px;
     color: #000;
-    max-width: 860px;
+    max-width: 1000px;
     width: 100%;
     margin: 16px auto;
     user-select: none;
     transition: max-width 0.15s ease;
   }
   .swx-root.swx-maximized {
-    max-width: 1200px;
+    max-width: 1450px;
   }
   .swx-window {
     border: 1px solid #0831D9;
@@ -212,7 +212,7 @@
     border: 2px inset #c9c6ba;
     background: #14304f;
     width: 100%;
-    max-width: 960px;
+    max-width: 1100px;
     margin: 0 auto;
   }
   canvas { display: block; width: 100%; height: auto; background: #4b7a3a; }
@@ -285,7 +285,7 @@
       <div class="swx-menuitem">Help</div>
     </div>
 
-    <div class="swx-tip">Tip: Split your gold between Economy, land Troops, and your Navy. Land: Footman beats Catapult, Catapult beats Knight... wait, actually: Footman beats Knight, Knight beats Archer, Archer beats Footman. At sea: Galleons crush Sloops but are slow to arrive; Sloops raid fast and cheap. Hold the gold mine and the fishing grounds for bonus income.</div>
+    <div class="swx-tip">Tip: Land cycle: Footman beats Knight, Knight beats Cavalry, Cavalry beats Archer, Archer beats Footman. Knights are slow, heavily-armored tanks; Cavalry are fast flankers. You can attack the enemy base outright, or send forces to seize and hold the gold mine / fishing grounds instead - land and naval orders are issued separately.</div>
 
     <div id="swxBody" class="swx-body">
       <!-- LEFT CONTROL COLUMN -->
@@ -302,7 +302,8 @@
           <legend>Train Land Troops</legend>
           <button class="swx-btn" id="btnFootman">&#9876; Footman <span class="cost">50g</span><small>Balanced. Strong vs Knights.</small></button>
           <button class="swx-btn" id="btnArcher">&#127993; Archer <span class="cost">70g</span><small>Ranged. Strong vs Footmen.</small></button>
-          <button class="swx-btn" id="btnKnight">&#9820; Knight <span class="cost">110g</span><small>Fast. Strong vs Archers.</small></button>
+          <button class="swx-btn" id="btnCavalry">&#128014; Cavalry <span class="cost">100g</span><small>Fast flanker. Strong vs Archers.</small></button>
+          <button class="swx-btn" id="btnKnight">&#9820; Knight <span class="cost">140g</span><small>Heavy tank, slow. Strong vs Cavalry.</small></button>
           <button class="swx-btn" id="btnSiege">&#128163; Siege <span class="cost">160g</span><small>Wrecks bases. Fragile.</small></button>
         </div>
 
@@ -313,9 +314,17 @@
         </div>
 
         <div class="swx-groupbox">
-          <legend>Orders</legend>
-          <button class="swx-btn" id="btnAttack">&#9698; Attack Enemy Base</button>
-          <button class="swx-btn" id="btnRecall">&#8634; Recall Forces Home</button>
+          <legend>Land Orders</legend>
+          <button class="swx-btn" id="btnAttackLand">&#9698; Attack Enemy Base</button>
+          <button class="swx-btn" id="btnHoldGold">&#9873; Seize &amp; Hold Gold Mine</button>
+          <button class="swx-btn" id="btnRecallLand">&#8634; Recall Land Forces</button>
+        </div>
+
+        <div class="swx-groupbox">
+          <legend>Naval Orders</legend>
+          <button class="swx-btn" id="btnAttackSea">&#9698; Attack Enemy Base</button>
+          <button class="swx-btn" id="btnHoldFish">&#9873; Seize &amp; Hold Fishing Grounds</button>
+          <button class="swx-btn" id="btnRecallSea">&#8634; Recall Navy</button>
         </div>
 
         <div class="swx-groupbox">
@@ -337,7 +346,7 @@
       <!-- MAP -->
       <div style="flex:1; min-width:420px;">
         <div class="swx-canvas-wrap">
-          <canvas id="swxCanvas" width="800" height="520"></canvas>
+          <canvas id="swxCanvas" width="1100" height="560"></canvas>
           <div class="swx-overlay" id="swxOverlay">
             <div class="swx-msgbox">
               <div class="swx-titlebar">
@@ -358,7 +367,12 @@
 
         <div class="swx-groupbox" style="margin-top:8px;">
           <legend>Forces Guide</legend>
-          <div class="swx-legend-row"><span class="swx-chip" style="background:#3a6dcf;">F</span> Footman &rarr; beats &rarr; <span class="swx-chip" style="background:#7a4fbf;">K</span> Knight &rarr; beats &rarr; <span class="swx-chip" style="background:#c0682e;">A</span> Archer &rarr; beats &rarr; Footman</div>
+          <div class="swx-legend-row">
+            <span class="swx-chip" style="background:#3a6dcf;">F</span> Footman &rarr; beats &rarr;
+            <span class="swx-chip" style="background:#7a4fbf;">K</span> Knight &rarr; beats &rarr;
+            <span class="swx-chip" style="background:#2e8b57;">V</span> Cavalry &rarr; beats &rarr;
+            <span class="swx-chip" style="background:#c0682e;">A</span> Archer &rarr; beats &rarr; Footman
+          </div>
           <div class="swx-legend-row"><span class="swx-chip" style="background:#555;">C</span> Catapult: huge damage vs bases, fragile vs any unit.</div>
           <div class="swx-legend-row"><span class="swx-chip" style="background:#2e8b8b;">S</span> Sloop: fast &amp; cheap raider &nbsp; <span class="swx-chip" style="background:#1f4e6e;">G</span> Galleon: slow, beats Sloops, devastating vs bases.</div>
         </div>
@@ -384,29 +398,30 @@
   var W = canvas.width, H = canvas.height;
 
   // ---------- Terrain bands ----------
-  var LAND_Y_MIN = 20, LAND_Y_MAX = 300;
-  var SEA_Y_MIN = 328, SEA_Y_MAX = 498;
+  var LAND_Y_MIN = 20, LAND_Y_MAX = 320;
+  var SEA_Y_MIN = 345, SEA_Y_MAX = 540;
 
   // ---------- Unit definitions ----------
   var UNIT_TYPES = {
-    footman: { cost:50,  hp:50, dmg:8,  range:22,  speed:70,  atkCooldown:900,  trainTime:2200, label:'F', domain:'land', bonusVs:{ knight:1.5 } },
-    archer:  { cost:70,  hp:28, dmg:9,  range:120, speed:65,  atkCooldown:1000, trainTime:2800, label:'A', domain:'land', bonusVs:{ footman:1.6 } },
-    knight:  { cost:110, hp:90, dmg:11, range:24,  speed:130, atkCooldown:950,  trainTime:3400, label:'K', domain:'land', bonusVs:{ archer:1.8 } },
-    siege:   { cost:160, hp:50, dmg:6,  range:70,  speed:40,  atkCooldown:1600, trainTime:4200, label:'C', domain:'land', baseDmgMult:7, takesExtraDmg:1.6 },
-    sloop:   { cost:60,  hp:35, dmg:7,  range:26,  speed:100, atkCooldown:850,  trainTime:2000, label:'S', domain:'sea',  baseDmgMult:2.5 },
-    galleon: { cost:180, hp:130,dmg:15, range:36,  speed:42,  atkCooldown:1400, trainTime:4600, label:'G', domain:'sea',  baseDmgMult:5.5, bonusVs:{ sloop:1.5 } }
+    footman: { cost:50,  hp:50,  dmg:8,  range:22,  speed:70,  atkCooldown:900,  trainTime:2200, label:'F', domain:'land', bonusVs:{ knight:1.5 } },
+    archer:  { cost:70,  hp:28,  dmg:9,  range:120, speed:65,  atkCooldown:1000, trainTime:2800, label:'A', domain:'land', bonusVs:{ footman:1.6 } },
+    cavalry: { cost:100, hp:55,  dmg:10, range:24,  speed:145, atkCooldown:850,  trainTime:2800, label:'V', domain:'land', bonusVs:{ archer:1.9 } },
+    knight:  { cost:140, hp:140, dmg:13, range:26,  speed:55,  atkCooldown:1200, trainTime:4200, label:'K', domain:'land', bonusVs:{ cavalry:1.6 } },
+    siege:   { cost:160, hp:50,  dmg:6,  range:70,  speed:40,  atkCooldown:1600, trainTime:4200, label:'C', domain:'land', baseDmgMult:7, takesExtraDmg:1.6 },
+    sloop:   { cost:60,  hp:35,  dmg:7,  range:26,  speed:100, atkCooldown:850,  trainTime:2000, label:'S', domain:'sea',  baseDmgMult:2.5 },
+    galleon: { cost:180, hp:130, dmg:15, range:36,  speed:42,  atkCooldown:1400, trainTime:4600, label:'G', domain:'sea',  baseDmgMult:5.5, bonusVs:{ sloop:1.5 } }
   };
 
   var OWNER_COLOR = { player:'#2f5fce', enemy:'#c23b2b' };
   var OWNER_COLOR_DARK = { player:'#193a8c', enemy:'#7c1f14' };
 
-  var BASE_POS = { player:{x:55,y:165}, enemy:{x:745,y:165} };
-  var DOCK_POS = { player:{x:55,y:410}, enemy:{x:745,y:410} };
+  var BASE_POS = { player:{x:60,y:180}, enemy:{x:1040,y:180} };
+  var DOCK_POS = { player:{x:60,y:440}, enemy:{x:1040,y:440} };
   var BASE_MAX_HP = 600;
-  var RESOURCE_POINT = { x:400, y:165, r:42 };
-  var SEA_RESOURCE_POINT = { x:400, y:410, r:42 };
-  var DEFEND_RADIUS = 170;
-  var AGGRO_RADIUS = 150;
+  var RESOURCE_POINT = { x:550, y:180, r:46 };
+  var SEA_RESOURCE_POINT = { x:550, y:440, r:46 };
+  var DEFEND_RADIUS = 180;
+  var AGGRO_RADIUS = 160;
   var OCCUPATION_BONUS_LAND = 5;
   var OCCUPATION_BONUS_SEA = 4;
 
@@ -416,12 +431,13 @@
     hard:   { aiInterval:1300, attackChance:0.40, incomeMod:1 }
   };
 
-  var COUNTER_OF = { footman:'archer', archer:'knight', knight:'footman', siege:'footman' };
-  var TRAINABLE = ['footman','archer','knight','siege','sloop','galleon'];
+  // maps a unit type to the type that beats it (used by the CPU to pick counters)
+  var COUNTER_OF = { footman:'archer', knight:'footman', cavalry:'knight', archer:'cavalry' };
+  var TRAINABLE = ['footman','archer','cavalry','knight','siege','sloop','galleon'];
 
   var scenery = [];
   (function buildScenery(){
-    var seed = [ [140,60],[180,260],[640,55],[610,270],[400,50],[400,260],[260,230],[540,90] ];
+    var seed = [ [150,60],[150,270],[950,60],[950,270],[550,50],[550,280],[350,230],[750,230],[250,140],[850,140] ];
     for (var i=0;i<seed.length;i++){
       scenery.push({ x:seed[i][0], y:seed[i][1], r: 10 + (i%3)*4, type: i%2===0?'tree':'rock' });
     }
@@ -533,25 +549,50 @@
     return true;
   }
 
-  function attackEnemyBase(owner){
-    var count = 0;
+  function countIdle(owner, domain){
+    var n = 0;
     for (var i=0;i<state.units.length;i++){
       var u = state.units[i];
-      if (u.owner===owner && u.state==='idle'){ u.state='attacking'; count++; }
+      if (u.owner===owner && u.domain===domain && u.state==='idle') n++;
     }
-    if (owner==='player'){
-      if (count>0) logMsg('Your forces advance on the enemy base! (' + count + ' units)');
-      else logMsg('No idle units available to send.');
-    }
+    return n;
   }
 
-  function recallArmy(owner){
+  function attackEnemyBase(owner, domain){
     var count = 0;
     for (var i=0;i<state.units.length;i++){
       var u = state.units[i];
-      if (u.owner===owner && u.state==='attacking'){ u.state='idle'; count++; }
+      if (u.owner===owner && u.domain===domain && u.state==='idle'){ u.state='attacking'; count++; }
     }
-    if (owner==='player' && count>0) logMsg('Forces recalled home.');
+    if (owner==='player'){
+      if (count>0) logMsg('Your ' + domain + ' forces advance on the enemy base! (' + count + ' units)');
+      else logMsg('No idle ' + domain + ' units available to send.');
+    }
+    return count;
+  }
+
+  function holdCheckpoint(owner, domain){
+    var count = 0;
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.owner===owner && u.domain===domain && u.state==='idle'){ u.state='holding'; count++; }
+    }
+    if (owner==='player'){
+      var spot = domain==='sea' ? 'the fishing grounds' : 'the gold mine';
+      if (count>0) logMsg('Your ' + domain + ' forces move to seize ' + spot + '. (' + count + ' units)');
+      else logMsg('No idle ' + domain + ' units available to send.');
+    }
+    return count;
+  }
+
+  function recallForces(owner, domain){
+    var count = 0;
+    for (var i=0;i<state.units.length;i++){
+      var u = state.units[i];
+      if (u.owner===owner && u.domain===domain && (u.state==='attacking' || u.state==='holding')){ u.state='idle'; count++; }
+    }
+    if (owner==='player' && count>0) logMsg('Your ' + domain + ' forces are recalled home.');
+    return count;
   }
 
   function findNearestEnemy(unit, opts){
@@ -615,13 +656,18 @@
   function updateUnit(u, dt, now){
     if (u.hp <= 0) return;
     var def = UNIT_TYPES[u.type];
-    var homeAnchor = u.domain === 'sea' ? DOCK_POS[u.owner] : BASE_POS[u.owner];
+    var isAttacking = u.state === 'attacking';
+    var isHolding = u.state === 'holding';
+
+    var checkpoint = u.domain === 'sea' ? SEA_RESOURCE_POINT : RESOURCE_POINT;
+    var home = u.domain === 'sea' ? DOCK_POS[u.owner] : BASE_POS[u.owner];
+    var anchorPoint = isHolding ? checkpoint : home;
 
     var nearest;
-    if (u.state === 'idle'){
-      nearest = findNearestEnemy(u, { point: homeAnchor, r: DEFEND_RADIUS });
-    } else {
+    if (isAttacking){
       nearest = findNearestEnemy(u, { point: u, r: AGGRO_RADIUS });
+    } else {
+      nearest = findNearestEnemy(u, { point: anchorPoint, r: DEFEND_RADIUS });
     }
 
     if (nearest){
@@ -637,7 +683,7 @@
       return;
     }
 
-    if (u.state === 'attacking'){
+    if (isAttacking){
       var enemyOwner = otherOwner(u.owner);
       var basePos = BASE_POS[enemyOwner];
       if (u.domain === 'sea'){
@@ -656,6 +702,9 @@
           moveToward(u, tx, ty, dt);
         }
       }
+    } else if (isHolding){
+      var hx = checkpoint.x + u.offX*0.5, hy = checkpoint.y + u.offY*0.5;
+      moveToward(u, hx, hy, dt);
     } else {
       moveToward(u, u.rallyX, u.rallyY, dt);
     }
@@ -688,13 +737,8 @@
     return res;
   }
 
-  function totalArmyPower(owner){
-    var d = countArmyByDomain(owner);
-    return { count: d.land.count + d.sea.count, power: d.land.power + d.sea.power };
-  }
-
   function mostCommonType(owner){
-    var counts = { footman:0, archer:0, knight:0, siege:0 };
+    var counts = { footman:0, archer:0, cavalry:0, knight:0 };
     for (var i=0;i<state.units.length;i++){
       var u = state.units[i];
       if (u.owner===owner && u.hp>0 && counts.hasOwnProperty(u.type)) counts[u.type]++;
@@ -730,10 +774,19 @@
       else if (gold >= econCost(owner)) tryUpgradeEconomy(owner);
     }
 
-    var my = totalArmyPower('enemy');
-    var their = totalArmyPower('player');
-    if (my.count >= 5 && my.power > their.power*0.85 && Math.random() < diff.attackChance){
-      attackEnemyBase('enemy');
+    var armies = countArmyByDomain('enemy');
+    var theirArmies = countArmyByDomain('player');
+
+    if (armies.land.count >= 5 && armies.land.power > theirArmies.land.power*0.85 && Math.random() < diff.attackChance){
+      attackEnemyBase('enemy','land');
+    } else if (lastLandOcc !== 'enemy' && countIdle('enemy','land') >= 3 && Math.random() < diff.attackChance*0.7){
+      holdCheckpoint('enemy','land');
+    }
+
+    if (armies.sea.count >= 3 && armies.sea.power > theirArmies.sea.power*0.85 && Math.random() < diff.attackChance){
+      attackEnemyBase('enemy','sea');
+    } else if (lastSeaOcc !== 'enemy' && countIdle('enemy','sea') >= 2 && Math.random() < diff.attackChance*0.7){
+      holdCheckpoint('enemy','sea');
     }
   }
 
@@ -876,6 +929,10 @@
     if (u.state === 'attacking'){
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
       ctx.beginPath(); ctx.moveTo(u.x, u.y-18); ctx.lineTo(u.x-3, u.y-22); ctx.lineTo(u.x+3, u.y-22); ctx.closePath(); ctx.fill();
+    } else if (u.state === 'holding'){
+      ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(u.x-4, u.y-22, 8, 6);
     }
   }
 
@@ -925,6 +982,7 @@
     var full = state.queue.player.length >= 6;
     document.getElementById('btnFootman').disabled = state.gold.player < UNIT_TYPES.footman.cost || full;
     document.getElementById('btnArcher').disabled = state.gold.player < UNIT_TYPES.archer.cost || full;
+    document.getElementById('btnCavalry').disabled = state.gold.player < UNIT_TYPES.cavalry.cost || full;
     document.getElementById('btnKnight').disabled = state.gold.player < UNIT_TYPES.knight.cost || full;
     document.getElementById('btnSiege').disabled = state.gold.player < UNIT_TYPES.siege.cost || full;
     document.getElementById('btnSloop').disabled = state.gold.player < UNIT_TYPES.sloop.cost || full;
@@ -959,12 +1017,17 @@
   document.getElementById('btnEcon').addEventListener('click', function(){ tryUpgradeEconomy('player'); updateButtons(); });
   document.getElementById('btnFootman').addEventListener('click', function(){ tryTrain('player','footman'); updateButtons(); });
   document.getElementById('btnArcher').addEventListener('click', function(){ tryTrain('player','archer'); updateButtons(); });
+  document.getElementById('btnCavalry').addEventListener('click', function(){ tryTrain('player','cavalry'); updateButtons(); });
   document.getElementById('btnKnight').addEventListener('click', function(){ tryTrain('player','knight'); updateButtons(); });
   document.getElementById('btnSiege').addEventListener('click', function(){ tryTrain('player','siege'); updateButtons(); });
   document.getElementById('btnSloop').addEventListener('click', function(){ tryTrain('player','sloop'); updateButtons(); });
   document.getElementById('btnGalleon').addEventListener('click', function(){ tryTrain('player','galleon'); updateButtons(); });
-  document.getElementById('btnAttack').addEventListener('click', function(){ attackEnemyBase('player'); });
-  document.getElementById('btnRecall').addEventListener('click', function(){ recallArmy('player'); });
+  document.getElementById('btnAttackLand').addEventListener('click', function(){ attackEnemyBase('player','land'); });
+  document.getElementById('btnHoldGold').addEventListener('click', function(){ holdCheckpoint('player','land'); });
+  document.getElementById('btnRecallLand').addEventListener('click', function(){ recallForces('player','land'); });
+  document.getElementById('btnAttackSea').addEventListener('click', function(){ attackEnemyBase('player','sea'); });
+  document.getElementById('btnHoldFish').addEventListener('click', function(){ holdCheckpoint('player','sea'); });
+  document.getElementById('btnRecallSea').addEventListener('click', function(){ recallForces('player','sea'); });
   document.getElementById('btnNewGame').addEventListener('click', resetGame);
   document.getElementById('swxOverlayOk').addEventListener('click', hideOverlay);
   document.getElementById('swxOverlayClose').addEventListener('click', hideOverlay);
@@ -975,8 +1038,13 @@
     var scaleY = canvas.height / rect.height;
     var x = (e.clientX - rect.left) * scaleX;
     var y = (e.clientY - rect.top) * scaleY;
-    if (dist({x:x,y:y}, BASE_POS.enemy) < 60 || dist({x:x,y:y}, DOCK_POS.enemy) < 60) attackEnemyBase('player');
-    else if (dist({x:x,y:y}, BASE_POS.player) < 60 || dist({x:x,y:y}, DOCK_POS.player) < 60) recallArmy('player');
+    var p = {x:x,y:y};
+    if (dist(p, BASE_POS.enemy) < 60) attackEnemyBase('player','land');
+    else if (dist(p, DOCK_POS.enemy) < 60) attackEnemyBase('player','sea');
+    else if (dist(p, BASE_POS.player) < 60) recallForces('player','land');
+    else if (dist(p, DOCK_POS.player) < 60) recallForces('player','sea');
+    else if (dist(p, RESOURCE_POINT) < RESOURCE_POINT.r+10) holdCheckpoint('player','land');
+    else if (dist(p, SEA_RESOURCE_POINT) < SEA_RESOURCE_POINT.r+10) holdCheckpoint('player','sea');
   });
 
   // Window chrome interactivity
