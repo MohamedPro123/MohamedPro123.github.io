@@ -24,6 +24,68 @@
 </head>
 
 <title>Strategy Wars</title>
+
+</head>
+<body>
+
+  <header class="xp-navbar">
+    <div class="xp-navbar-container">
+        
+        <!-- Updated Start Button with Logo Image -->
+        <a href="/" class="xp-start-button">
+            <img src="Images/XP_Logo" alt="" class="start-logo">
+            <span class="start-text">start</span>
+        </a>
+        
+        <!-- Updated Navigation Links with Custom Image Icons -->
+        <nav class="xp-nav-tasks">
+            <a href="strategygame" class="xp-task-item">
+                <img src="Images/Windows-Media-Player-icon.png" alt="" class="task-custom-icon">
+                <span class="task-text">Features</span>
+            </a>
+            <a href="" class="xp-task-item">
+                <img src="Images/hWgjp1e.png" alt="" class="task-custom-icon">
+                <span class="task-text">Credits</span>
+            </a>
+            <a href="workinprogress" class="xp-task-item">
+                <img src="Images/0dJoZTG.png" alt="" class="task-custom-icon">
+                <span class="task-text">Contact</span>
+            </a>
+
+                        <a href="challenge" class="xp-task-item">
+                <img src="Images/RjMRqmK.png" alt="" class="task-custom-icon">
+                <span class="task-text">The Challenge</span>
+            </a>
+
+            <a href="https://visualtimer.com/timers/summer-countdown/" target="_blank" class="xp-task-item">
+                <img src="Images/QuKJ3Fu.png" alt="" class="task-custom-icon">
+         <span class="rgb-text">    <span class="task-text">Click me!</span></span>
+            </a>
+        </nav>
+        
+        <!-- Right Side Call-To-Action -->
+        <div class="xp-system-tray">
+            <a href="workinprogress" class="xp-cta-tray-btn">Get Started</a>
+        </div>
+        
+    </div>
+</header>
+
+
+<div id="isolated-segment">
+  
+
+
+    
+    <h2 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Strategy Game</h2>
+    <hr>
+    <p style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Want to test your skills? Try to win this strategy game I made. More features coming soon - check back in eventually! - M</p><br>
+       
+    </div>
+</span>
+
+<br><br>
+<br>
 <style>
   /* ============ Windows XP themed shell ============ */
   .swx-root, .swx-root * { box-sizing: border-box; }
@@ -32,8 +94,13 @@
     font-size: 11px;
     color: #000;
     max-width: 860px;
+    width: 100%;
     margin: 16px auto;
     user-select: none;
+    transition: max-width 0.15s ease;
+  }
+  .swx-root.swx-maximized {
+    max-width: 1200px;
   }
   .swx-window {
     border: 1px solid #0831D9;
@@ -140,11 +207,19 @@
     background: #fff;
   }
 
-  .swx-canvas-wrap { position: relative; border: 2px inset #c9c6ba; background:#000; }
-  canvas { display: block; background: #4b7a3a; }
+  .swx-canvas-wrap {
+    position: relative;
+    border: 2px inset #c9c6ba;
+    background: #14304f;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  canvas { display: block; width: 100%; height: auto; background: #4b7a3a; }
 
   .swx-statusbar {
     display: flex;
+    flex-wrap: wrap;
     border-top: 1px solid #ACA899;
     background: #ECE9D8;
     font-size: 11px;
@@ -158,7 +233,7 @@
   .swx-status-seg.grow { flex: 1; white-space: normal; overflow:hidden; text-overflow: ellipsis; }
   .swx-status-seg b { color: #003399; }
 
-  .swx-legend-row { display:flex; align-items:center; gap:5px; margin-bottom:3px; }
+  .swx-legend-row { display:flex; align-items:center; gap:5px; margin-bottom:3px; flex-wrap:wrap; }
   .swx-chip {
     display:inline-flex; align-items:center; justify-content:center;
     width:16px; height:16px; border-radius:3px; color:#fff; font-weight:bold; font-size:9px;
@@ -193,72 +268,12 @@
 </style>
 </head>
 <body>
-
-  <header class="xp-navbar">
-    <div class="xp-navbar-container">
-        
-        <!-- Updated Start Button with Logo Image -->
-        <a href="/" class="xp-start-button">
-            <img src="Images/XP_Logo" alt="" class="start-logo">
-            <span class="start-text">start</span>
-        </a>
-        
-        <!-- Updated Navigation Links with Custom Image Icons -->
-        <nav class="xp-nav-tasks">
-            <a href="strategygame" class="xp-task-item">
-                <img src="Images/Windows-Media-Player-icon.png" alt="" class="task-custom-icon">
-                <span class="task-text">Features</span>
-            </a>
-            <a href="" class="xp-task-item">
-                <img src="Images/hWgjp1e.png" alt="" class="task-custom-icon">
-                <span class="task-text">Credits</span>
-            </a>
-            <a href="workinprogress" class="xp-task-item">
-                <img src="Images/0dJoZTG.png" alt="" class="task-custom-icon">
-                <span class="task-text">Contact</span>
-            </a>
-
-                        <a href="challenge" class="xp-task-item">
-                <img src="Images/RjMRqmK.png" alt="" class="task-custom-icon">
-                <span class="task-text">The Challenge</span>
-            </a>
-
-            <a href="https://visualtimer.com/timers/summer-countdown/" target="_blank" class="xp-task-item">
-                <img src="Images/QuKJ3Fu.png" alt="" class="task-custom-icon">
-         <span class="rgb-text">    <span class="task-text">Click me!</span></span>
-            </a>
-        </nav>
-        
-        <!-- Right Side Call-To-Action -->
-        <div class="xp-system-tray">
-            <a href="workinprogress" class="xp-cta-tray-btn">Get Started</a>
-        </div>
-        
-    </div>
-</header>
-
-
-<div id="isolated-segment">
-  
-
-
-    
-    <h2 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Strategy Game</h2>
-    <hr>
-    <p style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Want to test your skills? Try to win this strategy game I made. More features coming soon - check back in eventually! - M</p><br>
-       
-    </div>
-</span>
-
-<br><br>
-<br>
-<div class="swx-root">
+<div class="swx-root" id="swxRoot">
   <div class="swx-window">
     <div class="swx-titlebar">
       <div class="swx-titlebar-icon"></div>
-      <div class="swx-titlebar-text">Strategy Wars.exe - Medieval Frontier Map</div>
+      <div class="swx-titlebar-text">Strategy Wars.exe - Coastal Frontier Map</div>
       <div class="swx-titlebar-btns">
-        <div class="swx-tbtn" id="swxMin" title="Minimize">_</div>
         <div class="swx-tbtn" id="swxMax" title="Maximize">&#9633;</div>
         <div class="swx-tbtn close" id="swxClose" title="Close">&times;</div>
       </div>
@@ -270,7 +285,7 @@
       <div class="swx-menuitem">Help</div>
     </div>
 
-    <div class="swx-tip">Tip: Balance gold between growing your Economy and training troops. Counter cycle: Footman beats Knight, Archer beats Footman, Knight beats Archer. Siege units wreck bases but are fragile in the open field. Hold the center gold deposit for bonus income.</div>
+    <div class="swx-tip">Tip: Split your gold between Economy, land Troops, and your Navy. Land: Footman beats Catapult, Catapult beats Knight... wait, actually: Footman beats Knight, Knight beats Archer, Archer beats Footman. At sea: Galleons crush Sloops but are slow to arrive; Sloops raid fast and cheap. Hold the gold mine and the fishing grounds for bonus income.</div>
 
     <div id="swxBody" class="swx-body">
       <!-- LEFT CONTROL COLUMN -->
@@ -284,7 +299,7 @@
         </div>
 
         <div class="swx-groupbox">
-          <legend>Train Troops</legend>
+          <legend>Train Land Troops</legend>
           <button class="swx-btn" id="btnFootman">&#9876; Footman <span class="cost">50g</span><small>Balanced. Strong vs Knights.</small></button>
           <button class="swx-btn" id="btnArcher">&#127993; Archer <span class="cost">70g</span><small>Ranged. Strong vs Footmen.</small></button>
           <button class="swx-btn" id="btnKnight">&#9820; Knight <span class="cost">110g</span><small>Fast. Strong vs Archers.</small></button>
@@ -292,9 +307,15 @@
         </div>
 
         <div class="swx-groupbox">
+          <legend>Build Navy</legend>
+          <button class="swx-btn" id="btnSloop">&#9973; Sloop <span class="cost">60g</span><small>Fast, cheap raider.</small></button>
+          <button class="swx-btn" id="btnGalleon">&#128674; Galleon <span class="cost">180g</span><small>Heavy. Crushes Sloops &amp; bases.</small></button>
+        </div>
+
+        <div class="swx-groupbox">
           <legend>Orders</legend>
           <button class="swx-btn" id="btnAttack">&#9698; Attack Enemy Base</button>
-          <button class="swx-btn" id="btnRecall">&#8634; Recall Army Home</button>
+          <button class="swx-btn" id="btnRecall">&#8634; Recall Forces Home</button>
         </div>
 
         <div class="swx-groupbox">
@@ -316,7 +337,7 @@
       <!-- MAP -->
       <div style="flex:1; min-width:420px;">
         <div class="swx-canvas-wrap">
-          <canvas id="swxCanvas" width="800" height="480"></canvas>
+          <canvas id="swxCanvas" width="800" height="520"></canvas>
           <div class="swx-overlay" id="swxOverlay">
             <div class="swx-msgbox">
               <div class="swx-titlebar">
@@ -336,19 +357,20 @@
         </div>
 
         <div class="swx-groupbox" style="margin-top:8px;">
-          <legend>Troop Cycle</legend>
+          <legend>Forces Guide</legend>
           <div class="swx-legend-row"><span class="swx-chip" style="background:#3a6dcf;">F</span> Footman &rarr; beats &rarr; <span class="swx-chip" style="background:#7a4fbf;">K</span> Knight &rarr; beats &rarr; <span class="swx-chip" style="background:#c0682e;">A</span> Archer &rarr; beats &rarr; Footman</div>
-          <div class="swx-legend-row"><span class="swx-chip" style="background:#555;">S</span> Siege: huge damage vs bases, takes extra damage from all units.</div>
+          <div class="swx-legend-row"><span class="swx-chip" style="background:#555;">C</span> Catapult: huge damage vs bases, fragile vs any unit.</div>
+          <div class="swx-legend-row"><span class="swx-chip" style="background:#2e8b8b;">S</span> Sloop: fast &amp; cheap raider &nbsp; <span class="swx-chip" style="background:#1f4e6e;">G</span> Galleon: slow, beats Sloops, devastating vs bases.</div>
         </div>
       </div>
     </div>
 
     <div class="swx-statusbar">
       <div class="swx-status-seg">Gold: <b id="statGold">200</b> (<span id="statIncome">+6</span>/s)</div>
-      <div class="swx-status-seg">Your Army: <b id="statArmy">0</b></div>
-      <div class="swx-status-seg">Enemy Army: <b id="statEnemyArmy">0</b></div>
+      <div class="swx-status-seg">You: <b id="statArmy">0L / 0N</b></div>
+      <div class="swx-status-seg">Enemy: <b id="statEnemyArmy">0L / 0N</b></div>
       <div class="swx-status-seg">Queue: <b id="statQueue">0/6</b></div>
-      <div class="swx-status-seg grow" id="statMsg">Welcome, commander. Build your economy or army!</div>
+      <div class="swx-status-seg grow" id="statMsg">Welcome, commander. Build your economy, army, or navy!</div>
     </div>
   </div>
 </div>
@@ -361,23 +383,32 @@
   var ctx = canvas.getContext('2d');
   var W = canvas.width, H = canvas.height;
 
+  // ---------- Terrain bands ----------
+  var LAND_Y_MIN = 20, LAND_Y_MAX = 300;
+  var SEA_Y_MIN = 328, SEA_Y_MAX = 498;
+
   // ---------- Unit definitions ----------
   var UNIT_TYPES = {
-    footman: { cost:50,  hp:50, dmg:8,  range:22,  speed:70,  atkCooldown:900,  trainTime:2200, label:'F', bonusVs:{ knight:1.5 } },
-    archer:  { cost:70,  hp:28, dmg:9,  range:120, speed:65,  atkCooldown:1000, trainTime:2800, label:'A', bonusVs:{ footman:1.6 } },
-    knight:  { cost:110, hp:90, dmg:11, range:24,  speed:130, atkCooldown:950,  trainTime:3400, label:'K', bonusVs:{ archer:1.8 } },
-    siege:   { cost:160, hp:50, dmg:6,  range:70,  speed:40,  atkCooldown:1600, trainTime:4200, label:'S', baseDmgMult:7, takesExtraDmg:1.6 }
+    footman: { cost:50,  hp:50, dmg:8,  range:22,  speed:70,  atkCooldown:900,  trainTime:2200, label:'F', domain:'land', bonusVs:{ knight:1.5 } },
+    archer:  { cost:70,  hp:28, dmg:9,  range:120, speed:65,  atkCooldown:1000, trainTime:2800, label:'A', domain:'land', bonusVs:{ footman:1.6 } },
+    knight:  { cost:110, hp:90, dmg:11, range:24,  speed:130, atkCooldown:950,  trainTime:3400, label:'K', domain:'land', bonusVs:{ archer:1.8 } },
+    siege:   { cost:160, hp:50, dmg:6,  range:70,  speed:40,  atkCooldown:1600, trainTime:4200, label:'C', domain:'land', baseDmgMult:7, takesExtraDmg:1.6 },
+    sloop:   { cost:60,  hp:35, dmg:7,  range:26,  speed:100, atkCooldown:850,  trainTime:2000, label:'S', domain:'sea',  baseDmgMult:2.5 },
+    galleon: { cost:180, hp:130,dmg:15, range:36,  speed:42,  atkCooldown:1400, trainTime:4600, label:'G', domain:'sea',  baseDmgMult:5.5, bonusVs:{ sloop:1.5 } }
   };
 
   var OWNER_COLOR = { player:'#2f5fce', enemy:'#c23b2b' };
   var OWNER_COLOR_DARK = { player:'#193a8c', enemy:'#7c1f14' };
 
-  var BASE_POS = { player:{x:55,y:240}, enemy:{x:745,y:240} };
+  var BASE_POS = { player:{x:55,y:165}, enemy:{x:745,y:165} };
+  var DOCK_POS = { player:{x:55,y:410}, enemy:{x:745,y:410} };
   var BASE_MAX_HP = 600;
-  var RESOURCE_POINT = { x:400, y:230, r:42 };
+  var RESOURCE_POINT = { x:400, y:165, r:42 };
+  var SEA_RESOURCE_POINT = { x:400, y:410, r:42 };
   var DEFEND_RADIUS = 170;
   var AGGRO_RADIUS = 150;
-  var OCCUPATION_BONUS = 5;
+  var OCCUPATION_BONUS_LAND = 5;
+  var OCCUPATION_BONUS_SEA = 4;
 
   var DIFFICULTY = {
     easy:   { aiInterval:3600, attackChance:0.13, incomeMod:-1 },
@@ -386,10 +417,11 @@
   };
 
   var COUNTER_OF = { footman:'archer', archer:'knight', knight:'footman', siege:'footman' };
+  var TRAINABLE = ['footman','archer','knight','siege','sloop','galleon'];
 
   var scenery = [];
   (function buildScenery(){
-    var seed = [ [140,80],[180,420],[640,70],[610,430],[400,60],[400,420],[260,340],[540,150] ];
+    var seed = [ [140,60],[180,260],[640,55],[610,270],[400,50],[400,260],[260,230],[540,90] ];
     for (var i=0;i<seed.length;i++){
       scenery.push({ x:seed[i][0], y:seed[i][1], r: 10 + (i%3)*4, type: i%2===0?'tree':'rock' });
     }
@@ -440,27 +472,30 @@
     return Math.sqrt(dx*dx+dy*dy);
   }
 
-  function rallyPoint(owner, idx){
-    var base = BASE_POS[owner];
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+  function rallyPoint(owner, idx, domain){
+    var base = domain === 'sea' ? DOCK_POS[owner] : BASE_POS[owner];
     var dir = owner === 'player' ? 1 : -1;
     var col = idx % 4, row = Math.floor(idx/4) % 4;
-    return { x: base.x + dir*(40 + col*16), y: base.y - 45 + row*22 };
+    return { x: base.x + dir*(40 + col*16), y: base.y - 40 + row*22 };
   }
 
   function spawnUnit(owner, type){
     var def = UNIT_TYPES[type];
-    var base = BASE_POS[owner];
-    var idx = state.units.filter(function(u){ return u.owner===owner; }).length;
-    var rp = rallyPoint(owner, idx);
-    var off = { x:(Math.random()-0.5)*70, y:(Math.random()-0.5)*90 };
+    var anchor = def.domain === 'sea' ? DOCK_POS[owner] : BASE_POS[owner];
+    var domainCount = state.units.filter(function(u){ return u.owner===owner && u.domain===def.domain; }).length;
+    var rp = rallyPoint(owner, domainCount, def.domain);
+    var off = { x:(Math.random()-0.5)*70, y:(Math.random()-0.5)*60 };
     state.units.push({
       id: uid++,
       owner: owner,
       type: type,
+      domain: def.domain,
       hp: def.hp,
       maxhp: def.hp,
-      x: base.x + (owner==='player'?18:-18) + (Math.random()-0.5)*10,
-      y: base.y + (Math.random()-0.5)*30,
+      x: anchor.x + (owner==='player'?18:-18) + (Math.random()-0.5)*10,
+      y: anchor.y + (Math.random()-0.5)*20,
       state: 'idle',
       lastAttack: 0,
       rallyX: rp.x,
@@ -477,7 +512,7 @@
       return false;
     }
     if (state.gold[owner] < def.cost) {
-      if (owner==='player') logMsg('Not enough gold to train ' + type + '.');
+      if (owner==='player') logMsg('Not enough gold to train that unit.');
       return false;
     }
     state.gold[owner] -= def.cost;
@@ -505,7 +540,7 @@
       if (u.owner===owner && u.state==='idle'){ u.state='attacking'; count++; }
     }
     if (owner==='player'){
-      if (count>0) logMsg('Your army marches on the enemy base! (' + count + ' units)');
+      if (count>0) logMsg('Your forces advance on the enemy base! (' + count + ' units)');
       else logMsg('No idle units available to send.');
     }
   }
@@ -516,18 +551,17 @@
       var u = state.units[i];
       if (u.owner===owner && u.state==='attacking'){ u.state='idle'; count++; }
     }
-    if (owner==='player' && count>0) logMsg('Army recalled home.');
+    if (owner==='player' && count>0) logMsg('Forces recalled home.');
   }
 
-  function findNearestEnemy(unit, withinRadiusOfPoint){
+  function findNearestEnemy(unit, opts){
     var best = null, bestD = Infinity;
     for (var i=0;i<state.units.length;i++){
       var e = state.units[i];
       if (e.owner === unit.owner || e.hp<=0) continue;
+      if (e.domain !== unit.domain) continue;
+      if (dist(opts.point, e) > opts.r) continue;
       var d = dist(unit, e);
-      if (withinRadiusOfPoint){
-        if (dist(withinRadiusOfPoint.point, e) > withinRadiusOfPoint.r) continue;
-      }
       if (d < bestD){ bestD = d; best = e; }
     }
     return best;
@@ -536,14 +570,19 @@
   function moveToward(u, tx, ty, dt){
     var dx = tx-u.x, dy = ty-u.y;
     var d = Math.sqrt(dx*dx+dy*dy);
-    if (d < 2) return;
-    var def = UNIT_TYPES[u.type];
-    var step = def.speed * dt;
-    if (step > d) step = d;
-    u.x += (dx/d)*step;
-    u.y += (dy/d)*step;
-    u.y = Math.max(20, Math.min(H-20, u.y));
-    u.x = Math.max(15, Math.min(W-15, u.x));
+    if (d >= 2){
+      var def = UNIT_TYPES[u.type];
+      var step = def.speed * dt;
+      if (step > d) step = d;
+      u.x += (dx/d)*step;
+      u.y += (dy/d)*step;
+    }
+    if (u.domain === 'sea'){
+      u.y = clamp(u.y, SEA_Y_MIN+15, SEA_Y_MAX-15);
+    } else {
+      u.y = clamp(u.y, LAND_Y_MIN+15, LAND_Y_MAX-15);
+    }
+    u.x = clamp(u.x, 15, W-15);
   }
 
   function applyDamage(attacker, defender, now){
@@ -576,10 +615,11 @@
   function updateUnit(u, dt, now){
     if (u.hp <= 0) return;
     var def = UNIT_TYPES[u.type];
+    var homeAnchor = u.domain === 'sea' ? DOCK_POS[u.owner] : BASE_POS[u.owner];
 
     var nearest;
     if (u.state === 'idle'){
-      nearest = findNearestEnemy(u, { point: BASE_POS[u.owner], r: DEFEND_RADIUS });
+      nearest = findNearestEnemy(u, { point: homeAnchor, r: DEFEND_RADIUS });
     } else {
       nearest = findNearestEnemy(u, { point: u, r: AGGRO_RADIUS });
     }
@@ -598,29 +638,35 @@
     }
 
     if (u.state === 'attacking'){
-      var basePos = BASE_POS[otherOwner(u.owner)];
-      var tx = basePos.x + u.offX, ty = basePos.y + u.offY;
-      var db = dist(u, { x: tx, y: ty });
-      var reachDist = def.range + 12;
-      if (dist(u, basePos) <= def.range + 20){
-        if (now - u.lastAttack >= def.atkCooldown){
-          damageBase(u, now);
-          u.lastAttack = now;
+      var enemyOwner = otherOwner(u.owner);
+      var basePos = BASE_POS[enemyOwner];
+      if (u.domain === 'sea'){
+        var targetX = basePos.x;
+        var seaCenterY = clamp((SEA_Y_MIN+SEA_Y_MAX)/2 + u.offY*0.4, SEA_Y_MIN+15, SEA_Y_MAX-15);
+        if (Math.abs(u.x - targetX) <= def.range + 18){
+          if (now - u.lastAttack >= def.atkCooldown){ damageBase(u, now); u.lastAttack = now; }
+        } else {
+          moveToward(u, targetX, seaCenterY, dt);
         }
       } else {
-        moveToward(u, tx, ty, dt);
+        var tx = basePos.x + u.offX, ty = basePos.y + u.offY;
+        if (dist(u, basePos) <= def.range + 20){
+          if (now - u.lastAttack >= def.atkCooldown){ damageBase(u, now); u.lastAttack = now; }
+        } else {
+          moveToward(u, tx, ty, dt);
+        }
       }
     } else {
       moveToward(u, u.rallyX, u.rallyY, dt);
     }
   }
 
-  function isOccupiedBy(){
+  function isOccupied(point, r, domain){
     var playerHere = false, enemyHere = false;
     for (var i=0;i<state.units.length;i++){
       var u = state.units[i];
-      if (u.hp<=0) continue;
-      if (dist(u, RESOURCE_POINT) <= RESOURCE_POINT.r){
+      if (u.hp<=0 || u.domain!==domain) continue;
+      if (dist(u, point) <= r){
         if (u.owner==='player') playerHere = true; else enemyHere = true;
       }
     }
@@ -629,23 +675,29 @@
     return null;
   }
 
-  function countArmyPower(owner){
-    var count=0, power=0;
+  function countArmyByDomain(owner){
+    var res = { land:{count:0,power:0}, sea:{count:0,power:0} };
     for (var i=0;i<state.units.length;i++){
       var u = state.units[i];
       if (u.owner===owner && u.hp>0){
-        count++;
-        power += u.hp * 0.3 + UNIT_TYPES[u.type].dmg;
+        var bucket = res[u.domain];
+        bucket.count++;
+        bucket.power += u.hp * 0.3 + UNIT_TYPES[u.type].dmg;
       }
     }
-    return { count:count, power:power };
+    return res;
+  }
+
+  function totalArmyPower(owner){
+    var d = countArmyByDomain(owner);
+    return { count: d.land.count + d.sea.count, power: d.land.power + d.sea.power };
   }
 
   function mostCommonType(owner){
     var counts = { footman:0, archer:0, knight:0, siege:0 };
     for (var i=0;i<state.units.length;i++){
       var u = state.units[i];
-      if (u.owner===owner && u.hp>0) counts[u.type]++;
+      if (u.owner===owner && u.hp>0 && counts.hasOwnProperty(u.type)) counts[u.type]++;
     }
     var best = null, bestN = -1;
     for (var t in counts){ if (counts[t] > bestN){ bestN = counts[t]; best = t; } }
@@ -659,20 +711,18 @@
     var gold = state.gold[owner];
 
     var playerCommon = mostCommonType('player');
-    var wantType = playerCommon && Math.random() < 0.55 ? COUNTER_OF[playerCommon] : null;
+    var wantType = (playerCommon && COUNTER_OF[playerCommon] && Math.random() < 0.5) ? COUNTER_OF[playerCommon] : null;
 
-    var doEcon = Math.random() < 0.35 && gold >= econCost(owner);
+    var doEcon = Math.random() < 0.32 && gold >= econCost(owner);
 
     if (doEcon){
       tryUpgradeEconomy(owner);
     } else {
-      var choices = ['footman','archer','knight','siege'];
-      var type = wantType || choices[Math.floor(Math.random()*choices.length)];
+      var type = wantType || TRAINABLE[Math.floor(Math.random()*TRAINABLE.length)];
       if (state.gold[owner] < UNIT_TYPES[type].cost){
-        // fall back to cheapest affordable
         var cheapest = null;
-        for (var i=0;i<choices.length;i++){
-          if (UNIT_TYPES[choices[i]].cost <= state.gold[owner]) { cheapest = choices[i]; break; }
+        for (var i=0;i<TRAINABLE.length;i++){
+          if (UNIT_TYPES[TRAINABLE[i]].cost <= state.gold[owner]) { cheapest = TRAINABLE[i]; break; }
         }
         type = cheapest;
       }
@@ -680,18 +730,23 @@
       else if (gold >= econCost(owner)) tryUpgradeEconomy(owner);
     }
 
-    var my = countArmyPower('enemy');
-    var their = countArmyPower('player');
+    var my = totalArmyPower('enemy');
+    var their = totalArmyPower('player');
     if (my.count >= 5 && my.power > their.power*0.85 && Math.random() < diff.attackChance){
       attackEnemyBase('enemy');
     }
   }
 
+  var lastLandOcc = null, lastSeaOcc = null;
+
   function update(dt, now){
     if (!state.gameOver){
-      var occ = isOccupiedBy();
-      state.gold.player += (state.baseIncome.player + (occ==='player'?OCCUPATION_BONUS:0)) * dt;
-      state.gold.enemy  += (state.baseIncome.enemy  + (occ==='enemy'?OCCUPATION_BONUS:0)) * dt;
+      var landOcc = isOccupied(RESOURCE_POINT, RESOURCE_POINT.r, 'land');
+      var seaOcc = isOccupied(SEA_RESOURCE_POINT, SEA_RESOURCE_POINT.r, 'sea');
+      lastLandOcc = landOcc; lastSeaOcc = seaOcc;
+
+      state.gold.player += (state.baseIncome.player + (landOcc==='player'?OCCUPATION_BONUS_LAND:0) + (seaOcc==='player'?OCCUPATION_BONUS_SEA:0)) * dt;
+      state.gold.enemy  += (state.baseIncome.enemy  + (landOcc==='enemy'?OCCUPATION_BONUS_LAND:0)  + (seaOcc==='enemy'?OCCUPATION_BONUS_SEA:0)) * dt;
 
       ['player','enemy'].forEach(function(owner){
         var q = state.queue[owner];
@@ -716,10 +771,8 @@
         aiTick();
       }
     }
-    updateHud(occOf());
+    updateHud();
   }
-
-  function occOf(){ return isOccupiedBy(); }
 
   // ---------- Rendering ----------
   function drawScenery(){
@@ -747,11 +800,9 @@
     ctx.strokeRect(p.x-24, p.y-30, 48, 60);
     ctx.fillStyle = OWNER_COLOR[owner];
     ctx.fillRect(p.x-18, p.y-22, 36, 44);
-    // flag
     ctx.strokeStyle = '#333'; ctx.beginPath(); ctx.moveTo(p.x, p.y-30); ctx.lineTo(p.x, p.y-46); ctx.stroke();
     ctx.fillStyle = OWNER_COLOR[owner];
     ctx.beginPath(); ctx.moveTo(p.x,p.y-46); ctx.lineTo(p.x+14,p.y-41); ctx.lineTo(p.x,p.y-36); ctx.closePath(); ctx.fill();
-    // hp bar
     var barW = 54;
     ctx.fillStyle = '#222'; ctx.fillRect(p.x-barW/2, p.y-56, barW, 6);
     ctx.fillStyle = hp/BASE_MAX_HP > 0.4 ? '#3fbf3f' : '#d94a2b';
@@ -762,70 +813,107 @@
     ctx.fillText(owner==='player' ? 'YOUR BASE' : 'ENEMY BASE', p.x, p.y+42);
   }
 
-  function drawResourcePoint(){
-    var occ = isOccupiedBy();
+  function drawDock(owner){
+    var p = DOCK_POS[owner];
+    var dir = owner==='player' ? 1 : -1;
+    ctx.fillStyle = '#6b4a2f';
+    ctx.fillRect(p.x-6, p.y-40, 12, 80);
+    for (var i=-1;i<=1;i++){
+      ctx.fillRect(p.x-4, p.y+i*26-2, dir*40, 5);
+    }
+    ctx.fillStyle = '#fff';
+    ctx.font = '9px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.fillText(owner==='player' ? 'YOUR DOCK' : 'ENEMY DOCK', p.x, p.y+56);
+  }
+
+  function drawResourcePoint(point, occ, label, fill){
     ctx.beginPath();
-    ctx.arc(RESOURCE_POINT.x, RESOURCE_POINT.y, RESOURCE_POINT.r, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(255,215,60,0.18)';
+    ctx.arc(point.x, point.y, point.r, 0, Math.PI*2);
+    ctx.fillStyle = fill;
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = occ==='player' ? OWNER_COLOR.player : occ==='enemy' ? OWNER_COLOR.enemy : 'rgba(200,200,200,0.7)';
+    ctx.strokeStyle = occ==='player' ? OWNER_COLOR.player : occ==='enemy' ? OWNER_COLOR.enemy : 'rgba(220,220,220,0.7)';
     ctx.setLineDash(occ ? [] : [5,4]);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = '#e0b020';
-    ctx.beginPath(); ctx.arc(RESOURCE_POINT.x, RESOURCE_POINT.y, 10, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = '#8a6a10'; ctx.lineWidth=1; ctx.stroke();
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 9px Tahoma';
     ctx.textAlign = 'center';
-    ctx.fillText('+' + OCCUPATION_BONUS, RESOURCE_POINT.x, RESOURCE_POINT.y+26);
+    ctx.fillText(label, point.x, point.y+3);
   }
 
   function drawUnit(u){
     var def = UNIT_TYPES[u.type];
-    ctx.beginPath();
-    ctx.arc(u.x, u.y, 8, 0, Math.PI*2);
-    ctx.fillStyle = OWNER_COLOR[u.owner];
-    ctx.fill();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = '#000';
-    ctx.stroke();
+    if (u.domain === 'sea'){
+      ctx.fillStyle = OWNER_COLOR[u.owner];
+      ctx.beginPath();
+      ctx.moveTo(u.x-9, u.y+5);
+      ctx.lineTo(u.x+9, u.y+5);
+      ctx.lineTo(u.x+5, u.y-4);
+      ctx.lineTo(u.x-5, u.y-4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.moveTo(u.x, u.y-4); ctx.lineTo(u.x, u.y-11); ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(u.x, u.y, 8, 0, Math.PI*2);
+      ctx.fillStyle = OWNER_COLOR[u.owner];
+      ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#000';
+      ctx.stroke();
+    }
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 8px Tahoma';
     ctx.textAlign = 'center';
     ctx.fillText(def.label, u.x, u.y+3);
     if (u.hp < u.maxhp){
-      ctx.fillStyle = '#222'; ctx.fillRect(u.x-9, u.y-15, 18, 3);
-      ctx.fillStyle = '#3fbf3f'; ctx.fillRect(u.x-8, u.y-14, 16*Math.max(0,u.hp/u.maxhp), 1.6);
+      ctx.fillStyle = '#222'; ctx.fillRect(u.x-9, u.y-16, 18, 3);
+      ctx.fillStyle = '#3fbf3f'; ctx.fillRect(u.x-8, u.y-15, 16*Math.max(0,u.hp/u.maxhp), 1.6);
     }
     if (u.state === 'attacking'){
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.beginPath(); ctx.moveTo(u.x, u.y-17); ctx.lineTo(u.x-3, u.y-21); ctx.lineTo(u.x+3, u.y-21); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(u.x, u.y-18); ctx.lineTo(u.x-3, u.y-22); ctx.lineTo(u.x+3, u.y-22); ctx.closePath(); ctx.fill();
     }
   }
 
   function render(){
     ctx.fillStyle = '#4b7a3a';
-    ctx.fillRect(0,0,W,H);
+    ctx.fillRect(0,0,W,LAND_Y_MAX+14);
+    var seaGrad = ctx.createLinearGradient(0,SEA_Y_MIN-10,0,SEA_Y_MAX+22);
+    seaGrad.addColorStop(0,'#2a6b96');
+    seaGrad.addColorStop(1,'#154a6e');
+    ctx.fillStyle = seaGrad;
+    ctx.fillRect(0,LAND_Y_MAX+14,W,H-(LAND_Y_MAX+14));
+    ctx.fillStyle = '#d9c58a';
+    ctx.fillRect(0,LAND_Y_MAX+14,W,10);
+
     ctx.strokeStyle = 'rgba(0,0,0,0.06)';
-    for (var gx=0; gx<W; gx+=40){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
-    for (var gy=0; gy<H; gy+=40){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+    for (var gx=0; gx<W; gx+=40){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,LAND_Y_MAX+14); ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    for (var gy=SEA_Y_MIN-10; gy<H; gy+=30){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
 
     drawScenery();
-    drawResourcePoint();
+    drawResourcePoint(RESOURCE_POINT, lastLandOcc, 'GOLD +'+OCCUPATION_BONUS_LAND, '#e0b020');
+    drawResourcePoint(SEA_RESOURCE_POINT, lastSeaOcc, 'FISH +'+OCCUPATION_BONUS_SEA, '#3fa0c9');
     drawBase('player');
     drawBase('enemy');
+    drawDock('player');
+    drawDock('enemy');
     for (var i=0;i<state.units.length;i++) drawUnit(state.units[i]);
   }
 
   // ---------- HUD ----------
-  function updateHud(occ){
+  function updateHud(){
     document.getElementById('statGold').textContent = Math.floor(state.gold.player);
-    var incomeShown = state.baseIncome.player + (occ==='player'?OCCUPATION_BONUS:0);
+    var incomeShown = state.baseIncome.player + (lastLandOcc==='player'?OCCUPATION_BONUS_LAND:0) + (lastSeaOcc==='player'?OCCUPATION_BONUS_SEA:0);
     document.getElementById('statIncome').textContent = '+' + incomeShown;
-    document.getElementById('statArmy').textContent = countArmyPower('player').count;
-    document.getElementById('statEnemyArmy').textContent = countArmyPower('enemy').count;
+    var you = countArmyByDomain('player');
+    var foe = countArmyByDomain('enemy');
+    document.getElementById('statArmy').textContent = you.land.count + 'L / ' + you.sea.count + 'N';
+    document.getElementById('statEnemyArmy').textContent = foe.land.count + 'L / ' + foe.sea.count + 'N';
     document.getElementById('statQueue').textContent = state.queue.player.length + '/6';
     document.getElementById('econCost').textContent = econCost('player') + 'g';
     document.getElementById('econLevelTxt').textContent = 'Level ' + state.econLevel.player + ' \u00b7 +' + state.baseIncome.player + 'g/s';
@@ -834,10 +922,13 @@
 
   function updateButtons(){
     document.getElementById('btnEcon').disabled = state.gold.player < econCost('player');
-    document.getElementById('btnFootman').disabled = state.gold.player < UNIT_TYPES.footman.cost || state.queue.player.length>=6;
-    document.getElementById('btnArcher').disabled = state.gold.player < UNIT_TYPES.archer.cost || state.queue.player.length>=6;
-    document.getElementById('btnKnight').disabled = state.gold.player < UNIT_TYPES.knight.cost || state.queue.player.length>=6;
-    document.getElementById('btnSiege').disabled = state.gold.player < UNIT_TYPES.siege.cost || state.queue.player.length>=6;
+    var full = state.queue.player.length >= 6;
+    document.getElementById('btnFootman').disabled = state.gold.player < UNIT_TYPES.footman.cost || full;
+    document.getElementById('btnArcher').disabled = state.gold.player < UNIT_TYPES.archer.cost || full;
+    document.getElementById('btnKnight').disabled = state.gold.player < UNIT_TYPES.knight.cost || full;
+    document.getElementById('btnSiege').disabled = state.gold.player < UNIT_TYPES.siege.cost || full;
+    document.getElementById('btnSloop').disabled = state.gold.player < UNIT_TYPES.sloop.cost || full;
+    document.getElementById('btnGalleon').disabled = state.gold.player < UNIT_TYPES.galleon.cost || full;
   }
 
   // ---------- Overlay (game over) ----------
@@ -870,6 +961,8 @@
   document.getElementById('btnArcher').addEventListener('click', function(){ tryTrain('player','archer'); updateButtons(); });
   document.getElementById('btnKnight').addEventListener('click', function(){ tryTrain('player','knight'); updateButtons(); });
   document.getElementById('btnSiege').addEventListener('click', function(){ tryTrain('player','siege'); updateButtons(); });
+  document.getElementById('btnSloop').addEventListener('click', function(){ tryTrain('player','sloop'); updateButtons(); });
+  document.getElementById('btnGalleon').addEventListener('click', function(){ tryTrain('player','galleon'); updateButtons(); });
   document.getElementById('btnAttack').addEventListener('click', function(){ attackEnemyBase('player'); });
   document.getElementById('btnRecall').addEventListener('click', function(){ recallArmy('player'); });
   document.getElementById('btnNewGame').addEventListener('click', resetGame);
@@ -882,23 +975,16 @@
     var scaleY = canvas.height / rect.height;
     var x = (e.clientX - rect.left) * scaleX;
     var y = (e.clientY - rect.top) * scaleY;
-    if (dist({x:x,y:y}, BASE_POS.enemy) < 60) attackEnemyBase('player');
-    else if (dist({x:x,y:y}, BASE_POS.player) < 60) recallArmy('player');
+    if (dist({x:x,y:y}, BASE_POS.enemy) < 60 || dist({x:x,y:y}, DOCK_POS.enemy) < 60) attackEnemyBase('player');
+    else if (dist({x:x,y:y}, BASE_POS.player) < 60 || dist({x:x,y:y}, DOCK_POS.player) < 60) recallArmy('player');
   });
 
   // Window chrome interactivity
-  var minimized = false, maximized = false;
-  document.getElementById('swxMin').addEventListener('click', function(){
-    var body = document.getElementById('swxBody');
-    var statusbar = document.querySelector('.swx-statusbar');
-    minimized = !minimized;
-    body.style.display = minimized ? 'none' : 'flex';
-    statusbar.style.display = minimized ? 'none' : 'flex';
-  });
+  var maximized = false;
   document.getElementById('swxMax').addEventListener('click', function(){
-    var root = document.querySelector('.swx-root');
+    var root = document.getElementById('swxRoot');
     maximized = !maximized;
-    root.style.maxWidth = maximized ? '100%' : '860px';
+    root.classList.toggle('swx-maximized', maximized);
   });
   document.getElementById('swxClose').addEventListener('click', function(){
     var proceed = window.confirm('Are you sure you want to close Strategy Wars?');
