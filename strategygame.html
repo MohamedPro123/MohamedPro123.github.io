@@ -1074,6 +1074,60 @@
 
 })();
 </script>
+
+
+    <hr><br>
+
+    select id="tz">
+        <option value="" disabled selected>Select Timezone</option>
+        <option value="America/New_York">America/New_York</option>
+        <option value="America/Chicago">America/Chicago</option>
+        <option value="America/Denver">America/Denver</option>
+        <option value="America/Los_Angeles">America/Los_Angeles</option>
+        <option value="Europe/London">Europe/London</option>
+        <option value="Europe/Paris">Europe/Paris</option>
+        <option value="Africa/Cairo">Africa/Cairo</option>
+        <option value="Asia/Riyadh">Asia/Riyadh</option>
+        <option value="Asia/Dubai">Asia/Dubai</option>
+        <option value="Asia/Karachi">Asia/Karachi</option>
+        <option value="Asia/Jakarta">Asia/Jakarta</option>
+        <option value="Australia/Sydney">Australia/Sydney</option>
+    </select>
+
+    <div id="status"></div>
+    <div id="date"></div>
+    <ul id="times"></ul>
+
+<script>
+    const tzSelect = document.getElementById('tz');
+    const statusDiv = document.getElementById('status');
+    const dateDiv = document.getElementById('date');
+    const timesList = document.getElementById('times');
+    const prayers = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+    tzSelect.addEventListener('change', function() {
+        statusDiv.textContent = "Loading...";
+        dateDiv.textContent = "";
+        timesList.innerHTML = "";
+
+        fetch(`https://aladhan.com{encodeURIComponent(this.value)}`)
+            .then(res => res.json())
+            .then(payload => {
+                statusDiv.textContent = "";
+                dateDiv.textContent = payload.data.date.readable;
+                
+                prayers.forEach(p => {
+                    const li = document.createElement('li');
+                    li.textContent = `${p}: ${payload.data.timings[p]}`;
+                    timesList.appendChild(li);
+                });
+            })
+            .catch(() => {
+                statusDiv.textContent = "Error loading times.";
+            });
+    });
+</script>
+
 </body>
     
 </html>
