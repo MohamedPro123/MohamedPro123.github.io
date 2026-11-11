@@ -9,20 +9,57 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, sans-serif;
-      background-color: #ffffff;
-      color: #222222;
+      background-color: #222222;
+      color: #fff;
       line-height: 1.6;
+        overflow-x: clip; /* Prevents sideways scrolling while letting the bottom glow show */
+        overflow-y: visible;
     }
 /* s */
     /* The black header bar at the top */
-    header {
-      background-color: #000000;
-      color: #ffffff;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+header {
+  position: relative;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+
+/* Diffused Multi-Color RGB Glow */
+header::before {
+  content: "";
+  position: absolute;
+  inset: -4px; /* Controls how far the glow extends past the edges */
+  background: linear-gradient(
+    90deg, 
+    #ff0055, 
+    #ff7700, 
+    #ffdd00, 
+    #00ff88, 
+    #00bbff, 
+    #aa00ff, 
+    #ff0055
+  );
+  background-size: 200% 200%;
+  filter: blur(20px); /* Makes the gradient look soft and diffused */
+  opacity: 0.85;
+  z-index: -1; /* Places the glow behind the black header */
+  animation: rgbShift 6s linear infinite; /* Smoothly cycles the colors */
+}
+
+/* Animation to move the RGB colors */
+@keyframes rgbShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
 
     header h1 {
       margin: 0;
@@ -109,21 +146,37 @@
   line-height: 1.4;
 }
 
+        a, a:link, a:visited, a:active {
+      color: #0000FF; /* Standard browser blue */
+    }
+
+    a:hover {
+            color: #5142f5; 
+    }
+
+    header h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+
   </style>
 </head>
 <body>
 
-  <header>
-    <h1><div style="font-family: 'Product Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px;">
-  <span style="color: #4285F4;">M</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">h</span><span style="color: #4285F4;">a</span><span style="color: #34A853;">m</span><span style="color: #EA4335;">e</span><span style="color: #FBBC05;">d</span>
-</div>
-</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="https://www.instagram.com/mohamedhshcs/">Contact</a>
-    </nav>
-  </header>
+<header>
+  <h1 style="font-family: 'Product Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px;">
+    Mohamed
+  </h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="https://www.instagram.com/mohamedhshcs/">Contact</a>
+  </nav>
+</header>
+
 
   <main>
     <h2>Welcome to my website!</h2>
