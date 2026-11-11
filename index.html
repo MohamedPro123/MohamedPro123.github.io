@@ -1,131 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows eXPerience</title> <!-- Website Title -->
-    <link rel="icon" type="image/png" href="https://i.imgur.com/T0xTpue.png"> <!-- Favicon -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Clean Website</title>
+  <style>
+    /* Removes default browser spacing so the black bar touches the edges */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #ffffff;
+      color: #222222;
+      line-height: 1.6;
+    }
 
-    <meta name="google-site-verification" content="0w1x-bmw4xbF6V5ssZ7JbDd8HiMZ-rZFypp4nvNYdhY" />
-    
-    <!-- Link your script.js file here -->
-    <script src="script.js" defer></script>
+    /* The black header bar at the top */
+    header {
+      background-color: #000000;
+      color: #ffffff;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
+    header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
 
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 0.95rem;
+    }
 
-<!-- CUSTOM STYLES -->
+    nav a:hover {
+      text-decoration: underline;
+    }
 
+    /* Keeps the main text centered and easy to read */
+    main {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
 
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
 
-    
-    <!-- Windows XP Framework Stylesheet -->
-    <link rel="stylesheet" href="https://unpkg.com/xp.css">
-    <!-- Your Custom Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+      .media-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  max-width: 450px;
+  font-family: system-ui, -apple-system, sans-serif;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #ffffff;
+  overflow: hidden; /* Keeps hover states inside the rounded corners */
+}
 
-    
-    
+.media-item {
+  display: flex;
+  align-items: center; /* Vertically centers the image with the text block */
+  gap: 16px; /* Adds clean space between the image and the text */
+  padding: 14px 18px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.media-item:last-child {
+  border-bottom: none;
+}
+
+/* Optional: Subtle hover effect for interactivity */
+.media-item:hover {
+  background-color: #f9fafb;
+}
+
+.item-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; /* Use 8px instead of 50% for rounded squares */
+  object-fit: cover; /* Prevents images from stretching or squishing */
+  flex-shrink: 0; /* Stops the image from shrinking if text gets too long */
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.item-subtext {
+  margin: 4px 0 0 0;
+  font-size: 0.875rem;
+  color: #6b7280; /* Muted gray for visual hierarchy */
+  line-height: 1.4;
+}
+
+  </style>
 </head>
-
-    <div id="isolated-segment">
-    <div class="blurred-overlay-card">
-    <!-- This style block lives here and only targets things inside #isolated-segment -->
-    <style>
-        #isolated-segment h2, #isolated-segment h3, #isolated-segment h4, 
-        #isolated-segment h5, #isolated-segment h1, #isolated-segment p, 
-        #isolated-segment li, #isolated-segment ul, #isolated-segment hr {
-            margin: 0;
-            margin-left: 20px;
-            margin-top: 5px;
-        }
-    </style>
-
-<span style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">
-    
 <body>
 
-<header class="xp-navbar">
-    <div class="xp-navbar-container">
-        
-        <!-- Updated Start Button with Logo Image -->
-        <a href="/" class="xp-start-button">
-            <img src="Images/XP_Logo" alt="" class="start-logo">
-            <span class="start-text">start</span>
-        </a>
-        
-        <!-- Updated Navigation Links with Custom Image Icons -->
-        <nav class="xp-nav-tasks">
-            <a href="strategygame" class="xp-task-item">
-                <img src="Images/Windows-Media-Player-icon.png" alt="" class="task-custom-icon">
-                <span class="task-text">Features</span>
-            </a>
-            <a href="" class="xp-task-item">
-                <img src="Images/hWgjp1e.png" alt="" class="task-custom-icon">
-                <span class="task-text">Credits</span>
-            </a>
-            <a href="workinprogress" class="xp-task-item">
-                <img src="Images/0dJoZTG.png" alt="" class="task-custom-icon">
-                <span class="task-text">Contact</span>
-            </a>
-
-                        <a href="challenge" class="xp-task-item">
-                <img src="Images/RjMRqmK.png" alt="" class="task-custom-icon">
-                <span class="task-text">The Challenge</span>
-            </a>
-
-            <a href="https://visualtimer.com/timers/summer-countdown/" target="_blank" class="xp-task-item">
-                <img src="Images/QuKJ3Fu.png" alt="" class="task-custom-icon">
-         <span class="rgb-text">    <span class="task-text">Click me!</span></span>
-            </a>
-        </nav>
-        
-        <!-- Right Side Call-To-Action -->
-        <div class="xp-system-tray">
-            <a href="workinprogress" class="xp-cta-tray-btn">Get Started</a>
-        </div>
-        
-    </div>
-</header>
-
-
-<div id="isolated-segment">
-  
-
-
-    
-    <h2 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">Welcome to My Website</h2>
-    <hr>
-    <p style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8);">This is the website of Mohamed, someone at <a href="https://www.google.com/search?q=hshcs&rlz=1C1UEAD_enUS1189US1189&oq=hshcs&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIQCAEQLhivARjHARiABBiOBTIGCAIQIxgnMgcIAxAAGIAEMggIBBAAGAoYHjIGCAUQABgeMgcIBhAAGO8FMgcIBxAAGO8FMgcICBAAGO8FMgcICRAAGO8F0gEHNTc3ajBqN6gCALACAA&sourceid=chrome&source=chrome.ob&ie=UTF-8" target="_blank" rel="noopener noreferrer">High School for Health Careers and Sciences</a> in <a href="https://www.google.com/search?q=new+york&rlz=1C1UEAD_enUS1189US1189&oq=new+york&gs_lcrp=EgZjaHJvbWUqBwgAEAAYjwIyBwgAEAAYjwIyDwgBEC4YQxixAxiABBiKBTIGCAIQIxgnMg0IAxAAGIMBGLEDGIAEMgwIBBAuGEMYgAQYigUyBggFEEUYPDIGCAYQRRg8MgYIBxBFGDzSAQc3NzNqMGo3qAIAsAIA&sourceid=chrome&source=chrome.ob&ie=UTF-8" target="_blank" rel="noopener noreferrer">Manhattan, New York</a>. You found it before I gave it to anyone, congratulations!</p> <p>It'll be a <i>while</i> before I get the ball rolling on this, but this will where my school repository will live.</p><br>
-
-    <p>10/21/26 - Well, it has been a while! But I have made a project for AP Seminar, so here is the link: <br> <a href="https://mohamedpro123.github.io/school-website/">The links</a> </p> 
-       
-    </div>
-</span>
-
-<br><br>
-<br>
-    
-      <div class="window" style="width: 325px">
-  <div class="title-bar">
-    <div class="title-bar-text">Credits</div>
-    <div class="title-bar-controls">
-      <button aria-label="Minimize"></button>
-      <button aria-label="Maximize"></button>
-      <button aria-label="Close"></button>
-    </div>
-  </div>
-  <div class="window-body">
-    <p>Created by Mohamed Abdalrahman using: <br> - HyperText Markup Language 5<br> - Javascript<br> - Deployed with Github Pages
-    <br><br>
-<img style="max-width: 100%; height: auto; border: 2px solid #808080;" src="https://i.imgur.com/HKRQbsJ.png"/>
- <br> <i>This is the outside of the GWEC Campus.</i>
-    </p>
-  </div>
+  <header>
+    <h1><div style="font-family: 'Product Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px;">
+  <span style="color: #4285F4;">G</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">o</span><span style="color: #4285F4;">g</span><span style="color: #34A853;">l</span><span style="color: #EA4335;">e</span>
 </div>
-<br>
+</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Welcome to my website!</h2>
+    <p>This is the website of Mohamed Abdalrahman, someone who goes to school at High School for Health Careers and Sciences in Manhattan.</p>
+    <p>I will mainly put my projects here. I think there will be some images, and some notes. Contact me at mohamedhshcs on Ig.  </p>
+    <p>My goal is to create a successful tech company, and sell it for a lot of money (Hundreds of millions).  </p>
+
+  <ul class="media-list" role="list">
+  <li class="media-item">
+    <img src="https://placeholder.com" alt="User avatar" class="item-img">
+    <div class="item-content">
+      <h4 class="item-title">Alex Morgan</h4>
+      <p class="item-subtext">Product Designer • San Francisco, CA</p>
+    </div>
+  </li>
+
+  <li class="media-item">
+    <img src="https://placeholder.com" alt="User avatar" class="item-img">
+    <div class="item-content">
+      <h4 class="item-title">Sam Rivera</h4>
+      <p class="item-subtext">Frontend Developer • Austin, TX</p>
+    </div>
+  </li>
+
+  <li class="media-item">
+    <img src="https://placeholder.com" alt="User avatar" class="item-img">
+    <div class="item-content">
+      <h4 class="item-title">Jordan Lee</h4>
+      <p class="item-subtext">UX Researcher • New York, NY</p>
+    </div>
+  </li>
+</ul>
+
+
+
+  </main>
+
 
     
-<audio id="welcome-sound" src="https://www.winhistory.de/more/winstart/mp3/winxp.mp3" volume="0"></audio>
 </body>
-    
 </html>
