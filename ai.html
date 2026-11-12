@@ -71,55 +71,70 @@
 
 <!-- 3. Frontend JavaScript -->
 <script>
-  const WORKER_URL = "https://gemini-chat-proxy.mappinggerman04.workers.dev";
 
-  const chatForm = document.getElementById("chat-form");
-  const chatInput = document.getElementById("chat-input");
-  const chatMessages = document.getElementById("chat-messages");
-  const chatSend = document.getElementById("chat-send");
+const WORKER_URL =
+  "https://gemini-chat-proxy.mappinggerman04.workers.dev";
 
-  function appendMessage(text, sender) {
-    const div = document.createElement("div");
-    div.className = `msg ${sender}`;
-    div.textContent = text;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    return div;
-  }
+const chatForm = document.getElementById("chat-form");
+const chatInput = document.getElementById("chat-input");
+const chatMessages = document.getElementById("chat-messages");
+const chatSend = document.getElementById("chat-send");
 
-  chatForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const message = chatInput.value.trim();
-    if (!message) return;
+function appendMessage(text, sender) {
+  const div = document.createElement("div");
 
-    // Show user message and disable input while waiting
-    appendMessage(message, "user");
-    chatInput.value = "";
-    chatInput.disabled = true;
-    chatSend.disabled = true;
+  div.className = `msg ${sender}`;
+  div.textContent = text;
 
-    const loadingBubble = appendMessage("Thinking...", "bot");
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    try {
-      const response = await fetch(WORKER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
-      });
+  return div;
+}
 
-      const data = await response.json();
+chatForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-      if (response.ok) {
-        loadingBubble.textContent = data.reply;
-      } else {
-        loadingBubble.textContent = "Error: " + (data.error || "Could not reach Gemini.");
-      }
-    } catch (error) {
-      loadingBubble.textContent = "Network error. Check your Worker URL or CORS settings.";
-    } finally {
-      chatInput.disabled = false;
-      chatSend.disabled = false;
-      chatInput.focus();
+  const message = chatInput.value.trim();
+
+  if (!message) return;
+
+  appendMessage(message, "user");
+
+  chatInput.value = "";
+  chatInput.disabled = true;
+  chatSend.disabled = true;
+
+  const loadingBubble = appendMessage("Thinking...", "bot");
+
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || `Server error: ${response.status}`);
     }
-  });
+
+    loadingBubble.textContent = data.reply || "No response received.";
+
+  } catch (error) {
+    console.error("Chat API error:", error);
+
+    loadingBubble.textContent =
+      "Error: " + error.message;
+
+  } finally {
+    chatInput.disabled = false;
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
+});
+
 </script>
