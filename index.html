@@ -144,12 +144,14 @@ header::before {
 }
 
 .item-img {
-  width: 96px;
-  height: 48px;
-  border-radius: 75%; /* Use 8px instead of 50% for rounded squares */
-  object-fit: cover; /* Prevents images from stretching or squishing */
-  flex-shrink: 0; /* Stops the image from shrinking if text gets too long */
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  corner-shape: squircle;
+  object-fit: cover;
+  flex-shrink: 0;
 }
+
 
 .item-content {
   display: flex;
@@ -193,13 +195,15 @@ a:hover {
   background: rgba(255, 255, 255, 0.1); 
   
   /* 2. The blur effect */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px); /* Safari support */
   
   /* 3. Subtle border and shadow for depth */
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+  padding: 24px
 }
 
 
