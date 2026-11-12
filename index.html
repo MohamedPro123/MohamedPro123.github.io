@@ -72,6 +72,84 @@ header::before {
 }
 
 
+
+
+
+
+blockquote.rgb-glow {
+  position: relative;
+  margin: 2rem 0;
+  padding: 1.25rem 1.75rem;
+  background-color: #0f172a; /* Dark background makes the glow pop */
+  color: #f8fafc;
+  font-style: italic;
+  line-height: 1.6;
+  border-radius: 0 8px 8px 0;
+  isolation: isolate; /* Keeps z-index: -1 safely behind the box without hiding behind the page body */
+}
+
+blockquote.rgb-glow p {
+  margin: 0;
+}
+
+/* Shared gradient and animation for both the bar and the glow */
+blockquote.rgb-glow::before,
+blockquote.rgb-glow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg, 
+    #ff0055, 
+    #ff7700, 
+    #ffdd00, 
+    #00ff88, 
+    #00bbff, 
+    #aa00ff, 
+    #ff0055
+  );
+  background-size: 200% 200%;
+  animation: rgbVerticalShift 6s linear infinite;
+}
+
+/* The crisp front vertical bar */
+blockquote.rgb-glow::before {
+  z-index: 1;
+}
+
+/* The diffused glow behind the bar */
+blockquote.rgb-glow::after {
+  left: -2px;
+  width: 8px; /* Slightly wider so the blur has substance */
+  filter: blur(14px);
+  opacity: 0.9;
+  z-index: -1;
+}
+
+/* Animation to shift colors vertically */
+@keyframes rgbVerticalShift {
+  0% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 50% 200%;
+  }
+}
+
+
+
+
+
+
+
+
+    
+
+
     header h1 {
       margin: 0;
       font-size: 1.25rem;
@@ -88,6 +166,14 @@ header::before {
       text-decoration: underline;
     }
 
+
+
+
+
+
+
+
+    
     /* Keeps the main text centered and easy to read */
     main {
       max-width: 700px;
@@ -308,9 +394,15 @@ a:hover {
 
       <div class="frosted-card">
     <h2>Welcome to my website!</h2>
-    <p>This is the website of Mohamed Abdalrahman, someone who goes to school at High School for Health Careers and Sciences in Manhattan.</p>
+    <p>This is the website of Mohamed Abdalrahman, someone who goes to school at <a href="https://www.google.com/search?q=high+school+for+health+careers+and+sciences&rlz=1C1GCEA_enUS1229US1229&oq=high+school+for+health+careers+and+sciences&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRg90gEINTI3NWowajmoAgCwAgE&sourceid=chrome&source=chrome.ob&ie=UTF-8">High School for Health Careers and Sciences</a> 
+      in <a href="https://www.google.com/search?q=new+york&rlz=1C1GCEA_enUS1229US1229&oq=new+york&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRg8MgYIAhBFGDzSAQgyNDg2ajBqOagCALACAA&sourceid=chrome&source=chrome.ob&ie=UTF-8">New York.</a></p>
     <p>I will mainly put my projects here. I think there will be some images, and some notes. You can contact me <a href="https://www.instagram.com/mohamedhshcs/">here.</a></p>
-    <p>My goal is to create a successful tech company, and sell it for a lot of money (Hundreds of millions).  </p>
+    <p>My goal is to create a successful tech company, and sell it for a lot of money (hundreds of millions). They say you're more likely to achieve something if you write it down, so let's hope so!  </p>
+
+            <p>My goal is to create a successful tech company, and sell it for a lot of money (hundreds of millions). They say you're more likely to achieve something if you write it down, so let's hope so!  </p>
+
+             <b><p><blockquote>There is no god but Allah; and the Prophet is the Messenger of Allah.</blockquote></p></b>
+        
       </div>
 
 <h2 id="my-projects">My Projects</h2>
@@ -320,7 +412,7 @@ a:hover {
     <img src="https://camo.githubusercontent.com/2941b93218303f29015abee6d3f89ceb6137efb2db92ffeab3239dcb9fce89de/68747470733a2f2f692e706f7374696d672e63632f6a355a50424348422f49636f6e2e706e67" alt=" " class="item-img">
     <div class="item-content">
       <h4 class="item-title"><a href="https://github.com/MohamedPro123/PrayerTimesNX">PrayerTimesNX</a></h4>
-      <p class="item-subtext">App to check the Islamic Prayer Times on a Nintendo Switch • Subhanallah</p>
+      <p class="item-subtext">App to check the Islamic Prayer Times on a Nintendo Switch • Only app on the console that does this</p>
     </div>
   </li>
 
