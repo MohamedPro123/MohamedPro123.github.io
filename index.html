@@ -80,68 +80,30 @@ blockquote {
   position: relative;
   margin: 1.5rem 0;
   padding: 1.25rem 1.75rem;
-  background: rgba(15, 23, 42, 0.55); /* Translucent dark glass */
+  background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(8px);
   color: #f8fafc;
   border-radius: 0 8px 8px 0;
 }
 
-/* Muted, pastel-neon gradient */
-blockquote::before,
-blockquote::after {
+blockquote::before {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  width: 3px; /* Slightly thinner for elegance */
+  width: 3px;
   border-radius: 3px;
-  background: linear-gradient(
-    180deg,
-    #f43f5e,
-    #f59e0b,
-    #10b981,
-    #38bdf8,
-    #a855f7,
-    #f43f5e
-  );
-  background-size: 200% 200%;
-  animation: rgbVerticalShift 12s linear infinite; /* Slower, calmer movement */
-  opacity: 0.7; /* Tones down the intensity at rest */
-  transition: opacity 0.3s ease;
-}
-
-/* Stagger each card's animation so they don't match identically */
-blockquote:nth-of-type(2)::before,
-blockquote:nth-of-type(2)::after {
-  animation-delay: -4s;
-}
-
-blockquote:nth-of-type(3)::before,
-blockquote:nth-of-type(3)::after {
-  animation-delay: -8s;
-}
-
-/* Subtle glow only at rest, brighter on hover */
-blockquote::after {
-  left: -1px;
-  width: 6px;
-  filter: blur(10px);
-  opacity: 0.35;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+  transition: all 0.3s ease;
 }
 
 blockquote:hover::before {
-  opacity: 1;
+  background: #ffffff;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
 }
 
-blockquote:hover::after {
-  opacity: 0.85;
-}
-
-@keyframes rgbVerticalShift {
-  0% { background-position: 50% 0%; }
-  100% { background-position: 50% 200%; }
-}
 
 
 
@@ -470,9 +432,9 @@ a:hover {
 
         <h3>Favorite Quotes</h3>
 
-                     <b><p><blockquote class="rgb-glow">“You can never cross the ocean unless you have the courage to lose sight of the shore.” — Unknown</blockquote></p></b>
-                     <b><p><blockquote class="rgb-glow">“The more difficult the victory, the greater the happiness in winning.” — Pelé</blockquote></p></b>
-                     <b><p><blockquote class="rgb-glow">“There is no god but Allah; and the Prophet is the Messenger of Allah.” — Shahada</blockquote></p></b>
+                     <b><p><blockquote>“You can never cross the ocean unless you have the courage to lose sight of the shore.” — Unknown</blockquote></p></b>
+                     <b><p><blockquote>“The more difficult the victory, the greater the happiness in winning.” — Pelé</blockquote></p></b>
+                     <b><p><blockquote>“There is no god but Allah; and the Prophet is the Messenger of Allah.” — Shahada</blockquote></p></b>
         
       </div>
 
