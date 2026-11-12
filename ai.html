@@ -227,123 +227,131 @@
   </div>
 
   <script>
-    // IMPORTANT: Replace this with your NEW Cloudflare Worker URL.
-    const WORKER_URL =
-      "https://gemini-chat.mappinggerman04.workers.dev";
+ 
+const WORKER_URL =
+  "https://gemini-chat.mappinggerman04.workers.dev";
 
-    const chatForm = document.getElementById("chat-form");
-    const chatInput = document.getElementById("chat-input");
-    const chatMessages = document.getElementById("chat-messages");
-    const chatSend = document.getElementById("chat-send");
-    const newChat = document.getElementById("new-chat");
+const chatForm = document.getElementById("chat-form");
+const chatInput = document.getElementById("chat-input");
+const chatMessages = document.getElementById("chat-messages");
+const chatSend = document.getElementById("chat-send");
+const newChat = document.getElementById("new-chat");
 
-    // Stores the conversation while the page remains open.
-    let history = [];
+let history = [];
 
-    function addMessage(text, sender) {
-      const bubble = document.createElement("div");
+function addMessage(text, sender) {
+  const bubble = document.createElement("div");
 
-      bubble.className = `msg ${sender}`;
-      bubble.textContent = text;
+  bubble.className = `msg ${sender}`;
+  bubble.textContent = text;
 
-      chatMessages.appendChild(bubble);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+  chatMessages.appendChild(bubble);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      return bubble;
+  return bubble;
+}
+
+// New conversation
+newChat.addEventListener("click", () => {
+  history = [];
+  chatMessages.innerHTML = "";
+
+  addMessage(
+    "New conversation started. What would you like to know?",
+    "bot"
+  );
+});
+
+// Send message
+chatForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const message = chatInput.value.trim();
+
+  if (!message || chatSend.disabled) return;
+
+  // Save the previous history in case the request fails.
+  const previousHistory = [...history];
+
+  // Display user message.
+  addMessage(message, "user");
+
+  history.push({
+    role: "user",
+    parts: [{ text: message }]
+  });
+
+  // Keep conversation history manageable.
+  history = history.slice(-12);
+
+  chatInput.value = "";
+  chatInput.disabled = true;
+  chatSend.disabled = true;
+
+  const loading = addMessage("Thinking...", "bot");
+
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: history
+      })
+    });
+
+    const responseText = await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        `Invalid server response (${response.status}): ` +
+        responseText.slice(0, 200)
+      );
     }
 
-    newChat.addEventListener("click", () => {
-      history = [];
-
-      chatMessages.innerHTML = "";
-
-      addMessage(
-        "New conversation started. What would you like to know?",
-        "bot"
+    if (!response.ok) {
+      throw new Error(
+        data.error || `Server error: ${response.status}`
       );
+    }
+
+    if (typeof data.reply !== "string" || !data.reply.trim()) {
+      throw new Error("Gemini returned an empty response.");
+    }
+
+    // Display Gemini's answer.
+    loading.textContent = data.reply;
+
+    // Save the AI response.
+    history.push({
+      role: "model",
+      parts: [{ text: data.reply }]
     });
 
-    chatForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    // Keep only the latest 12 messages.
+    history = history.slice(-12);
 
-      const message = chatInput.value.trim();
+  } catch (error) {
+    console.error("Gemini error:", error);
 
-      if (!message || chatSend.disabled) return;
+    loading.textContent = "Error: " + error.message;
+    loading.classList.add("error");
 
-      // Display user's message.
-      addMessage(message, "user");
+    // Restore the previous conversation.
+    history = previousHistory;
 
-      // Add message to conversation history.
-      history.push({
-        role: "user",
-        parts: [{ text: message }]
-      });
-
-      chatInput.value = "";
-      chatInput.disabled = true;
-      chatSend.disabled = true;
-
-      const loading = addMessage("Thinking...", "bot");
-
-      try {
-        const response = await fetch(WORKER_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    contents: history.slice(-12)
-  })
+  } finally {
+    chatInput.disabled = false;
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
 });
 
-const responseText = await response.text();
-
-let data;
-
-try {
-  data = JSON.parse(responseText);
-} catch {
-  throw new Error(
-    `Invalid server response (${response.status}): ` +
-    responseText.slice(0, 200)
-  );
-}
-
-if (!response.ok) {
-  throw new Error(
-    data.error || `Server error: ${response.status}`
-  );
-}
-
-if (!data.reply) {
-  throw new Error("Gemini returned an empty response.");
-}
-
-// Display the answer.
-loading.textContent = data.reply;
-
-// Save Gemini's response.
-history.push({
-  role: "model",
-  parts: [{ text: data.reply }]
-});
-        });
-
-      } catch (error) {
-        console.error("Gemini error:", error);
-
-        loading.textContent = "Error: " + error.message;
-        loading.classList.add("error");
-
-        // Remove failed user message from API history.
-        history.pop();
-
-      } finally {
-        chatInput.disabled = false;
-        chatSend.disabled = false;
-        chatInput.focus();
-      }
-    });
   </script>
 
 </body>
