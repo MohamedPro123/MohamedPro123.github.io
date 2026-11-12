@@ -45,25 +45,38 @@ header {
 }
 
 /* Diffused Multi-Color RGB Glow */
+/* Desktop: keep your original color distribution */
 header::before {
-  content: "";
-  position: absolute;
-  inset: 0; /* Keeps bounds tight so blur doesn't bleed horizontally */
   background: linear-gradient(
-    90deg, 
-    #ff0055, 
-    #ff7700, 
-    #ffdd00, 
-    #00ff88, 
-    #00bbff, 
-    #aa00ff, 
+    90deg,
+    #ff0055,
+    #ff7700,
+    #ffdd00,
+    #00ff88,
+    #00bbff,
+    #aa00ff,
     #ff0055
   );
+
   background-size: 200% 200%;
-  filter: blur(18px);
-  opacity: 0.85;
-  z-index: -1;
-  animation: rgbShift 6s linear infinite;
+}
+
+/* Mobile: show fewer colors at once */
+@media (max-width: 768px) {
+  header::before {
+    background: linear-gradient(
+      90deg,
+      #ff0055 0%,
+      #ff7700 8%,
+      #ffdd00 16%,
+      #00ff88 24%,
+      #00bbff 32%,
+      #aa00ff 40%,
+      #ff0055 48%
+    );
+
+    background-size: 200% 200%;
+  }
 }
 
 /* Keep social icons together in a clean row */
