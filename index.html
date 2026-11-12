@@ -40,30 +40,37 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
   z-index: 1;
+  /* Keeps the wider sliding glow from causing horizontal scrolling */
+  overflow-x: clip; 
 }
 
-/* Diffused Multi-Color RGB Glow */
 header::before {
   content: "";
   position: absolute;
-  inset: 0; /* Keeps bounds tight so blur doesn't bleed horizontally */
+  top: -4px;
+  bottom: -4px;
+  left: 0;
+  width: 200%; /* Twice as wide as the header */
   background: linear-gradient(
     90deg, 
-    #ff0055, 
-    #ff7700, 
-    #ffdd00, 
-    #00ff88, 
-    #00bbff, 
-    #aa00ff, 
-    #ff0055
+    #ff0055, #ff7700, #ffdd00, #00ff88, #00bbff, #aa00ff, 
+    #ff0055, #ff7700, #ffdd00, #00ff88, #00bbff, #aa00ff, #ff0055
   );
-  background-size: 200% 200%;
-  filter: blur(18px);
+  filter: blur(20px);
   opacity: 0.85;
   z-index: -1;
+  will-change: transform; /* Optimizes performance for mobile GPUs */
   animation: rgbShift 6s linear infinite;
+}
+
+@keyframes rgbShift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* Shifts exactly half its 200% width */
+  }
 }
 
 /* Keep social icons together in a clean row */
@@ -444,11 +451,8 @@ a:hover {
     /* 1. Slow down the cycle from 6s to 14s */
     animation-duration: 16s !important;
 
-    /* 2. Stretch the gradient wider so only 2-3 colors show at a time */
-    background-size: 400% 400% !important;
-
     /* 3. Lower opacity and tighten blur so text stays easy to read */
-    opacity: 0.65 !important;
+    opacity: 0.75 !important;
     filter: blur(12px) !important;
   }
 }
