@@ -144,7 +144,7 @@ header::before {
 }
 
 .item-img {
-  width: 48px;
+  width: 96px;
   height: 48px;
   border-radius: 75%; /* Use 8px instead of 50% for rounded squares */
   object-fit: cover; /* Prevents images from stretching or squishing */
@@ -188,6 +188,20 @@ a:hover {
   margin: 0;
 }
 
+    .frosted-card {
+  /* 1. Semi-transparent background */
+  background: rgba(255, 255, 255, 0.1); 
+  
+  /* 2. The blur effect */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  
+  /* 3. Subtle border and shadow for depth */
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
 
   </style>
 </head>
@@ -198,18 +212,22 @@ a:hover {
     <b>Mohamed's Website</b>
   </h1>
   <nav>
-    <a href="#about">About</a>
-    <a href="#work">Work</a>
-    <a href="https://www.instagram.com/mohamedhshcs/">Contact</a>
+    <i><a href="#about">About</a></i>
+    <i><a href="#work">Work</a></i>
+    <i><a href="https://www.instagram.com/mohamedhshcs/">Contact</a></i>
   </nav>
 </header>
 
 
   <main>
+
+
+      <div class="frosted-card">
     <h2>Welcome to my website!</h2>
     <p>This is the website of Mohamed Abdalrahman, someone who goes to school at High School for Health Careers and Sciences in Manhattan.</p>
     <p>I will mainly put my projects here. I think there will be some images, and some notes. You can contact me <a href="https://www.instagram.com/mohamedhshcs/">here.</a></p>
     <p>My goal is to create a successful tech company, and sell it for a lot of money (Hundreds of millions).  </p>
+      </div>
 
 <h2><u>My Projects</u></h2>
     
