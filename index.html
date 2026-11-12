@@ -439,20 +439,18 @@ a:hover {
     padding: 0 !important;
   }
 }
-@media (max-width: 768px) {
+
+    /* Disable RGB ON MOBILE */
+    @media (max-width: 768px) {
+  header {
+    background: #000000 !important;
+  }
+
   header::before {
-    /* 1. Slow down the cycle from 6s to 14s */
-    animation-duration: 16s !important;
-
-    /* 2. Stretch the gradient wider so only 2-3 colors show at a time */
-    background-size: 200% 200% !important;
-
-    /* 3. Lower opacity and tighten blur so text stays easy to read */
-    opacity: 0.65 !important;
-    filter: blur(12px) !important;
+    display: none !important;
+    animation: none !important;
   }
 }
-
     
 
 
