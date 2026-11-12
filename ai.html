@@ -298,8 +298,28 @@
           })
         });
 
-        const data = await response.json();
+const responseText = await response.text();
 
+let data;
+
+try {
+  data = JSON.parse(responseText);
+} catch {
+  throw new Error(
+    `Server returned an invalid response (HTTP ${response.status}): ` +
+    responseText.slice(0, 250)
+  );
+}
+
+if (!response.ok) {
+  throw new Error(data.error || `Request failed (${response.status}).`);
+}
+
+if (!data.reply) {
+  throw new Error("The AI returned an empty response.");
+}
+
+return data.reply;
         if (!response.ok) {
           throw new Error(
             data.error || `Server error: ${response.status}`
