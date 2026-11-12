@@ -274,6 +274,16 @@ a:hover {
      animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* 1. Define what the animation actually does */
+@keyframes pulse-glow {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(56, 189, 248, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
+  }
+}
+    
     header h1 {
   position: absolute;
   left: 50%;
