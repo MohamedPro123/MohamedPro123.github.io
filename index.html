@@ -76,68 +76,71 @@ header::before {
 
 
 
-blockquote.rgb-glow {
+blockquote {
   position: relative;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   padding: 1.25rem 1.75rem;
-  background-color: #0000001A; /* Dark background makes the glow pop */
+  background: rgba(15, 23, 42, 0.55); /* Translucent dark glass */
+  backdrop-filter: blur(8px);
   color: #f8fafc;
-  font-style: italic;
-  line-height: 1.6;
   border-radius: 0 8px 8px 0;
-  isolation: isolate; /* Keeps z-index: -1 safely behind the box without hiding behind the page body */
 }
 
-blockquote.rgb-glow p {
-  margin: 0;
-}
-
-/* Shared gradient and animation for both the bar and the glow */
-blockquote.rgb-glow::before,
-blockquote.rgb-glow::after {
+/* Muted, pastel-neon gradient */
+blockquote::before,
+blockquote::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  width: 4px;
-  border-radius: 4px;
+  width: 3px; /* Slightly thinner for elegance */
+  border-radius: 3px;
   background: linear-gradient(
-    180deg, 
-    #ff0055, 
-    #ff7700, 
-    #ffdd00, 
-    #00ff88, 
-    #00bbff, 
-    #aa00ff, 
-    #ff0055
+    180deg,
+    #f43f5e,
+    #f59e0b,
+    #10b981,
+    #38bdf8,
+    #a855f7,
+    #f43f5e
   );
   background-size: 200% 200%;
-  animation: rgbVerticalShift 6s linear infinite;
+  animation: rgbVerticalShift 12s linear infinite; /* Slower, calmer movement */
+  opacity: 0.7; /* Tones down the intensity at rest */
+  transition: opacity 0.3s ease;
 }
 
-/* The crisp front vertical bar */
-blockquote.rgb-glow::before {
-  z-index: 1;
+/* Stagger each card's animation so they don't match identically */
+blockquote:nth-of-type(2)::before,
+blockquote:nth-of-type(2)::after {
+  animation-delay: -4s;
 }
 
-/* The diffused glow behind the bar */
-blockquote.rgb-glow::after {
-  left: -2px;
-  width: 6px; /* Slightly wider so the blur has substance */
-  filter: blur(14px);
-  opacity: 0.9;
-  z-index: -1;
+blockquote:nth-of-type(3)::before,
+blockquote:nth-of-type(3)::after {
+  animation-delay: -8s;
 }
 
-/* Animation to shift colors vertically */
+/* Subtle glow only at rest, brighter on hover */
+blockquote::after {
+  left: -1px;
+  width: 6px;
+  filter: blur(10px);
+  opacity: 0.35;
+}
+
+blockquote:hover::before {
+  opacity: 1;
+}
+
+blockquote:hover::after {
+  opacity: 0.85;
+}
+
 @keyframes rgbVerticalShift {
-  0% {
-    background-position: 50% 0%;
-  }
-  100% {
-    background-position: 50% 200%;
-  }
+  0% { background-position: 50% 0%; }
+  100% { background-position: 50% 200%; }
 }
 
 
@@ -305,12 +308,38 @@ a:hover {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   padding: 24px
 
-      
+
+
 }
 
 
 
 
+
+
+
+
+      .social-icons {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* Increased from 15px for wider spacing */
+  }
+
+  .social-icon {
+    color: #ffffff;
+    display: flex;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .social-icon:hover {
+    opacity: 0.7; /* Slightly fades the white icon */
+    transform: translateY(-2px); /* Gently lifts the icon up */
+  }
+
+
+
+
+    
 
 
 
@@ -388,6 +417,7 @@ a:hover {
 
   <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
+  
 
 
 <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
@@ -401,23 +431,23 @@ a:hover {
     </nav>
   </div>
 
-  <div style="display: flex; align-items: center; gap: 15px;">
+  <div class="social-icons">
     <!-- GitHub Link -->
-    <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" style="color: #ffffff; display: flex;">
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="social-icon">
       <svg height="32" width="32" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
       </svg>
     </a>
 
     <!-- YouTube Link -->
-    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" style="color: #ffffff; display: flex;">
+    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" class="social-icon">
       <svg height="36" width="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
       </svg>
     </a>
 
     <!-- Instagram Link -->
-    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" style="color: #ffffff; display: flex;">
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" class="social-icon">
       <svg height="32" width="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
       </svg>
