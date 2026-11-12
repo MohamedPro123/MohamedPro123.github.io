@@ -287,16 +287,14 @@
 
       try {
         const response = await fetch(WORKER_URL, {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            contents: history.slice(-20)
-          })
-        });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    contents: history.slice(-12)
+  })
+});
 
 const responseText = await response.text();
 
@@ -306,36 +304,29 @@ try {
   data = JSON.parse(responseText);
 } catch {
   throw new Error(
-    `Server returned an invalid response (HTTP ${response.status}): ` +
-    responseText.slice(0, 250)
+    `Invalid server response (${response.status}): ` +
+    responseText.slice(0, 200)
   );
 }
 
 if (!response.ok) {
-  throw new Error(data.error || `Request failed (${response.status}).`);
+  throw new Error(
+    data.error || `Server error: ${response.status}`
+  );
 }
 
 if (!data.reply) {
-  throw new Error("The AI returned an empty response.");
+  throw new Error("Gemini returned an empty response.");
 }
 
-return data.reply;
-        if (!response.ok) {
-          throw new Error(
-            data.error || `Server error: ${response.status}`
-          );
-        }
+// Display the answer.
+loading.textContent = data.reply;
 
-        if (!data.reply) {
-          throw new Error("Gemini returned no response.");
-        }
-
-        loading.textContent = data.reply;
-
-        // Store Gemini's answer for conversational context.
-        history.push({
-          role: "model",
-          parts: [{ text: data.reply }]
+// Save Gemini's response.
+history.push({
+  role: "model",
+  parts: [{ text: data.reply }]
+});
         });
 
       } catch (error) {
