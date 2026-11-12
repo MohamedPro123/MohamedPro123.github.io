@@ -205,14 +205,84 @@ a:hover {
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-
   padding: 24px
+
+      
 }
+    /* Only apply on devices with a mouse/trackpad */
+@media (hover: hover) and (pointer: fine) {
+  body, a, button {
+    cursor: none; /* Hide default cursor */
+  }
+
+  /* Instant center dot */
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: #00f3ff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00f3ff;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Smooth trailing outer ring */
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 34px;
+    height: 34px;
+    border: 2px solid rgba(0, 243, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.4), inset 0 0 8px rgba(0, 243, 255, 0.2);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Hover state over links and buttons */
+  .cursor-ring.hover {
+    width: 52px;
+    height: 52px;
+    border-color: #ff0055;
+    box-shadow: 0 0 16px rgba(255, 0, 85, 0.6), inset 0 0 10px rgba(255, 0, 85, 0.3);
+  }
+
+  .cursor-dot.hover {
+    background-color: #ff0055;
+    box-shadow: 0 0 8px #ff0055;
+  }
+
+  /* Click/active state */
+  .cursor-ring.click {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Hide custom elements on touch screens */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot, .cursor-ring {
+    display: none;
+  }
+}
+
 
 
   </style>
 </head>
 <body>
+
+  <div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
 
 <header>
   <h1 style="font-family: 'Google Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px;">
@@ -268,7 +338,57 @@ a:hover {
   </main>
 
 
-    
+    <script>const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let ringX = mouseX;
+let ringY = mouseY;
+
+// Lower = smoother/slower lag, Higher = snappier (0.1 to 0.3 is ideal)
+const speed = 0.18;
+
+// Track mouse position
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  // Move center dot immediately
+  dot.style.left = `${mouseX}px`;
+  dot.style.top = `${mouseY}px`;
+});
+
+// Smooth animation loop for the outer ring
+function animateRing() {
+  ringX += (mouseX - ringX) * speed;
+  ringY += (mouseY - ringY) * speed;
+
+  ring.style.left = `${ringX}px`;
+  ring.style.top = `${ringY}px`;
+
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// Expand & change color on interactive elements
+const clickables = document.querySelectorAll('a, button, input, [role="button"]');
+clickables.forEach((el) => {
+  el.addEventListener('mouseenter', () => {
+    ring.classList.add('hover');
+    dot.classList.add('hover');
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.classList.remove('hover');
+    dot.classList.remove('hover');
+  });
+});
+
+// Pulse inward on click
+window.addEventListener('mousedown', () => ring.classList.add('click'));
+window.addEventListener('mouseup', () => ring.classList.remove('click'));
+</script>
+  
 </body>
   
 </html>
