@@ -400,6 +400,43 @@ nav a:hover {
     }
 }
 
+
+/* fix on mobile */
+    @media (max-width: 768px) {
+  header div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  header h1 {
+    position: static !important;
+    display: block !important;
+    margin: 0 0 12px 0 !important; /* Forces space below the title */
+    padding: 0 !important;
+    line-height: 1.2 !important;
+    transform: none !important;
+  }
+
+  header nav {
+    position: static !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+    transform: none !important;
+  }
+
+  header nav a {
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+    
 /* Disable RGB on mobile */
 @media (max-width: 768px) {
     header {
