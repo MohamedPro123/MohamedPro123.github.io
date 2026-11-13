@@ -92,31 +92,38 @@ body {
 
 /* Animated RGB glow */
 
-.site-header::before {
-    content: "";
+header {
+  position: sticky;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  z-index: 1;
+}
 
-    position: absolute;
-    inset: 0;
-
-    background: linear-gradient(
-        90deg,
-        #ff0055,
-        #ff7700,
-        #ffdd00,
-        #00ff88,
-        #00bbff,
-        #aa00ff,
-        #ff0055
-    );
-
-    background-size: 200% 200%;
-
-    filter: blur(18px);
-    opacity: 0.85;
-
-    z-index: -1;
-
-    animation: rgbShift 6s linear infinite;
+/* Diffused Multi-Color RGB Glow */
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* Keeps bounds tight so blur doesn't bleed horizontally */
+  background: linear-gradient(
+    90deg, 
+    #ff0055, 
+    #ff7700, 
+    #ffdd00, 
+    #00ff88, 
+    #00bbff, 
+    #aa00ff, 
+    #ff0055
+  );
+  background-size: 200% 200%;
+  filter: blur(18px);
+  opacity: 0.85;
+  z-index: -1;
+  animation: rgbShift 6s linear infinite;
 }
 
 @keyframes rgbShift {
