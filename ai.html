@@ -634,7 +634,14 @@ nav a:hover { text-decoration: underline; }
 ========================================= */
 
 @media (hover: hover) and (pointer: fine) {
-    body, a, button { cursor: none; }
+    html,
+    html *,
+    body,
+    body *,
+    body *::before,
+    body *::after {
+        cursor: none !important;
+    }
 
     .cursor-dot {
         position: fixed;
@@ -719,8 +726,14 @@ nav a:hover { text-decoration: underline; }
         display: block;
         margin-bottom: 12px;
         font-size: 1.4rem;
+        
     }
-
+    header h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
     header > div:first-child {
         display: flex;
         flex-direction: column;
