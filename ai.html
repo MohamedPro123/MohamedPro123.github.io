@@ -974,70 +974,71 @@ nav a:hover::after {
    CUSTOM CURSOR
 ========================================= */
 
+  /* Only apply on devices with a mouse/trackpad */
 @media (hover: hover) and (pointer: fine) {
-    html,
-    html *,
-    body,
-    body *,
-    body *::before,
-    body *::after {
-        cursor: none !important;
-    }
+  body, a, button {
+    cursor: none; /* Hide default cursor */
+  }
 
-    .cursor-dot {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 6px;
-        height: 6px;
-        background: #00f3ff;
-        border-radius: 50%;
-        box-shadow: 0 0 8px #00f3ff;
-        pointer-events: none;
-        z-index: 100001;
-        transform: translate(-50%, -50%);
-    }
+  /* Instant center dot */
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: #00f3ff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00f3ff;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
 
-    .cursor-ring {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 14px;
-        height: 14px;
-        border: 2px solid rgba(0,243,255,0.8);
-        border-radius: 50%;
-        box-shadow: 0 0 12px rgba(0,243,255,0.4);
-        pointer-events: none;
-        z-index: 100001;
-        transform: translate(-50%, -50%);
-        transition:
-            width 0.2s ease,
-            height 0.2s ease,
-            border-color 0.2s ease;
-    }
+  /* Smooth trailing outer ring */
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 243, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.4), inset 0 0 8px rgba(0, 243, 255, 0.2);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
 
-    .cursor-ring.hover {
-        width: 12px;
-        height: 12px;
-        border-color: #8af9ff;
-        box-shadow: 0 0 16px rgba(138,249,255,0.6);
-    }
+  /* Hover state over links and buttons */
+  .cursor-ring.hover {
+    width: 12px;
+    height: 12px;
+    border-color: #8af9ff;
+    box-shadow: 0 0 16px rgba(138, 249, 255, 0.6), inset 0 0 10px rgba(138, 249, 255, 0.3);
+  }
 
-    .cursor-dot.hover {
-        background: #8af9ff;
-        box-shadow: 0 0 8px #8af9ff;
-    }
+  .cursor-dot.hover {
+    background-color: #8af9ff;
+    box-shadow: 0 0 8px #8af9ff;
+  }
 
-    .cursor-ring.click {
-        width: 8px;
-        height: 8px;
-    }
+  /* Click/active state */
+  .cursor-ring.click {
+    width: 8px;
+    height: 8px;
+  }
 }
 
+/* Hide custom elements on touch screens */
 @media (hover: none) and (pointer: coarse) {
-    .cursor-dot,
-    .cursor-ring { display: none; }
+  .cursor-dot, .cursor-ring {
+    display: none;
+  }
 }
+
 
 /* =========================================
    RESPONSIVE DESIGN
