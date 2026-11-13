@@ -6,7 +6,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mohamed's AI</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+
+<title>Google Classroom</title>
+    <link rel="icon" href="https://imglink.cc/cdn/A1ldO2SbuE.webp">
+
 
 <!-- Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -36,6 +42,18 @@ body {
     min-height: 100vh;
 
     font-family: 'Google Sans', Arial, sans-serif;
+      /* Semi-transparent dark background (adjust alpha 0.75-0.85 for heaviness) */
+  background: rgba(0, 0, 0, 0.75);
+  
+  /* Apply the frosted blur and boost saturation */
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  
+  /* Optional: subtle border to catch the light on the edge */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  
+  /* Optional: depth shadow */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 
     background-color: #0d0d12;
     background-image: url('https://imglink.cc/cdn/mJXIEE9M_k.jpg');
@@ -127,22 +145,17 @@ body {
 
 /* Navigation */
 
-.site-header nav a {
-    color: white;
-    text-decoration: none;
 
-    margin-right: 12px;
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 0.95rem;
+    }
 
-    font-size: 0.95rem;
-    font-weight: normal;
-
-    transition: 0.2s ease;
-}
-
-.site-header nav a:hover {
-    color: #38bdf8;
-    text-shadow: 0 0 10px #38bdf8;
-}
+    nav a:hover {
+      text-decoration: underline;
+    }
 
 /* Social icons */
 
@@ -1232,7 +1245,7 @@ body {
         <h2>AI Assistant</h2>
 
         <p>
-            Ask questions, explore ideas, and get answers powered by Google Gemini.
+          <span style="color: white;">  Ask questions, explore ideas, and get answers powered by Google Gemini. </span>
         </p>
 
     </div>
