@@ -1,358 +1,1782 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Gemini AI Chat</title>
+<title>Mohamed's AI</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
+<!-- Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Sanitize generated HTML for security -->
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
+<!-- Code highlighting -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: 'Google Sans', Arial, sans-serif;
+
+    background-color: #0d0d12;
+    background-image: url('https://imglink.cc/cdn/mJXIEE9M_k.jpg');
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+
+    color: #e4e4e7;
+    line-height: 1.6;
+
+    overflow-x: clip;
+}
+
+
+/* =========================================
+   RGB WEBSITE HEADER
+========================================= */
+
+.site-header {
+    position: relative;
+
+    background-color: #000000;
+    color: #ffffff;
+
+    padding: 20px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 16px;
+    z-index: 10;
+}
+
+/* Animated RGB glow */
+
+.site-header::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        90deg,
+        #ff0055,
+        #ff7700,
+        #ffdd00,
+        #00ff88,
+        #00bbff,
+        #aa00ff,
+        #ff0055
+    );
+
+    background-size: 200% 200%;
+
+    filter: blur(18px);
+    opacity: 0.85;
+
+    z-index: -1;
+
+    animation: rgbShift 6s linear infinite;
+}
+
+@keyframes rgbShift {
+    0% {
+        background-position: 0% 50%;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #f5f6fa;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* Website title */
+
+.site-header h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    margin: 0;
+
+    font-size: 1.25rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+/* Navigation */
+
+.site-header nav a {
+    color: white;
+    text-decoration: none;
+
+    margin-right: 12px;
+
+    font-size: 0.95rem;
+    font-weight: normal;
+
+    transition: 0.2s ease;
+}
+
+.site-header nav a:hover {
+    color: #38bdf8;
+    text-shadow: 0 0 10px #38bdf8;
+}
+
+/* Social icons */
+
+.social-icons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+}
+
+.social-icon {
+    color: white;
+
+    display: flex;
+    align-items: center;
+
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.social-icon:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   MAIN PAGE LAYOUT
+========================================= */
+
+.page-container {
+    width: min(1500px, 96%);
+    margin: 45px auto 35px;
+}
+
+.page-heading {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.page-heading h2 {
+    font-size: 2rem;
+    margin: 0;
+    color: white;
+    letter-spacing: -1px;
+}
+
+.page-heading p {
+    color: #a1a1aa;
+    margin: 5px 0 0;
+    font-size: 0.95rem;
+}
+
+
+/* =========================================
+   FROSTED GLASS CHAT CONTAINER
+========================================= */
+
+.chat-container {
+
+    width: 100%;
+
+    height: min(780px, calc(100vh - 230px));
+    min-height: 480px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: rgba(10, 10, 18, 0.70);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 35px rgba(0, 0, 0, 0.35),
+        0 0 25px rgba(0, 180, 255, 0.06);
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   CHAT HEADER
+========================================= */
+
+.chat-header {
+
+    padding: 17px 25px;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.ai-icon {
+
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        #4285f4,
+        #a142f4,
+        #e879f9
+    );
+
+    box-shadow: 0 0 18px rgba(161,66,244,0.35);
+
+    color: white;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 24px;
+}
+
+.header-title h2 {
+    margin: 0;
+    font-size: 17px;
+    color: white;
+}
+
+.status {
+    color: #4ade80;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.status.thinking {
+    color: #facc15;
+}
+
+.status.error-status {
+    color: #f87171;
+}
+
+
+/* New chat button */
+
+#new-chat {
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    background: rgba(255,255,255,0.08);
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+#new-chat:hover {
+
+    background: rgba(56,189,248,0.15);
+
+    border-color: #38bdf8;
+
+    box-shadow: 0 0 12px rgba(56,189,248,0.2);
+}
+
+
+/* =========================================
+   CHAT MESSAGES
+========================================= */
+
+#chat-messages {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 30px 35px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+
+    scroll-behavior: smooth;
+}
+
+
+/* Scrollbar */
+
+#chat-messages::-webkit-scrollbar {
+    width: 7px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 10px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+
+/* Message bubbles */
+
+.msg {
+
+    max-width: 85%;
+
+    padding: 15px 19px;
+
+    border-radius: 14px;
+
+    font-size: 14px;
+
+    line-height: 1.75;
+
+    overflow-wrap: anywhere;
+
+    animation: messageAppear 0.25s ease;
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* AI message */
+
+.msg.bot {
+
+    align-self: flex-start;
+
+    background: rgba(255,255,255,0.075);
+
+    border: 1px solid rgba(255,255,255,0.11);
+
+    border-bottom-left-radius: 4px;
+
+    color: #e4e4e7;
+
+    max-width: 90%;
+}
+
+
+/* User message */
+
+.msg.user {
+
+    align-self: flex-end;
+
+    background: rgba(37,99,235,0.35);
+
+    border: 1px solid rgba(59,130,246,0.35);
+
+    border-bottom-right-radius: 4px;
+
+    color: #ffffff;
+}
+
+
+/* Error message */
+
+.msg.error {
+
+    background: rgba(127,29,29,0.25);
+
+    border: 1px solid rgba(248,113,113,0.3);
+
+    color: #fca5a5;
+}
+
+
+/* =========================================
+   MARKDOWN FORMATTING
+========================================= */
+
+/* Headings */
+
+.msg.bot h1,
+.msg.bot h2,
+.msg.bot h3,
+.msg.bot h4 {
+
+    color: #ffffff;
+
+    line-height: 1.3;
+
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+.msg.bot h1 {
+    font-size: 1.65rem;
+}
+
+.msg.bot h2 {
+    font-size: 1.4rem;
+}
+
+.msg.bot h3 {
+    font-size: 1.15rem;
+}
+
+.msg.bot h4 {
+    font-size: 1rem;
+}
+
+
+/* Paragraphs */
+
+.msg.bot p {
+    margin: 10px 0;
+}
+
+.msg.bot p:first-child {
+    margin-top: 0;
+}
+
+.msg.bot p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Bold text */
+
+.msg.bot strong {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+
+/* Links */
+
+.msg.bot a {
+
+    color: #38bdf8;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.msg.bot a:hover {
+
+    color: white;
+
+    text-shadow: 0 0 10px rgba(56,189,248,0.8);
+}
+
+
+/* Lists */
+
+.msg.bot ul,
+.msg.bot ol {
+
+    padding-left: 25px;
+
+    margin: 12px 0;
+}
+
+.msg.bot li {
+    margin: 5px 0;
+}
+
+
+/* Blockquotes */
+
+.msg.bot blockquote {
+
+    position: relative;
+
+    margin: 16px 0;
+
+    padding: 12px 18px;
+
+    background: rgba(15,23,42,0.35);
+
+    border-radius: 0 8px 8px 0;
+
+    border-left: 3px solid rgba(255,255,255,0.8);
+
+    color: #cbd5e1;
+}
+
+
+/* Horizontal rules */
+
+.msg.bot hr {
+
+    border: 0;
+
+    border-top: 1px solid rgba(255,255,255,0.2);
+
+    margin: 20px 0;
+}
+
+
+/* Tables */
+
+.msg.bot table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin: 16px 0;
+
+    font-size: 13px;
+
+    overflow: hidden;
+
+    border-radius: 8px;
+}
+
+.msg.bot th,
+.msg.bot td {
+
+    border: 1px solid rgba(255,255,255,0.14);
+
+    padding: 9px 12px;
+
+    text-align: left;
+}
+
+.msg.bot th {
+
+    background: rgba(56,189,248,0.15);
+
+    color: white;
+}
+
+.msg.bot td {
+    background: rgba(255,255,255,0.025);
+}
+
+
+/* Inline code */
+
+.msg.bot code:not(pre code) {
+
+    background: rgba(255,255,255,0.12);
+
+    color: #7dd3fc;
+
+    padding: 2px 6px;
+
+    border-radius: 5px;
+
+    font-family: Consolas, monospace;
+
+    font-size: 0.9em;
+}
+
+
+/* Code blocks */
+
+.msg.bot pre {
+
+    position: relative;
+
+    background: rgba(0,0,0,0.55);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    border-radius: 10px;
+
+    padding: 18px;
+
+    margin: 14px 0;
+
+    overflow-x: auto;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+.msg.bot pre code {
+
+    font-family: Consolas, 'Courier New', monospace;
+
+    background: transparent;
+
+    padding: 0;
+
+    color: #e4e4e7;
+
+    white-space: pre;
+}
+
+
+/* Code copy button */
+
+.code-copy {
+
+    position: absolute;
+
+    top: 9px;
+    right: 9px;
+
+    padding: 5px 10px;
+
+    background: rgba(255,255,255,0.1);
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    border-radius: 6px;
+
+    color: #d4d4d8;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.code-copy:hover {
+
+    background: rgba(56,189,248,0.2);
+
+    color: white;
+
+    border-color: #38bdf8;
+}
+
+
+/* =========================================
+   CHAT FOOTER
+========================================= */
+
+.chat-footer {
+
+    padding: 20px 25px;
+
+    background: rgba(0,0,0,0.35);
+
+    border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+
+/* Input form */
+
+#chat-form {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    max-width: 1200px;
+
+    margin: auto;
+}
+
+
+/* Input field */
+
+#chat-input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 15px 18px;
+
+    background: rgba(255,255,255,0.08);
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition: all 0.2s ease;
+}
+
+#chat-input::placeholder {
+    color: #888899;
+}
+
+#chat-input:focus {
+
+    border-color: #38bdf8;
+
+    box-shadow: 0 0 12px rgba(56,189,248,0.15);
+
+    background: rgba(255,255,255,0.11);
+}
+
+
+/* Send button */
+
+#chat-send {
+
+    border: 1px solid rgba(56,189,248,0.5);
+
+    border-radius: 10px;
+
+    padding: 14px 25px;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #4f46e5
+    );
+
+    color: white;
+
+    font-weight: bold;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+#chat-send:hover {
+
+    background: linear-gradient(
+        135deg,
+        #3b82f6,
+        #6366f1
+    );
+
+    box-shadow: 0 0 18px rgba(59,130,246,0.35);
+
+    transform: translateY(-1px);
+}
+
+#chat-send:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* Footer text */
+
+.footer-note {
+
+    color: #71717a;
+
+    text-align: center;
+
+    font-size: 11px;
+
+    margin-top: 13px;
+}
+
+
+/* =========================================
+   CUSTOM CURSOR
+========================================= */
+
+@media (hover: hover) and (pointer: fine) {
+
+    body, a, button {
+        cursor: none;
+    }
+
+    .cursor-dot {
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 6px;
+        height: 6px;
+
+        background: #00f3ff;
+
+        border-radius: 50%;
+
+        box-shadow: 0 0 8px #00f3ff;
+
+        pointer-events: none;
+
+        z-index: 10000;
+
+        transform: translate(-50%, -50%);
+    }
+
+    .cursor-ring {
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 14px;
+        height: 14px;
+
+        border: 2px solid rgba(0,243,255,0.8);
+
+        border-radius: 50%;
+
+        box-shadow: 0 0 12px rgba(0,243,255,0.4);
+
+        pointer-events: none;
+
+        z-index: 9999;
+
+        transform: translate(-50%, -50%);
+
+        transition:
+            width 0.2s ease,
+            height 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    .cursor-ring.hover {
+
+        width: 12px;
+        height: 12px;
+
+        border-color: #8af9ff;
+
+        box-shadow: 0 0 16px rgba(138,249,255,0.6);
+    }
+
+    .cursor-dot.hover {
+
+        background: #8af9ff;
+
+        box-shadow: 0 0 8px #8af9ff;
+    }
+
+    .cursor-ring.click {
+
+        width: 8px;
+        height: 8px;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+
+    .cursor-dot,
+    .cursor-ring {
+        display: none;
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+/* Tablets */
+
+@media (max-width: 900px) {
+
+    .page-container {
+        width: 96%;
     }
 
     .chat-container {
-      width: 100%;
-      max-width: 700px;
-      height: 650px;
-      max-height: 90vh;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 35px rgba(0,0,0,0.09);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .chat-header {
-      padding: 20px;
-      background: #ffffff;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .header-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .ai-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4285f4, #a142f4);
-      color: white;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-    }
-
-    .header-title h2 {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .status {
-      color: #16a34a;
-      font-size: 12px;
-      margin-top: 4px;
+        height: calc(100vh - 220px);
     }
 
     #chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+        padding: 22px;
     }
 
     .msg {
-      max-width: 85%;
-      padding: 13px 16px;
-      border-radius: 14px;
-      line-height: 1.6;
-      font-size: 14px;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+        max-width: 94%;
+    }
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .site-header {
+
+        background: #000000 !important;
+
+        flex-direction: column;
+
+        text-align: center;
+
+        padding: 16px 20px;
     }
 
-    .msg.bot {
-      align-self: flex-start;
-      background: #f0f2f6;
-      color: #222;
-      border-bottom-left-radius: 4px;
+    .site-header::before {
+        display: none;
+        animation: none;
     }
 
-    .msg.user {
-      align-self: flex-end;
-      background: #2563eb;
-      color: white;
-      border-bottom-right-radius: 4px;
+    .site-header h1 {
+
+        position: static;
+
+        transform: none;
+
+        display: block;
+
+        margin-bottom: 12px;
+
+        font-size: 1.4rem;
     }
 
-    .msg.error {
-      background: #fee2e2;
-      color: #991b1b;
+    .site-header > div:first-child {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    .site-header nav {
+
+        display: flex;
+
+        justify-content: center;
+
+        gap: 12px;
+
+        margin: 0;
+    }
+
+    .site-header nav a {
+        margin: 0;
+    }
+
+    .social-icons {
+        margin-top: 12px;
+    }
+
+    .page-container {
+
+        width: 100%;
+
+        margin: 25px auto 0;
+
+        padding: 0 10px;
+    }
+
+    .page-heading h2 {
+        font-size: 1.6rem;
+    }
+
+    .chat-container {
+
+        height: calc(100vh - 190px);
+
+        min-height: 400px;
+
+        border-radius: 12px;
+    }
+
+    .chat-header {
+        padding: 13px 15px;
+    }
+
+    #chat-messages {
+        padding: 17px 12px;
+        gap: 14px;
+    }
+
+    .msg {
+        max-width: 96%;
+        padding: 12px 14px;
+        font-size: 13px;
     }
 
     .chat-footer {
-      padding: 18px;
-      border-top: 1px solid #eee;
-    }
-
-    #chat-form {
-      display: flex;
-      gap: 10px;
+        padding: 14px 12px;
     }
 
     #chat-input {
-      flex: 1;
-      min-width: 0;
-      padding: 14px 16px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      outline: none;
-      font-size: 14px;
-    }
-
-    #chat-input:focus {
-      border-color: #4285f4;
+        padding: 13px 12px;
+        font-size: 13px;
     }
 
     #chat-send {
-      border: none;
-      border-radius: 10px;
-      padding: 0 22px;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
+        padding: 13px 16px;
     }
 
-    #chat-send:hover {
-      background: #1d4ed8;
+    .msg.bot table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+
+/* Very small screens */
+
+@media (max-width: 400px) {
+
+    .header-title {
+        gap: 8px;
     }
 
-    #chat-send:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .ai-icon {
+        width: 38px;
+        height: 38px;
     }
 
-    .footer-note {
-      color: #999;
-      text-align: center;
-      font-size: 11px;
-      margin-top: 12px;
+    #new-chat {
+        padding: 9px 10px;
+        font-size: 11px;
     }
 
-    @media (max-width: 500px) {
-      body {
-        padding: 0;
-      }
-
-      .chat-container {
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
-      }
-
-      .msg {
-        max-width: 92%;
-      }
+    .site-header nav a {
+        font-size: 0.85rem;
     }
-  </style>
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-  <div class="chat-container">
+<!-- Custom cursor -->
 
-    <header class="chat-header">
-      <div class="header-title">
-        <div class="ai-icon">✦</div>
-        <div>
-          <h2>Gemini AI</h2>
-          <div class="status">● Ready to chat</div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+
+<!-- =========================================
+     MAIN WEBSITE HEADER
+========================================= -->
+
+<header class="site-header">
+
+    <div>
+
+        <h1>
+            Mohamed's Website
+        </h1>
+
+        <nav>
+            <i>
+                <a href="index.html#my-projects">
+                    Projects
+                </a>
+            </i>
+
+            <i>
+                <a href="https://www.instagram.com/mohamedhshcs/">
+                    Contact
+                </a>
+            </i>
+
+            <i>
+                <a href="ai.html">
+                    AI
+                </a>
+            </i>
+        </nav>
+
+    </div>
+
+
+    <!-- Social icons -->
+
+    <div class="social-icons">
+
+        <!-- GitHub -->
+
+        <a href="https://github.com/MohamedPro123"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="GitHub"
+           class="social-icon">
+
+            <svg height="28" width="28"
+                 viewBox="0 0 16 16"
+                 fill="currentColor">
+
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+
+            </svg>
+
+        </a>
+
+
+        <!-- YouTube -->
+
+        <a href="https://www.youtube.com/@mohamedaHSHCS"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="YouTube"
+           class="social-icon">
+
+            <svg height="32" width="32"
+                 viewBox="0 0 24 24"
+                 fill="currentColor">
+
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+
+            </svg>
+
+        </a>
+
+
+        <!-- Instagram -->
+
+        <a href="https://www.instagram.com/mohamedhshcs/"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Instagram"
+           class="social-icon">
+
+            <svg height="28" width="28"
+                 viewBox="0 0 24 24"
+                 fill="currentColor">
+
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.011 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+
+            </svg>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================
+     AI PAGE
+========================================= -->
+
+<div class="page-container">
+
+
+    <div class="page-heading">
+
+        <h2>AI Assistant</h2>
+
+        <p>
+            Ask questions, explore ideas, and get answers powered by Google Gemini.
+        </p>
+
+    </div>
+
+
+
+    <div class="chat-container">
+
+
+        <!-- Chat header -->
+
+        <div class="chat-header">
+
+            <div class="header-title">
+
+                <div class="ai-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <h2>Gemini AI</h2>
+
+                    <div class="status" id="status">
+                        ● Ready to chat
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button id="new-chat">
+                + New chat
+            </button>
+
         </div>
-      </div>
 
-      <button id="new-chat"
-        style="border:0;background:#eee;padding:10px 13px;border-radius:8px;cursor:pointer;">
-        New chat
-      </button>
-    </header>
 
-    <main id="chat-messages">
-      <div class="msg bot">
-        Hello! I'm Gemini. What would you like to know?
-      </div>
-    </main>
 
-    <footer class="chat-footer">
-      <form id="chat-form">
-        <input
-          type="text"
-          id="chat-input"
-          placeholder="Message Gemini..."
-          autocomplete="off"
-          required
-        >
+        <!-- Messages -->
 
-        <button type="submit" id="chat-send">
-          Send
-        </button>
-      </form>
+        <main id="chat-messages">
 
-      <div class="footer-note">
-        Powered by Google Gemini
-      </div>
-    </footer>
+            <div class="msg bot">
 
-  </div>
+                <h3>Welcome!</h3>
 
-  <script>
- 
+                Hello! I'm Gemini. What would you like to know?
+
+                <p>
+                    I can help with research, programming, explanations,
+                    brainstorming, and much more.
+                </p>
+
+                <p>
+                    You can also ask me to format answers using Markdown,
+                    including headings, lists, tables, and code blocks.
+                </p>
+
+            </div>
+
+        </main>
+
+
+
+        <!-- Chat input -->
+
+        <footer class="chat-footer">
+
+            <form id="chat-form">
+
+                <input
+                    type="text"
+                    id="chat-input"
+                    placeholder="Message Gemini..."
+                    autocomplete="off"
+                    required
+                >
+
+                <button type="submit" id="chat-send">
+                    Send ↑
+                </button>
+
+            </form>
+
+
+            <div class="footer-note">
+
+                Powered by Google Gemini · AI can make mistakes.
+
+            </div>
+
+        </footer>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+/* =========================================
+   GEMINI CONNECTION
+========================================= */
+
 const WORKER_URL =
-  "https://gemini-chat.mappinggerman04.workers.dev";
+"https://gemini-chat.mappinggerman04.workers.dev";
+
 
 const chatForm = document.getElementById("chat-form");
+
 const chatInput = document.getElementById("chat-input");
+
 const chatMessages = document.getElementById("chat-messages");
+
 const chatSend = document.getElementById("chat-send");
+
 const newChat = document.getElementById("new-chat");
+
+const status = document.getElementById("status");
+
 
 let history = [];
 
-function addMessage(text, sender) {
-  const bubble = document.createElement("div");
 
-  bubble.className = `msg ${sender}`;
-  bubble.textContent = text;
+/* =========================================
+   MARKDOWN RENDERING
+========================================= */
 
-  chatMessages.appendChild(bubble);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+marked.setOptions({
 
-  return bubble;
+    gfm: true,
+
+    breaks: true,
+
+    headerIds: false
+
+});
+
+
+function renderMarkdown(text) {
+
+    // Convert Markdown into HTML.
+    const rawHTML = marked.parse(text);
+
+    // Sanitize HTML to prevent injected scripts.
+    const safeHTML = DOMPurify.sanitize(rawHTML);
+
+    return safeHTML;
+
 }
 
-// New conversation
-newChat.addEventListener("click", () => {
-  history = [];
-  chatMessages.innerHTML = "";
 
-  addMessage(
-    "New conversation started. What would you like to know?",
-    "bot"
-  );
+/* =========================================
+   CODE HIGHLIGHTING
+========================================= */
+
+function formatCodeBlocks(container) {
+
+    container.querySelectorAll("pre code").forEach(code => {
+
+        // Apply syntax highlighting.
+        if (window.hljs) {
+            hljs.highlightElement(code);
+        }
+
+        const pre = code.parentElement;
+
+        // Prevent duplicate buttons.
+        if (pre.querySelector(".code-copy")) return;
+
+        const copyButton = document.createElement("button");
+
+        copyButton.className = "code-copy";
+
+        copyButton.textContent = "Copy code";
+
+        copyButton.addEventListener("click", async () => {
+
+            try {
+
+                await navigator.clipboard.writeText(code.innerText);
+
+                copyButton.textContent = "Copied!";
+
+                setTimeout(() => {
+                    copyButton.textContent = "Copy code";
+                }, 1500);
+
+            } catch (error) {
+
+                copyButton.textContent = "Copy failed";
+
+                console.error(error);
+
+            }
+
+        });
+
+        pre.appendChild(copyButton);
+
+    });
+
+}
+
+
+/* =========================================
+   MESSAGE CREATION
+========================================= */
+
+function addMessage(text, sender) {
+
+    const bubble = document.createElement("div");
+
+    bubble.className = `msg ${sender}`;
+
+
+    if (sender === "bot") {
+
+        bubble.innerHTML = renderMarkdown(text);
+
+        formatCodeBlocks(bubble);
+
+    } else {
+
+        // User messages are displayed as plain text.
+        bubble.textContent = text;
+
+    }
+
+
+    chatMessages.appendChild(bubble);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+
+    return bubble;
+
+}
+
+
+/* =========================================
+   NEW CONVERSATION
+========================================= */
+
+newChat.addEventListener("click", () => {
+
+    history = [];
+
+    chatMessages.innerHTML = "";
+
+    status.textContent = "● Ready to chat";
+
+    status.className = "status";
+
+
+    addMessage(
+
+        "New conversation started. What would you like to know?",
+
+        "bot"
+
+    );
+
+    chatInput.focus();
+
 });
 
-// Send message
+
+/* =========================================
+   SEND MESSAGE
+========================================= */
+
 chatForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
 
-  const message = chatInput.value.trim();
+    event.preventDefault();
 
-  if (!message || chatSend.disabled) return;
 
-  // Save the previous history in case the request fails.
-  const previousHistory = [...history];
+    const message = chatInput.value.trim();
 
-  // Display user message.
-  addMessage(message, "user");
 
-  history.push({
-    role: "user",
-    parts: [{ text: message }]
-  });
+    if (!message || chatSend.disabled) return;
 
-  // Keep conversation history manageable.
-  history = history.slice(-12);
 
-  chatInput.value = "";
-  chatInput.disabled = true;
-  chatSend.disabled = true;
+    // Save previous history in case of failure.
 
-  const loading = addMessage("Thinking...", "bot");
+    const previousHistory = [...history];
 
-  try {
-    const response = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        contents: history
-      })
-    });
 
-    const responseText = await response.text();
+    // Display user's message.
 
-    let data;
+    addMessage(message, "user");
 
-    try {
-      data = JSON.parse(responseText);
-    } catch {
-      throw new Error(
-        `Invalid server response (${response.status}): ` +
-        responseText.slice(0, 200)
-      );
-    }
 
-    if (!response.ok) {
-      throw new Error(
-        data.error || `Server error: ${response.status}`
-      );
-    }
+    // Add message to conversation history.
 
-    if (typeof data.reply !== "string" || !data.reply.trim()) {
-      throw new Error("Gemini returned an empty response.");
-    }
-
-    // Display Gemini's answer.
-    loading.textContent = data.reply;
-
-    // Save the AI response.
     history.push({
-      role: "model",
-      parts: [{ text: data.reply }]
+
+        role: "user",
+
+        parts: [{ text: message }]
+
     });
 
-    // Keep only the latest 12 messages.
+
+    // Keep history manageable.
+
     history = history.slice(-12);
 
-  } catch (error) {
-    console.error("Gemini error:", error);
 
-    loading.textContent = "Error: " + error.message;
-    loading.classList.add("error");
+    // Clear input.
 
-    // Restore the previous conversation.
-    history = previousHistory;
+    chatInput.value = "";
 
-  } finally {
-    chatInput.disabled = false;
-    chatSend.disabled = false;
-    chatInput.focus();
-  }
+    chatInput.disabled = true;
+
+    chatSend.disabled = true;
+
+
+    // Update status.
+
+    status.textContent = "● Thinking...";
+
+    status.className = "status thinking";
+
+
+    // Show loading message.
+
+    const loading = addMessage("Thinking...", "bot");
+
+
+    try {
+
+
+        const response = await fetch(WORKER_URL, {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                contents: history
+
+            })
+
+        });
+
+
+        const responseText = await response.text();
+
+
+        let data;
+
+
+        try {
+
+            data = JSON.parse(responseText);
+
+        } catch {
+
+            throw new Error(
+
+                `Invalid server response (${response.status}): ` +
+
+                responseText.slice(0, 200)
+
+            );
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                data.error || `Server error: ${response.status}`
+
+            );
+
+        }
+
+
+        if (
+
+            typeof data.reply !== "string" ||
+
+            !data.reply.trim()
+
+        ) {
+
+            throw new Error("Gemini returned an empty response.");
+
+        }
+
+
+        // Display formatted Gemini response.
+
+        loading.innerHTML = renderMarkdown(data.reply);
+
+        formatCodeBlocks(loading);
+
+
+        // Save AI response.
+
+        history.push({
+
+            role: "model",
+
+            parts: [{ text: data.reply }]
+
+        });
+
+
+        // Keep only latest 12 messages.
+
+        history = history.slice(-12);
+
+
+        // Update status.
+
+        status.textContent = "● Ready to chat";
+
+        status.className = "status";
+
+
+    } catch (error) {
+
+
+        console.error("Gemini error:", error);
+
+
+        loading.textContent = "Error: " + error.message;
+
+        loading.classList.add("error");
+
+
+        // Restore previous conversation.
+
+        history = previousHistory;
+
+
+        status.textContent = "● Connection error";
+
+        status.className = "status error-status";
+
+
+    } finally {
+
+
+        chatInput.disabled = false;
+
+        chatSend.disabled = false;
+
+        chatInput.focus();
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    }
+
 });
 
-  </script>
+
+/* =========================================
+   CUSTOM CURSOR
+========================================= */
+
+const cursorDot = document.querySelector(".cursor-dot");
+
+const cursorRing = document.querySelector(".cursor-ring");
+
+
+if (
+
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches
+
+) {
+
+
+    document.addEventListener("mousemove", (event) => {
+
+        cursorDot.style.left = event.clientX + "px";
+
+        cursorDot.style.top = event.clientY + "px";
+
+
+        cursorRing.style.left = event.clientX + "px";
+
+        cursorRing.style.top = event.clientY + "px";
+
+    });
+
+
+    document.querySelectorAll("a, button").forEach(element => {
+
+        element.addEventListener("mouseenter", () => {
+
+            cursorDot.classList.add("hover");
+
+            cursorRing.classList.add("hover");
+
+        });
+
+
+        element.addEventListener("mouseleave", () => {
+
+            cursorDot.classList.remove("hover");
+
+            cursorRing.classList.remove("hover");
+
+        });
+
+    });
+
+
+    document.addEventListener("mousedown", () => {
+
+        cursorRing.classList.add("click");
+
+    });
+
+
+    document.addEventListener("mouseup", () => {
+
+        cursorRing.classList.remove("click");
+
+    });
+
+}
+
+
+</script>
 
 </body>
 </html>
