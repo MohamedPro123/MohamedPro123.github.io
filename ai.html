@@ -1,37 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
 
 <title>Google Classroom</title>
-    <link rel="icon" href="https://imglink.cc/cdn/A1ldO2SbuE.webp">
+<link rel="icon" href="https://imglink.cc/cdn/A1ldO2SbuE.webp">
 
-
-<!-- Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-<!-- Sanitize generated HTML for security -->
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
 
-<!-- Code highlighting -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
-
 <style>
-
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
     scroll-behavior: smooth;
@@ -40,132 +27,76 @@ html {
 body {
     margin: 0;
     min-height: 100vh;
-
     font-family: 'Google Sans', Arial, sans-serif;
-      /* Semi-transparent dark background (adjust alpha 0.75-0.85 for heaviness) */
-  background: rgba(0, 0, 0, 0.75);
-  
-  /* Apply the frosted blur and boost saturation */
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  
-  /* Optional: subtle border to catch the light on the edge */
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  
-  /* Optional: depth shadow */
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-
     background-color: #0d0d12;
     background-image: url('https://imglink.cc/cdn/mJXIEE9M_k.jpg');
-
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-
     color: #e4e4e7;
     line-height: 1.6;
-
     overflow-x: clip;
 }
-
 
 /* =========================================
    RGB WEBSITE HEADER
 ========================================= */
 
-.site-header {
+.site-header,
+header {
     position: relative;
-
-    background-color: #000000;
-    color: #ffffff;
-
+    background-color: #000;
+    color: #fff;
     padding: 20px 40px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     gap: 16px;
     z-index: 10;
 }
 
-/* Animated RGB glow */
-
-header {
-  position: relative;
-  background-color: #000000;
-  color: #ffffff;
-  padding: 20px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  z-index: 1;
-}
-
-/* Diffused Multi-Color RGB Glow */
 header::before {
-  content: "";
-  position: absolute;
-  inset: 0; /* Keeps bounds tight so blur doesn't bleed horizontally */
-  background: linear-gradient(
-    90deg, 
-    #ff0055, 
-    #ff7700, 
-    #ffdd00, 
-    #00ff88, 
-    #00bbff, 
-    #aa00ff, 
-    #ff0055
-  );
-  background-size: 200% 200%;
-  filter: blur(18px);
-  opacity: 0.85;
-  z-index: -1;
-  animation: rgbShift 6s linear infinite;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        #ff0055,
+        #ff7700,
+        #ffdd00,
+        #00ff88,
+        #00bbff,
+        #aa00ff,
+        #ff0055
+    );
+    background-size: 200% 200%;
+    filter: blur(18px);
+    opacity: 0.85;
+    z-index: -1;
+    animation: rgbShift 6s linear infinite;
 }
 
 @keyframes rgbShift {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    100% {
-        background-position: 200% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
 }
 
-/* Website title */
-
-.site-header h1 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-
+header h1 {
     margin: 0;
-
     font-size: 1.25rem;
     font-weight: bold;
     letter-spacing: -1px;
 }
 
-/* Navigation */
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 0.95rem;
+}
 
-
-    nav a {
-      color: #ffffff;
-      text-decoration: none;
-      margin-left: 20px;
-      font-size: 0.95rem;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-
-/* Social icons */
+nav a:hover { text-decoration: underline; }
 
 .social-icons {
     display: flex;
@@ -176,10 +107,8 @@ header::before {
 
 .social-icon {
     color: white;
-
     display: flex;
     align-items: center;
-
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -188,9 +117,8 @@ header::before {
     transform: translateY(-2px);
 }
 
-
 /* =========================================
-   MAIN PAGE LAYOUT
+   PAGE LAYOUT
 ========================================= */
 
 .page-container {
@@ -216,54 +144,38 @@ header::before {
     font-size: 0.95rem;
 }
 
-
 /* =========================================
-   FROSTED GLASS CHAT CONTAINER
+   CHAT CONTAINER
 ========================================= */
 
 .chat-container {
-
     width: 100%;
-
     height: min(780px, calc(100vh - 230px));
     min-height: 480px;
-
     display: flex;
     flex-direction: column;
-
     background: rgba(10, 10, 18, 0.70);
-
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-
     border: 1px solid rgba(255, 255, 255, 0.18);
-
     border-radius: 18px;
-
     box-shadow:
         0 8px 35px rgba(0, 0, 0, 0.35),
         0 0 25px rgba(0, 180, 255, 0.06);
-
     overflow: hidden;
 }
-
 
 /* =========================================
    CHAT HEADER
 ========================================= */
 
 .chat-header {
-
     padding: 17px 25px;
-
     background: rgba(0, 0, 0, 0.45);
-
     border-bottom: 1px solid rgba(255,255,255,0.12);
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 15px;
 }
 
@@ -274,28 +186,15 @@ header::before {
 }
 
 .ai-icon {
-
     width: 45px;
     height: 45px;
-
     flex-shrink: 0;
-
     border-radius: 14px;
-
-    background: linear-gradient(
-        135deg,
-        #4285f4,
-        #a142f4,
-        #e879f9
-    );
-
+    background: linear-gradient(135deg, #4285f4, #a142f4, #e879f9);
     box-shadow: 0 0 18px rgba(161,66,244,0.35);
-
     color: white;
-
     display: grid;
     place-items: center;
-
     font-size: 24px;
 }
 
@@ -311,610 +210,450 @@ header::before {
     margin-top: 2px;
 }
 
-.status.thinking {
-    color: #facc15;
-}
-
-.status.error-status {
-    color: #f87171;
-}
-
-
-/* New chat button */
+.status.thinking { color: #facc15; }
+.status.error-status { color: #f87171; }
 
 #new-chat {
-
     border: 1px solid rgba(255,255,255,0.2);
-
     background: rgba(255,255,255,0.08);
-
     color: white;
-
     padding: 10px 16px;
-
     border-radius: 9px;
-
     font-size: 13px;
     font-weight: 600;
-
-
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
 #new-chat:hover {
-
     background: rgba(56,189,248,0.15);
-
     border-color: #38bdf8;
-
     box-shadow: 0 0 12px rgba(56,189,248,0.2);
 }
-
 
 /* =========================================
    CHAT MESSAGES
 ========================================= */
 
 #chat-messages {
-
     flex: 1;
-
     overflow-y: auto;
-
     padding: 30px 35px;
-
     display: flex;
     flex-direction: column;
-
     gap: 20px;
-
     scroll-behavior: smooth;
 }
 
-
-/* Scrollbar */
-
-#chat-messages::-webkit-scrollbar {
-    width: 7px;
-}
-
-#chat-messages::-webkit-scrollbar-track {
-    background: transparent;
-}
-
+#chat-messages::-webkit-scrollbar { width: 7px; }
+#chat-messages::-webkit-scrollbar-track { background: transparent; }
 #chat-messages::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.18);
     border-radius: 10px;
 }
-
 #chat-messages::-webkit-scrollbar-thumb:hover {
     background: rgba(255,255,255,0.35);
 }
 
-
-/* Message bubbles */
-
 .msg {
-
     max-width: 85%;
-
     padding: 15px 19px;
-
     border-radius: 14px;
-
     font-size: 14px;
-
     line-height: 1.75;
-
     overflow-wrap: anywhere;
-
     animation: messageAppear 0.25s ease;
 }
 
 @keyframes messageAppear {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-
-/* AI message */
-
 .msg.bot {
-
     align-self: flex-start;
-
     background: rgba(255,255,255,0.075);
-
     border: 1px solid rgba(255,255,255,0.11);
-
     border-bottom-left-radius: 4px;
-
     color: #e4e4e7;
-
     max-width: 90%;
 }
 
-
-/* User message */
-
 .msg.user {
-
     align-self: flex-end;
-
     background: rgba(37,99,235,0.35);
-
     border: 1px solid rgba(59,130,246,0.35);
-
     border-bottom-right-radius: 4px;
-
-    color: #ffffff;
+    color: #fff;
 }
-
-
-/* Error message */
 
 .msg.error {
-
     background: rgba(127,29,29,0.25);
-
     border: 1px solid rgba(248,113,113,0.3);
-
     color: #fca5a5;
 }
-
 
 /* =========================================
    MARKDOWN FORMATTING
 ========================================= */
 
-/* Headings */
-
 .msg.bot h1,
 .msg.bot h2,
 .msg.bot h3,
 .msg.bot h4 {
-
-    color: #ffffff;
-
+    color: #fff;
     line-height: 1.3;
-
     margin-top: 22px;
     margin-bottom: 10px;
 }
 
-.msg.bot h1 {
-    font-size: 1.65rem;
-}
+.msg.bot h1 { font-size: 1.65rem; }
+.msg.bot h2 { font-size: 1.4rem; }
+.msg.bot h3 { font-size: 1.15rem; }
+.msg.bot h4 { font-size: 1rem; }
 
-.msg.bot h2 {
-    font-size: 1.4rem;
-}
-
-.msg.bot h3 {
-    font-size: 1.15rem;
-}
-
-.msg.bot h4 {
-    font-size: 1rem;
-}
-
-
-/* Paragraphs */
-
-.msg.bot p {
-    margin: 10px 0;
-}
-
-.msg.bot p:first-child {
-    margin-top: 0;
-}
-
-.msg.bot p:last-child {
-    margin-bottom: 0;
-}
-
-
-/* Bold text */
+.msg.bot p { margin: 10px 0; }
+.msg.bot p:first-child { margin-top: 0; }
+.msg.bot p:last-child { margin-bottom: 0; }
 
 .msg.bot strong {
-    color: #ffffff;
+    color: #fff;
     font-weight: 700;
 }
 
-
-/* Links */
-
 .msg.bot a {
-
     color: #38bdf8;
-
     text-decoration: none;
-
     font-weight: 600;
-
     transition: 0.2s ease;
 }
 
 .msg.bot a:hover {
-
     color: white;
-
     text-shadow: 0 0 10px rgba(56,189,248,0.8);
 }
 
-
-/* Lists */
-
 .msg.bot ul,
 .msg.bot ol {
-
     padding-left: 25px;
-
     margin: 12px 0;
 }
 
-.msg.bot li {
-    margin: 5px 0;
-}
-
-
-/* Blockquotes */
+.msg.bot li { margin: 5px 0; }
 
 .msg.bot blockquote {
-
     position: relative;
-
     margin: 16px 0;
-
     padding: 12px 18px;
-
     background: rgba(15,23,42,0.35);
-
     border-radius: 0 8px 8px 0;
-
     border-left: 3px solid rgba(255,255,255,0.8);
-
     color: #cbd5e1;
 }
 
-
-/* Horizontal rules */
-
 .msg.bot hr {
-
     border: 0;
-
     border-top: 1px solid rgba(255,255,255,0.2);
-
     margin: 20px 0;
 }
 
-
-/* Tables */
-
 .msg.bot table {
-
     width: 100%;
-
     border-collapse: collapse;
-
     margin: 16px 0;
-
     font-size: 13px;
-
     overflow: hidden;
-
     border-radius: 8px;
 }
 
 .msg.bot th,
 .msg.bot td {
-
     border: 1px solid rgba(255,255,255,0.14);
-
     padding: 9px 12px;
-
     text-align: left;
 }
 
 .msg.bot th {
-
     background: rgba(56,189,248,0.15);
-
     color: white;
 }
 
-.msg.bot td {
-    background: rgba(255,255,255,0.025);
-}
-
-
-/* Inline code */
+.msg.bot td { background: rgba(255,255,255,0.025); }
 
 .msg.bot code:not(pre code) {
-
     background: rgba(255,255,255,0.12);
-
     color: #7dd3fc;
-
     padding: 2px 6px;
-
     border-radius: 5px;
-
     font-family: Consolas, monospace;
-
     font-size: 0.9em;
 }
 
-
-/* Code blocks */
-
 .msg.bot pre {
-
     position: relative;
-
     background: rgba(0,0,0,0.55);
-
     border: 1px solid rgba(255,255,255,0.12);
-
     border-radius: 10px;
-
     padding: 18px;
-
     margin: 14px 0;
-
     overflow-x: auto;
-
     font-size: 13px;
-
     line-height: 1.6;
 }
 
 .msg.bot pre code {
-
     font-family: Consolas, 'Courier New', monospace;
-
     background: transparent;
-
     padding: 0;
-
     color: #e4e4e7;
-
     white-space: pre;
 }
 
-
-/* Code copy button */
-
 .code-copy {
-
     position: absolute;
-
     top: 9px;
     right: 9px;
-
     padding: 5px 10px;
-
     background: rgba(255,255,255,0.1);
-
     border: 1px solid rgba(255,255,255,0.2);
-
     border-radius: 6px;
-
     color: #d4d4d8;
-
     font-size: 11px;
-
-
+    cursor: pointer;
     transition: 0.2s ease;
 }
 
 .code-copy:hover {
-
     background: rgba(56,189,248,0.2);
-
     color: white;
-
     border-color: #38bdf8;
 }
 
+/* =========================================
+   GOOGLE SEARCH SOURCES
+========================================= */
+
+.sources-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.13);
+}
+
+.sources-heading {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.sources-icon {
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    background: rgba(56,189,248,0.13);
+    color: #38bdf8;
+    font-size: 16px;
+}
+
+.sources-count {
+    margin-left: auto;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(56,189,248,0.12);
+    color: #7dd3fc;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.sources-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+}
+
+.source-card {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 12px;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.035);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.source-card:hover {
+    background: rgba(56,189,248,0.09);
+    border-color: rgba(56,189,248,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.source-favicon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+}
+
+.source-favicon img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.source-info {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.source-title {
+    color: #e4e4e7;
+    font-size: 12px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.source-domain {
+    color: #858595;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.source-external {
+    color: #71717a;
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.source-card:hover .source-external { color: #38bdf8; }
 
 /* =========================================
    CHAT FOOTER
 ========================================= */
 
 .chat-footer {
-
     padding: 20px 25px;
-
     background: rgba(0,0,0,0.35);
-
     border-top: 1px solid rgba(255,255,255,0.12);
 }
 
-
-/* Input form */
-
 #chat-form {
-
     display: flex;
-
     align-items: center;
-
     gap: 12px;
-
     max-width: 1200px;
-
     margin: auto;
 }
 
-
-/* Input field */
-
 #chat-input {
-
     flex: 1;
-
     min-width: 0;
-
     padding: 15px 18px;
-
     background: rgba(255,255,255,0.08);
-
     border: 1px solid rgba(255,255,255,0.2);
-
     border-radius: 11px;
-
     outline: none;
-
     color: white;
-
     font-family: inherit;
-
     font-size: 14px;
-
     transition: all 0.2s ease;
 }
 
-#chat-input::placeholder {
-    color: #888899;
-}
+#chat-input::placeholder { color: #888899; }
 
 #chat-input:focus {
-
     border-color: #38bdf8;
-
     box-shadow: 0 0 12px rgba(56,189,248,0.15);
-
     background: rgba(255,255,255,0.11);
 }
 
-
-/* Send button */
-
 #chat-send {
-
     border: 1px solid rgba(56,189,248,0.5);
-
     border-radius: 10px;
-
     padding: 14px 25px;
-
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #4f46e5
-    );
-
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
     color: white;
-
     font-weight: bold;
-
     font-size: 14px;
-
-
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
 #chat-send:hover {
-
-    background: linear-gradient(
-        135deg,
-        #3b82f6,
-        #6366f1
-    );
-
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
     box-shadow: 0 0 18px rgba(59,130,246,0.35);
-
     transform: translateY(-1px);
 }
 
 #chat-send:disabled {
-
     opacity: 0.5;
-
     transform: none;
-
     box-shadow: none;
+    cursor: not-allowed;
 }
-
-
-/* Footer text */
 
 .footer-note {
-
     color: #71717a;
-
     text-align: center;
-
     font-size: 11px;
-
     margin-top: 13px;
 }
-
 
 /* =========================================
    CUSTOM CURSOR
 ========================================= */
 
 @media (hover: hover) and (pointer: fine) {
-
-    body, a, button {
-        cursor: none;
-    }
+    body, a, button { cursor: none; }
 
     .cursor-dot {
-
         position: fixed;
-
         top: 0;
         left: 0;
-
         width: 6px;
         height: 6px;
-
         background: #00f3ff;
-
         border-radius: 50%;
-
         box-shadow: 0 0 8px #00f3ff;
-
         pointer-events: none;
-
         z-index: 10000;
-
         transform: translate(-50%, -50%);
     }
 
     .cursor-ring {
-
         position: fixed;
-
         top: 0;
         left: 0;
-
         width: 14px;
         height: 14px;
-
         border: 2px solid rgba(0,243,255,0.8);
-
         border-radius: 50%;
-
         box-shadow: 0 0 12px rgba(0,243,255,0.4);
-
         pointer-events: none;
-
         z-index: 9999;
-
         transform: translate(-50%, -50%);
-
         transition:
             width 0.2s ease,
             height 0.2s ease,
@@ -922,152 +661,90 @@ header::before {
     }
 
     .cursor-ring.hover {
-
         width: 12px;
         height: 12px;
-
         border-color: #8af9ff;
-
         box-shadow: 0 0 16px rgba(138,249,255,0.6);
     }
 
     .cursor-dot.hover {
-
         background: #8af9ff;
-
         box-shadow: 0 0 8px #8af9ff;
     }
 
     .cursor-ring.click {
-
         width: 8px;
         height: 8px;
     }
 }
 
 @media (hover: none) and (pointer: coarse) {
-
     .cursor-dot,
-    .cursor-ring {
-        display: none;
-    }
+    .cursor-ring { display: none; }
 }
-
 
 /* =========================================
    RESPONSIVE DESIGN
 ========================================= */
 
-/* Tablets */
-
 @media (max-width: 900px) {
-
-    .page-container {
-        width: 96%;
-    }
-
-    .chat-container {
-        height: calc(100vh - 220px);
-    }
-
-    #chat-messages {
-        padding: 22px;
-    }
-
-    .msg {
-        max-width: 94%;
-    }
+    .page-container { width: 96%; }
+    .chat-container { height: calc(100vh - 220px); }
+    #chat-messages { padding: 22px; }
+    .msg { max-width: 94%; }
 }
 
-
-/* Mobile */
-
 @media (max-width: 768px) {
-
-    .site-header {
-
-        background: #000000 !important;
-
+    header {
+        background: #000 !important;
         flex-direction: column;
-
         text-align: center;
-
         padding: 16px 20px;
     }
 
-    .site-header::before {
+    header::before {
         display: none;
         animation: none;
     }
 
-    .site-header h1 {
-
-        position: static;
-
-        transform: none;
-
+    header h1 {
         display: block;
-
         margin-bottom: 12px;
-
         font-size: 1.4rem;
     }
 
-    .site-header > div:first-child {
-
+    header > div:first-child {
         display: flex;
-
         flex-direction: column;
-
         align-items: center;
     }
 
-    .site-header nav {
-
+    header nav {
         display: flex;
-
         justify-content: center;
-
         gap: 12px;
-
         margin: 0;
     }
 
-
-    .social-icons {
-        margin-top: 12px;
-    }
+    header nav a { margin-left: 0; }
+    .social-icons { margin-top: 12px; }
 
     .page-container {
-
         width: 100%;
-
         margin: 25px auto 0;
-
         padding: 0 10px;
     }
 
-    .page-heading h2 {
-        font-size: 1.6rem;
-    }
+    .page-heading h2 { font-size: 1.6rem; }
 
     .chat-container {
-
         height: calc(100vh - 190px);
-
         min-height: 400px;
-
         border-radius: 12px;
     }
 
-    .chat-header {
-        padding: 13px 15px;
-    }
-
-    #chat-messages {
-        padding: 17px 12px;
-        gap: 14px;
-    }
+    .chat-header { padding: 13px 15px; }
+    #chat-messages { padding: 17px 12px; gap: 14px; }
 
     .msg {
         max-width: 96%;
@@ -1075,33 +752,26 @@ header::before {
         font-size: 13px;
     }
 
-    .chat-footer {
-        padding: 14px 12px;
-    }
+    .chat-footer { padding: 14px 12px; }
 
     #chat-input {
         padding: 13px 12px;
         font-size: 13px;
     }
 
-    #chat-send {
-        padding: 13px 16px;
-    }
+    #chat-send { padding: 13px 16px; }
 
     .msg.bot table {
         display: block;
         overflow-x: auto;
     }
+
+    .sources-grid { grid-template-columns: 1fr; }
+    .source-card { padding: 10px; }
 }
 
-
-/* Very small screens */
-
 @media (max-width: 400px) {
-
-    .header-title {
-        gap: 8px;
-    }
+    .header-title { gap: 8px; }
 
     .ai-icon {
         width: 38px;
@@ -1113,66 +783,53 @@ header::before {
         font-size: 11px;
     }
 
-    .site-header nav a {
-        font-size: 0.85rem;
-    }
-
+    header nav a { font-size: 0.85rem; }
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-<!-- Custom cursor -->
-
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
-
 
 <!-- =========================================
      MAIN WEBSITE HEADER
 ========================================= -->
 
 <header>
-  <div>
-    <h1 style="font-family: 'Google Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px; margin: 0;">
-      Mohamed's Website
-    </h1>
-    <nav style="margin-top: 6px;">
-      <i><a href="#my-projects" style="margin-right: 8px; color: #ffffff;">Projects</a></i>
-      <i><a href="https://www.instagram.com/mohamedhshcs/"  style="margin-right: 8px; color: #ffffff;">Contact</a></i>
-      <i><a href="https://mohamedpro123.github.io/ai" style="color: #ffffff;">AI</a></i>
-    </nav>
-  </div>
+    <div>
+        <h1 style="font-family: 'Google Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px; margin: 0;">
+            Mohamed's Website
+        </h1>
 
-  <div class="social-icons">
-    <!-- GitHub Link -->
-    <a href="https://github.com/MohamedPro123" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="social-icon">
-      <svg height="28" width="28" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-      </svg>
-    </a>
+        <nav style="margin-top: 6px;">
+            <i><a href="#my-projects" style="margin-right: 8px; color: #ffffff;">Projects</a></i>
+            <i><a href="https://www.instagram.com/mohamedhshcs/" style="margin-right: 8px; color: #ffffff;">Contact</a></i>
+            <i><a href="https://mohamedpro123.github.io/ai" style="color: #ffffff;">AI</a></i>
+        </nav>
+    </div>
 
-    <!-- YouTube Link -->
-    <a href="https://www.youtube.com/@mohamedaHSHCS" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" class="social-icon">
-      <svg height="32" width="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
-      </svg>
-    </a>
+    <div class="social-icons">
+        <a href="https://github.com/MohamedPro123" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="social-icon">
+            <svg height="28" width="28" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+        </a>
 
-    <!-- Instagram Link -->
-    <a href="https://www.instagram.com/mohamedhshcs/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" class="social-icon">
-      <svg height="28" width="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
-      </svg>
-    </a>
-  </div>
+        <a href="https://www.youtube.com/@mohamedaHSHCS" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" class="social-icon">
+            <svg height="32" width="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+            </svg>
+        </a>
+
+        <a href="https://www.instagram.com/mohamedhshcs/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" class="social-icon">
+            <svg height="28" width="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
+            </svg>
+        </a>
+    </div>
 </header>
-
-
 
 <!-- =========================================
      AI PAGE
@@ -1180,61 +837,33 @@ header::before {
 
 <div class="page-container">
 
-
     <div class="page-heading">
-
         <h2>AI Assistant</h2>
-
         <p>
-          <span style="color: white;">  Ask questions, explore ideas, and get answers powered by Google Gemini. </span>
+            <span style="color: white;">
+                Ask questions, explore ideas, and get answers powered by Google Gemini.
+            </span>
         </p>
-
     </div>
-
-
 
     <div class="chat-container">
 
-
-        <!-- Chat header -->
-
         <div class="chat-header">
-
             <div class="header-title">
-
-                <div class="ai-icon">
-                    ✦
-                </div>
+                <div class="ai-icon">✦</div>
 
                 <div>
-
                     <h2>Gemini AI</h2>
-
-                    <div class="status" id="status">
-                        ● Ready to chat
-                    </div>
-
+                    <div class="status" id="status">● Ready to chat</div>
                 </div>
-
             </div>
 
-
-            <button id="new-chat">
-                + New chat
-            </button>
-
+            <button id="new-chat" type="button">+ New chat</button>
         </div>
 
-
-
-        <!-- Messages -->
-
         <main id="chat-messages">
-
             <div class="msg bot">
-
                 <h3>Welcome!</h3>
-
                 Hello! I'm Gemini. What would you like to know?
 
                 <p>
@@ -1246,19 +875,11 @@ header::before {
                     You can also ask me to format answers using Markdown,
                     including headings, lists, tables, and code blocks.
                 </p>
-
             </div>
-
         </main>
 
-
-
-        <!-- Chat input -->
-
         <footer class="chat-footer">
-
             <form id="chat-form">
-
                 <input
                     type="text"
                     id="chat-input"
@@ -1267,55 +888,33 @@ header::before {
                     required
                 >
 
-                <button type="submit" id="chat-send">
-                    Send ↑
-                </button>
-
+                <button type="submit" id="chat-send">Send ↑</button>
             </form>
 
-
             <div class="footer-note">
-
                 Powered by Google Gemini · AI can make mistakes.
-
             </div>
-
         </footer>
 
-
     </div>
-
 </div>
 
-
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
-
 <script>
-
-
 /* =========================================
    GEMINI CONNECTION
 ========================================= */
 
 const WORKER_URL =
-"https://gemini-chat.mappinggerman04.workers.dev";
+    "https://gemini-chat.mappinggerman04.workers.dev";
 
+const MAX_HISTORY_MESSAGES = 40;
 
 const chatForm = document.getElementById("chat-form");
-
 const chatInput = document.getElementById("chat-input");
-
 const chatMessages = document.getElementById("chat-messages");
-
 const chatSend = document.getElementById("chat-send");
-
 const newChat = document.getElementById("new-chat");
-
 const status = document.getElementById("status");
-
 
 let history = [];
 
@@ -1325,26 +924,14 @@ let history = [];
 ========================================= */
 
 marked.setOptions({
-
     gfm: true,
-
     breaks: true,
-
     headerIds: false
-
 });
 
-
 function renderMarkdown(text) {
-
-    // Convert Markdown into HTML.
     const rawHTML = marked.parse(text);
-
-    // Sanitize HTML to prevent injected scripts.
-    const safeHTML = DOMPurify.sanitize(rawHTML);
-
-    return safeHTML;
-
+    return DOMPurify.sanitize(rawHTML);
 }
 
 
@@ -1356,26 +943,23 @@ function formatCodeBlocks(container) {
 
     container.querySelectorAll("pre code").forEach(code => {
 
-        // Apply syntax highlighting.
         if (window.hljs) {
             hljs.highlightElement(code);
         }
 
         const pre = code.parentElement;
 
-        // Prevent duplicate buttons.
         if (pre.querySelector(".code-copy")) return;
 
         const copyButton = document.createElement("button");
 
         copyButton.className = "code-copy";
-
         copyButton.textContent = "Copy code";
+        copyButton.type = "button";
 
         copyButton.addEventListener("click", async () => {
 
             try {
-
                 await navigator.clipboard.writeText(code.innerText);
 
                 copyButton.textContent = "Copied!";
@@ -1385,19 +969,146 @@ function formatCodeBlocks(container) {
                 }, 1500);
 
             } catch (error) {
-
                 copyButton.textContent = "Copy failed";
-
                 console.error(error);
-
             }
 
         });
 
         pre.appendChild(copyButton);
-
     });
+}
 
+
+/* =========================================
+   GOOGLE SEARCH SOURCES
+========================================= */
+
+function addSources(container, sources) {
+
+    if (!Array.isArray(sources) || sources.length === 0) {
+        return;
+    }
+
+    const validSources = [];
+    const seen = new Set();
+
+    for (const source of sources) {
+
+        if (!source || typeof source.url !== "string") {
+            continue;
+        }
+
+        let parsedURL;
+
+        try {
+            parsedURL = new URL(source.url);
+        } catch {
+            continue;
+        }
+
+        if (parsedURL.protocol !== "https:") {
+            continue;
+        }
+
+        if (seen.has(parsedURL.href)) {
+            continue;
+        }
+
+        seen.add(parsedURL.href);
+
+        validSources.push({
+            title:
+                typeof source.title === "string" && source.title.trim()
+                    ? source.title.trim()
+                    : parsedURL.hostname,
+
+            url: parsedURL.href,
+
+            domain: parsedURL.hostname.replace(/^www\./, "")
+        });
+    }
+
+    if (validSources.length === 0) {
+        return;
+    }
+
+    const section = document.createElement("section");
+    section.className = "sources-section";
+
+    const heading = document.createElement("div");
+    heading.className = "sources-heading";
+
+    const icon = document.createElement("span");
+    icon.className = "sources-icon";
+    icon.textContent = "⌕";
+
+    const headingText = document.createElement("span");
+    headingText.textContent = "Web sources";
+
+    const count = document.createElement("span");
+    count.className = "sources-count";
+    count.textContent =
+        `${validSources.length} ${validSources.length === 1 ? "source" : "sources"}`;
+
+    heading.append(icon, headingText, count);
+
+    const grid = document.createElement("div");
+    grid.className = "sources-grid";
+
+    for (const source of validSources) {
+
+        const link = document.createElement("a");
+
+        link.className = "source-card";
+        link.href = source.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.title = source.title;
+
+        const faviconContainer = document.createElement("div");
+        faviconContainer.className = "source-favicon";
+
+        const favicon = document.createElement("img");
+
+        favicon.src =
+            "https://www.google.com/s2/favicons?domain=" +
+            encodeURIComponent(source.domain) +
+            "&sz=64";
+
+        favicon.alt = "";
+        favicon.loading = "lazy";
+        favicon.referrerPolicy = "no-referrer";
+
+        favicon.addEventListener("error", () => {
+            faviconContainer.textContent = "🌐";
+        });
+
+        faviconContainer.appendChild(favicon);
+
+        const info = document.createElement("div");
+        info.className = "source-info";
+
+        const title = document.createElement("span");
+        title.className = "source-title";
+        title.textContent = source.title;
+
+        const domain = document.createElement("span");
+        domain.className = "source-domain";
+        domain.textContent = source.domain;
+
+        info.append(title, domain);
+
+        const external = document.createElement("span");
+        external.className = "source-external";
+        external.textContent = "↗";
+
+        link.append(faviconContainer, info, external);
+        grid.appendChild(link);
+    }
+
+    section.append(heading, grid);
+    container.appendChild(section);
 }
 
 
@@ -1408,31 +1119,23 @@ function formatCodeBlocks(container) {
 function addMessage(text, sender) {
 
     const bubble = document.createElement("div");
-
     bubble.className = `msg ${sender}`;
-
 
     if (sender === "bot") {
 
         bubble.innerHTML = renderMarkdown(text);
-
         formatCodeBlocks(bubble);
 
     } else {
 
-        // User messages are displayed as plain text.
         bubble.textContent = text;
 
     }
 
-
     chatMessages.appendChild(bubble);
-
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-
     return bubble;
-
 }
 
 
@@ -1443,24 +1146,17 @@ function addMessage(text, sender) {
 newChat.addEventListener("click", () => {
 
     history = [];
-
     chatMessages.innerHTML = "";
 
     status.textContent = "● Ready to chat";
-
     status.className = "status";
 
-
     addMessage(
-
         "New conversation started. What would you like to know?",
-
         "bot"
-
     );
 
     chatInput.focus();
-
 });
 
 
@@ -1472,193 +1168,121 @@ chatForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
-
     const message = chatInput.value.trim();
 
+    if (!message || chatSend.disabled) {
+        return;
+    }
 
-    if (!message || chatSend.disabled) return;
-
-
-    // Save previous history in case of failure.
-
+    // Preserve history if the request fails.
     const previousHistory = [...history];
 
-
-    // Display user's message.
-
+    // Display the user's message.
     addMessage(message, "user");
 
-
-    // Add message to conversation history.
-
+    // Add the message to conversation history.
     history.push({
-
         role: "user",
-
         parts: [{ text: message }]
-
     });
 
+    // Keep the latest 40 messages.
+    history = history.slice(-MAX_HISTORY_MESSAGES);
 
-    // Keep history manageable.
-
-    history = history.slice(-12);
-
-
-    // Clear input.
-
+    // Disable input while processing.
     chatInput.value = "";
-
     chatInput.disabled = true;
-
     chatSend.disabled = true;
 
-
-    // Update status.
-
     status.textContent = "● Thinking...";
-
     status.className = "status thinking";
-
-
-    // Show loading message.
 
     const loading = addMessage("Thinking...", "bot");
 
-
     try {
 
-
         const response = await fetch(WORKER_URL, {
-
             method: "POST",
-
             headers: {
-
                 "Content-Type": "application/json"
-
             },
-
             body: JSON.stringify({
-
                 contents: history
-
             })
-
         });
-
 
         const responseText = await response.text();
 
-
         let data;
 
-
         try {
-
             data = JSON.parse(responseText);
-
         } catch {
-
             throw new Error(
-
                 `Invalid server response (${response.status}): ` +
-
                 responseText.slice(0, 200)
-
             );
-
         }
-
 
         if (!response.ok) {
-
             throw new Error(
-
                 data.error || `Server error: ${response.status}`
-
             );
-
         }
-
 
         if (
-
             typeof data.reply !== "string" ||
-
             !data.reply.trim()
-
         ) {
-
             throw new Error("Gemini returned an empty response.");
-
         }
 
-
-        // Display formatted Gemini response.
-
+        // Display the AI response.
         loading.innerHTML = renderMarkdown(data.reply);
-
         formatCodeBlocks(loading);
 
+        // Display Google Search sources separately.
+        if (Array.isArray(data.sources)) {
+            addSources(loading, data.sources);
+        }
 
-        // Save AI response.
-
+        // Save the AI response to conversation history.
         history.push({
-
             role: "model",
-
             parts: [{ text: data.reply }]
-
         });
 
-
-        // Keep only latest 12 messages.
-
-        history = history.slice(-12);
-
+        history = history.slice(-MAX_HISTORY_MESSAGES);
 
         // Update status.
-
-        status.textContent = "● Ready to chat";
+        status.textContent =
+            data.groundingUsed && data.sources?.length
+                ? "● Answered using web search"
+                : "● Ready to chat";
 
         status.className = "status";
 
-
     } catch (error) {
-
 
         console.error("Gemini error:", error);
 
-
         loading.textContent = "Error: " + error.message;
-
         loading.classList.add("error");
 
-
-        // Restore previous conversation.
-
+        // Restore the conversation history.
         history = previousHistory;
 
-
         status.textContent = "● Connection error";
-
         status.className = "status error-status";
-
 
     } finally {
 
-
         chatInput.disabled = false;
-
         chatSend.disabled = false;
-
         chatInput.focus();
 
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
     }
-
 });
 
 
@@ -1667,69 +1291,42 @@ chatForm.addEventListener("submit", async (event) => {
 ========================================= */
 
 const cursorDot = document.querySelector(".cursor-dot");
-
 const cursorRing = document.querySelector(".cursor-ring");
 
-
 if (
-
     window.matchMedia("(hover: hover) and (pointer: fine)").matches
-
 ) {
-
 
     document.addEventListener("mousemove", (event) => {
 
         cursorDot.style.left = event.clientX + "px";
-
         cursorDot.style.top = event.clientY + "px";
 
-
         cursorRing.style.left = event.clientX + "px";
-
         cursorRing.style.top = event.clientY + "px";
-
     });
-
 
     document.querySelectorAll("a, button").forEach(element => {
 
         element.addEventListener("mouseenter", () => {
-
             cursorDot.classList.add("hover");
-
             cursorRing.classList.add("hover");
-
         });
-
 
         element.addEventListener("mouseleave", () => {
-
             cursorDot.classList.remove("hover");
-
             cursorRing.classList.remove("hover");
-
         });
-
     });
-
 
     document.addEventListener("mousedown", () => {
-
         cursorRing.classList.add("click");
-
     });
-
 
     document.addEventListener("mouseup", () => {
-
         cursorRing.classList.remove("click");
-
     });
-
 }
-
-
 </script>
 
 </body>
