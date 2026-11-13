@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +17,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
 
     
     <div class="popup-overlay" id="notificationPopup" hidden>
@@ -89,6 +91,9 @@ html {
 
 .popup-overlay.active {
     opacity: 1;
+}
+    .popup-content p {
+white-space: pre-wrap;
 }
 
 /* Ventana principal */
@@ -1230,7 +1235,7 @@ nav a:hover {
             </form>
 
             <div class="footer-note">
-                Powered by Gemini™ 3.5 Flash Lite · AI can make mistakes. · <u><span style="" role="button" tabindex="0" onclick="showNotification('Important Notices', '- Gemini can make mistakes. Please, double check your work.', 'Google may use data you enter for training their models. I have no control over this. Avoid entering sensitive information.', '- Mohamed is not liable if your teacher catches you using AI in class, and any consequences they may give as a result.')">Notice</span></u>
+                Powered by Gemini™ 3.5 Flash Lite · AI can make mistakes. · <u><span style="" role="button" tabindex="0" onclick="showNotification('Important Notices', '· Gemini can make mistakes. Please, double check your work.\n· Google may use data you enter for training their models. I have no control over this. Avoid entering sensitive information.\n· Make sure to be careful. Mohamed is not liable if your teacher catches you using AI in class, and any punishments they may give as a result.')">Notice</span></u>
             </div>
         </footer>
 
