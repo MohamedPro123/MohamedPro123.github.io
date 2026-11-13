@@ -30,12 +30,6 @@ body {
     font-family: 'Google Sans', Arial, sans-serif;
   background-color: rgba(0, 0, 0, 0.65); 
   
-  /* Heavy blur and slight brightness adjustment */
-  backdrop-filter: blur(20px) brightness(70%);
-  -webkit-backdrop-filter: blur(20px) brightness(70%); /* Safari support */
-      position: fixed;
-  inset: 0; /* Shorthand for top: 0; right: 0; bottom: 0; left: 0; */
-  z-index: 999; /* Keeps it above regular page content */
 
     background-image: url('https://imglink.cc/cdn/mJXIEE9M_k.jpg');
     background-size: cover;
@@ -45,6 +39,25 @@ body {
     color: #e4e4e7;
     line-height: 1.6;
     overflow-x: clip;
+}
+
+    body {
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  color: white;
+}
+
+body::before {
+  content: "";
+  inset: -30px;    /* Prevents white/faded edges from the heavy blur */
+  z-index: -1;
+  
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+    url("https://imglink.cc/cdn/mJXIEE9M_k.jpg") center / cover no-repeat;
+    
+  filter: blur(28px);
 }
 
 /* =========================================
