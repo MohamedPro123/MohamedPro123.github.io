@@ -7,7 +7,6 @@ Right now I am doing a major overhaul, before the website looked like Windows XP
 # Full features list ▶
 - Gemini 3.5 Flash Lite - UNBLOCKED ON SCHOOL COMPUTERS!
 
-
-  # To do list ▶
+# To do list ▶
   - Game emulators online
   - GWEC school forum with anonymous posts
