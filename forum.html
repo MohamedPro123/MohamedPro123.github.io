@@ -129,6 +129,9 @@
 // add this near beginning of javascript
         document.getElementById("username").value =
         localStorage.getItem("forumUsername") || "";
+
+        let currentUser = null;
+        let isAdmin = false;
         
         // ==========================================
         // 1. SUPABASE CONFIGURATION
@@ -319,145 +322,153 @@ async function createPost() {
         // 4. LOAD POSTS
         // ==========================================
 
-        async function loadPosts() {
+ 
+async function loadPosts() {
 
-            const container = document.getElementById("posts");
+    const container = document.getElementById("posts");
 
-            container.textContent = "Loading posts...";
+    container.textContent = "Loading posts...";
 
-            try {
+    try {
 
-                const { data: posts, error } = await db
-                    .from("posts")
-                    .select("*")
-                    .order("created_at", { ascending: false });
+        const { data: posts, error } = await db
+            .from("posts")
+            .select("*")
+            .order("created_at", { ascending: false });
 
-                if (error) throw error;
+        if (error) throw error;
 
-                container.replaceChildren();
+        container.replaceChildren();
 
-                if (!posts || posts.length === 0) {
-                    container.textContent = "No posts yet. Be the first!";
-                    return;
+        if (!posts || posts.length === 0) {
+            container.textContent = "No posts yet. Be the first!";
+            return;
+        }
+
+        for (const post of posts) {
+
+            const postElement = document.createElement("div");
+            postElement.className = "post";
+
+            // USERNAME
+            const usernameElement = document.createElement("p");
+            usernameElement.textContent =
+                "Posted by: " + (post.username || "Anonymous");
+            usernameElement.className = "post-meta";
+
+            // TITLE
+            const titleElement = document.createElement("h3");
+            titleElement.textContent = post.title;
+
+            // CONTENT
+            const contentElement = document.createElement("p");
+            contentElement.className = "post-content";
+            contentElement.textContent = post.content;
+
+            // MEDIA
+            let mediaElement = null;
+
+            if (post.media_url) {
+
+                if (post.media_type === "video") {
+
+                    mediaElement = document.createElement("video");
+                    mediaElement.src = post.media_url;
+                    mediaElement.controls = true;
+                    mediaElement.preload = "metadata";
+
+                } else {
+
+                    mediaElement = document.createElement("img");
+                    mediaElement.src = post.media_url;
+                    mediaElement.alt = "Post attachment";
+                    mediaElement.loading = "lazy";
                 }
 
-                for (const post of posts) {
+                mediaElement.style.maxWidth = "100%";
+                mediaElement.style.maxHeight = "500px";
+                mediaElement.style.borderRadius = "8px";
+            }
 
-                    const postElement = document.createElement("div");
-                    postElement.className = "post";
+            // DATE
+            const meta = document.createElement("p");
+            meta.className = "post-meta";
+            meta.textContent =
+                "Posted: " + new Date(post.created_at).toLocaleString();
 
+            // VOTES
+            const voteCount = await getVoteCount(post.id);
 
-const username = document.createElement("p");
-username.textContent = "Posted by: " + (post.username || "Anonymous");
-username.className = "post-meta";
+            const votes = document.createElement("p");
+            votes.textContent = "Score: " + voteCount;
 
-const title = document.createElement("h3");
-title.textContent = post.title;
+            const upvote = document.createElement("button");
+            upvote.textContent = "▲ Upvote";
+            upvote.onclick = () => vote(post.id, 1);
 
-const content = document.createElement("p");
-content.className = "post-content";
-content.textContent = post.content;
+            const downvote = document.createElement("button");
+            downvote.textContent = "▼ Downvote";
+            downvote.onclick = () => vote(post.id, -1);
 
-// Display uploaded media
-let mediaElement = null;
+            // REPLIES
+            const replyButton = document.createElement("button");
+            replyButton.textContent = "Replies";
 
-if (post.media_url) {
+            const repliesArea = document.createElement("div");
+            repliesArea.className = "replies-area";
+            repliesArea.hidden = true;
 
-    if (post.media_type === "video") {
+            replyButton.onclick = async () => {
 
-        mediaElement = document.createElement("video");
-        mediaElement.src = post.media_url;
-        mediaElement.controls = true;
-        mediaElement.preload = "metadata";
-        mediaElement.style.maxWidth = "100%";
+                repliesArea.hidden = !repliesArea.hidden;
 
-    } else {
+                if (!repliesArea.hidden) {
+                    await loadReplies(post.id, repliesArea);
+                }
+            };
 
-        mediaElement = document.createElement("img");
-        mediaElement.src = post.media_url;
-        mediaElement.alt = "Post attachment";
-        mediaElement.loading = "lazy";
-        mediaElement.style.maxWidth = "100%";
+            // DELETE POST
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete Post";
+
+            deleteButton.hidden =
+                post.user_id !== currentUser.id && !isAdmin;
+
+            deleteButton.onclick = () => deletePost(post.id);
+
+            // ASSEMBLE POST
+            postElement.append(
+                usernameElement,
+                titleElement,
+                contentElement
+            );
+
+            if (mediaElement) {
+                postElement.appendChild(mediaElement);
+            }
+
+            postElement.append(
+                meta,
+                votes,
+                upvote,
+                downvote,
+                replyButton,
+                deleteButton,
+                repliesArea
+            );
+
+            container.appendChild(postElement);
+        }
+
+    } catch (error) {
+
+        container.textContent =
+            "Error loading posts: " + error.message;
+
+        console.error("Post loading error:", error);
     }
 }
 
-
-                    const content = document.createElement("p");
-                    content.className = "post-content";
-                    content.textContent = post.content;
-
-                    const meta = document.createElement("p");
-                    meta.className = "post-meta";
-                    meta.textContent =
-                        "Posted: " + new Date(post.created_at).toLocaleString();
-
-                    const voteCount = await getVoteCount(post.id);
-
-                    const votes = document.createElement("p");
-                    votes.textContent = "Score: " + voteCount;
-
-                    const upvote = document.createElement("button");
-                    upvote.textContent = "▲ Upvote";
-                    upvote.onclick = () => vote(post.id, 1);
-
-                    const downvote = document.createElement("button");
-                    downvote.textContent = "▼ Downvote";
-                    downvote.onclick = () => vote(post.id, -1);
-
-                    const replyButton = document.createElement("button");
-                    replyButton.textContent = "Replies";
-
-                    const repliesArea = document.createElement("div");
-                    repliesArea.className = "replies-area";
-                    repliesArea.hidden = true;
-
-                    replyButton.onclick = async () => {
-
-                        repliesArea.hidden = !repliesArea.hidden;
-
-                        if (!repliesArea.hidden) {
-                            await loadReplies(post.id, repliesArea);
-                        }
-                    };
-
-                    const deleteButton = document.createElement("button");
-                    deleteButton.textContent = "Delete Post";
-
-                    deleteButton.hidden =
-                        post.user_id !== currentUser.id;
-
-                    deleteButton.onclick = () => deletePost(post.id);
-
-postElement.append(
-    username,
-    title,
-    content
-);
-
-if (mediaElement) {
-    postElement.appendChild(mediaElement);
-}
-
-postElement.append(
-    meta,
-    votes,
-    upvote,
-    downvote,
-    replyButton,
-    deleteButton,
-    repliesArea
-);
-
-                    container.appendChild(postElement);
-                }
-
-            } catch (error) {
-
-                container.textContent = "Error loading posts: " + error.message;
-
-                console.error(error);
-            }
-        }
 
 
         // ==========================================
