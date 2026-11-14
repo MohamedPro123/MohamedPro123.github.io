@@ -1689,43 +1689,55 @@ chatForm.addEventListener("submit", async (event) => {
    CUSTOM CURSOR
 ========================================= */
 
-const cursorDot = document.querySelector(".cursor-dot");
-const cursorRing = document.querySelector(".cursor-ring");
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
 
-if (
-    window.matchMedia("(hover: hover) and (pointer: fine)").matches
-) {
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let ringX = mouseX;
+let ringY = mouseY;
 
-    document.addEventListener("mousemove", (event) => {
+// Lower = smoother/slower lag, Higher = snappier (0.1 to 0.3 is ideal)
+const speed = 0.18;
 
-        cursorDot.style.left = event.clientX + "px";
-        cursorDot.style.top = event.clientY + "px";
+// Track mouse position
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
 
-        cursorRing.style.left = event.clientX + "px";
-        cursorRing.style.top = event.clientY + "px";
-    });
+  // Move center dot immediately
+  dot.style.left = `${mouseX}px`;
+  dot.style.top = `${mouseY}px`;
+});
 
-    document.querySelectorAll("a, button").forEach(element => {
+// Smooth animation loop for the outer ring
+function animateRing() {
+  ringX += (mouseX - ringX) * speed;
+  ringY += (mouseY - ringY) * speed;
 
-        element.addEventListener("mouseenter", () => {
-            cursorDot.classList.add("hover");
-            cursorRing.classList.add("hover");
-        });
+  ring.style.left = `${ringX}px`;
+  ring.style.top = `${ringY}px`;
 
-        element.addEventListener("mouseleave", () => {
-            cursorDot.classList.remove("hover");
-            cursorRing.classList.remove("hover");
-        });
-    });
-
-    document.addEventListener("mousedown", () => {
-        cursorRing.classList.add("click");
-    });
-
-    document.addEventListener("mouseup", () => {
-        cursorRing.classList.remove("click");
-    });
+  requestAnimationFrame(animateRing);
 }
+animateRing();
+
+// Expand & change color on interactive elements
+const clickables = document.querySelectorAll('a, button, input, [role="button"]');
+clickables.forEach((el) => {
+  el.addEventListener('mouseenter', () => {
+    ring.classList.add('hover');
+    dot.classList.add('hover');
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.classList.remove('hover');
+    dot.classList.remove('hover');
+  });
+});
+
+// Pulse inward on click
+window.addEventListener('mousedown', () => ring.classList.add('click'));
+window.addEventListener('mouseup', () => ring.classList.remove('click'));
 
     /* NOTIFICATION CODE */
 
