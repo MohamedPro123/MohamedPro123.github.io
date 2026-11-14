@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@db/db-js@2"></script>
 
     <style>
         body {
@@ -64,21 +64,21 @@
     <div id="posts">Loading posts...</div>
 
     <script>
-        // 1. SUPABASE CONFIGURATION
-        const SUPABASE_URL = "https://ezgvqpasqentcyohhdcs.supabase.co/rest/v1/";
-        const SUPABASE_KEY = "sb_publishable_hmbwFdChJYxB7Ra48hmn8g_ga04W7Zx";
+        // 1. db CONFIGURATION
+        const db_URL = "https://ezgvqpasqentcyohhdcs.db.co/rest/v1/";
+        const db_KEY = "sb_publishable_hmbwFdChJYxB7Ra48hmn8g_ga04W7Zx";
 
-        const supabase = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
+const db = window.supabase.createClient(
+    db_URL,
+    db_KEY
+);
 
         let currentUser = null;
 
         // 2. ANONYMOUS SIGN-IN
         async function initialize() {
             let { data: { session }, error } =
-                await supabase.auth.getSession();
+                await db.auth.getSession();
 
             if (error) {
                 document.getElementById("status").textContent = error.message;
@@ -89,7 +89,7 @@
                 currentUser = session.user;
             } else {
                 const { data, error } =
-                    await supabase.auth.signInAnonymously();
+                    await db.auth.signInAnonymously();
 
                 if (error) {
                     document.getElementById("status").textContent =
@@ -116,7 +116,7 @@
                 return;
             }
 
-            const { error } = await supabase
+            const { error } = await db
                 .from("posts")
                 .insert({
                     user_id: currentUser.id,
@@ -137,7 +137,7 @@
 
         // 4. LOAD POSTS
         async function loadPosts() {
-            const { data: posts, error } = await supabase
+            const { data: posts, error } = await db
                 .from("posts")
                 .select("*")
                 .order("created_at", { ascending: false });
@@ -214,7 +214,7 @@
 
         // 5. GET TOTAL VOTES
         async function getVoteCount(postId) {
-            const { data, error } = await supabase
+            const { data, error } = await db
                 .from("votes")
                 .select("vote")
                 .eq("post_id", postId);
@@ -226,7 +226,7 @@
 
         // 6. UPVOTE / DOWNVOTE
         async function vote(postId, value) {
-            const { error } = await supabase
+            const { error } = await db
                 .from("votes")
                 .upsert({
                     post_id: postId,
@@ -244,7 +244,7 @@
 
         // 7. LOAD REPLIES
         async function loadReplies(postId, container) {
-            const { data, error } = await supabase
+            const { data, error } = await db
                 .from("replies")
                 .select("*")
                 .eq("post_id", postId)
@@ -291,7 +291,7 @@
 
                 if (!content) return;
 
-                const { error } = await supabase
+                const { error } = await db
                     .from("replies")
                     .insert({
                         post_id: postId,
@@ -314,7 +314,7 @@
         async function deletePost(postId) {
             if (!confirm("Delete this post?")) return;
 
-            const { error } = await supabase
+            const { error } = await db
                 .from("posts")
                 .delete()
                 .eq("id", postId)
@@ -330,7 +330,7 @@
 
         // 9. DELETE A REPLY
         async function deleteReply(replyId, postId, container) {
-            const { error } = await supabase
+            const { error } = await db
                 .from("replies")
                 .delete()
                 .eq("id", replyId)
