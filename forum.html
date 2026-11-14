@@ -85,24 +85,39 @@
 
     <p id="status">Connecting to Supabase...</p>
 
-    <h2>Create a post</h2>
+  
+<h2>Create a post</h2>
 
-    <input
-        id="postTitle"
-        type="text"
-        maxlength="150"
-        placeholder="Post title"
-    >
+<input
+    id="username"
+    type="text"
+    maxlength="25"
+    placeholder="Your username"
+>
 
-    <textarea
-        id="postContent"
-        maxlength="10000"
-        placeholder="Write something..."
-    ></textarea>
+<input
+    id="postTitle"
+    type="text"
+    maxlength="150"
+    placeholder="Post title"
+>
 
-    <button id="publishButton" onclick="createPost()">
-        Publish Post
-    </button>
+<textarea
+    id="postContent"
+    maxlength="10000"
+    placeholder="Write something..."
+></textarea>
+
+<label for="mediaFile">Attach an image, GIF, or MP4:</label>
+<input
+    id="mediaFile"
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif,video/mp4"
+>
+
+<button id="publishButton" onclick="createPost()">
+    Publish Post
+</button>
 
     <hr>
 
@@ -111,6 +126,10 @@
     <div id="posts">Loading posts...</div>
 
     <script>
+// add this near beginning of javascript
+        document.getElementById("username").value =
+        localStorage.getItem("forumUsername") || "";
+        
         // ==========================================
         // 1. SUPABASE CONFIGURATION
         // ==========================================
@@ -141,6 +160,8 @@
         // ==========================================
 
         async function initialize() {
+
+            console.log("Your forum user ID:", currentUser.id);
 
             const status = document.getElementById("status");
 
@@ -183,52 +204,115 @@
         // 3. CREATE A POST
         // ==========================================
 
-        async function createPost() {
+        
+async function createPost() {
 
-            if (!currentUser) {
-                alert("You are not connected yet.");
-                return;
-            }
+    if (!currentUser) {
+        alert("You are not connected yet.");
+        return;
+    }
 
-            const title = document.getElementById("postTitle").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const title = document.getElementById("postTitle").value.trim();
+    const content = document.getElementById("postContent").value.trim();
+    const file = document.getElementById("mediaFile").files[0];
 
-            const content = document.getElementById("postContent").value.trim();
+    if (!username || !title || !content) {
+        alert("Please enter a username, title, and message.");
+        return;
+    }
 
-            if (!title || !content) {
-                alert("Please enter a title and message.");
-                return;
-            }
+    if (username.length > 25) {
+        alert("Username must be 25 characters or fewer.");
+        return;
+    }
 
-            const button = document.getElementById("publishButton");
+    if (file && file.size > 50 * 1024 * 1024) {
+        alert("Maximum file size is 50 MB.");
+        return;
+    }
 
-            button.disabled = true;
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+        "video/mp4"
+    ];
 
-            try {
+    if (file && !allowedTypes.includes(file.type)) {
+        alert("Only images, GIFs, and MP4 videos are allowed.");
+        return;
+    }
 
-                const { error } = await db
-                    .from("posts")
-                    .insert({
-                        user_id: currentUser.id,
-                        title: title,
-                        content: content
-                    });
+    const button = document.getElementById("publishButton");
+    button.disabled = true;
 
-                if (error) throw error;
+    let mediaUrl = null;
+    let mediaType = null;
 
-                document.getElementById("postTitle").value = "";
-                document.getElementById("postContent").value = "";
+    try {
 
-                await loadPosts();
+        // Upload media if a file was selected
+        if (file) {
 
-            } catch (error) {
+            const extension = file.name.split(".").pop().toLowerCase();
+            const filePath =
+                currentUser.id + "/" + crypto.randomUUID() + "." + extension;
 
-                alert("Could not publish post: " + error.message);
+            const { error: uploadError } = await db.storage
+                .from("forum-media")
+                .upload(filePath, file, {
+                    contentType: file.type,
+                    upsert: false
+                });
 
-            } finally {
+            if (uploadError) throw uploadError;
 
-                button.disabled = false;
-            }
+            const { data } = db.storage
+                .from("forum-media")
+                .getPublicUrl(filePath);
+
+            mediaUrl = data.publicUrl;
+            mediaType = file.type.startsWith("video/")
+                ? "video"
+                : "image";
         }
+
+        // Save the post
+        const { error } = await db
+            .from("posts")
+            .insert({
+                user_id: currentUser.id,
+                username: username,
+                title: title,
+                content: content,
+                media_url: mediaUrl,
+                media_type: mediaType
+            });
+
+        if (error) throw error;
+
+        // Remember the username on this browser
+        localStorage.setItem("forumUsername", username);
+
+        document.getElementById("postTitle").value = "";
+        document.getElementById("postContent").value = "";
+        document.getElementById("mediaFile").value = "";
+
+        await loadPosts();
+
+    } catch (error) {
+
+        alert("Could not publish post: " + error.message);
+        console.error(error);
+
+    } finally {
+
+        button.disabled = false;
+    }
+}
+
 
 
         // ==========================================
@@ -262,8 +346,41 @@
                     const postElement = document.createElement("div");
                     postElement.className = "post";
 
-                    const title = document.createElement("h3");
-                    title.textContent = post.title;
+
+const username = document.createElement("p");
+username.textContent = "Posted by: " + (post.username || "Anonymous");
+username.className = "post-meta";
+
+const title = document.createElement("h3");
+title.textContent = post.title;
+
+const content = document.createElement("p");
+content.className = "post-content";
+content.textContent = post.content;
+
+// Display uploaded media
+let mediaElement = null;
+
+if (post.media_url) {
+
+    if (post.media_type === "video") {
+
+        mediaElement = document.createElement("video");
+        mediaElement.src = post.media_url;
+        mediaElement.controls = true;
+        mediaElement.preload = "metadata";
+        mediaElement.style.maxWidth = "100%";
+
+    } else {
+
+        mediaElement = document.createElement("img");
+        mediaElement.src = post.media_url;
+        mediaElement.alt = "Post attachment";
+        mediaElement.loading = "lazy";
+        mediaElement.style.maxWidth = "100%";
+    }
+}
+
 
                     const content = document.createElement("p");
                     content.className = "post-content";
@@ -311,17 +428,25 @@
 
                     deleteButton.onclick = () => deletePost(post.id);
 
-                    postElement.append(
-                        title,
-                        content,
-                        meta,
-                        votes,
-                        upvote,
-                        downvote,
-                        replyButton,
-                        deleteButton,
-                        repliesArea
-                    );
+postElement.append(
+    username,
+    title,
+    content
+);
+
+if (mediaElement) {
+    postElement.appendChild(mediaElement);
+}
+
+postElement.append(
+    meta,
+    votes,
+    upvote,
+    downvote,
+    replyButton,
+    deleteButton,
+    repliesArea
+);
 
                     container.appendChild(postElement);
                 }
