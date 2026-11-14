@@ -923,7 +923,7 @@
 
 <header>
     <div class="header-side">
-        <span style="font-size:13px;color:#aaa;">Community</span>
+        <span style="font-size:13px;color:#aaa;"></span>
     </div>
 
     <h1 class="header-title">Community Forum</h1>
@@ -939,8 +939,8 @@
 <main class="page-container">
 
     <div class="page-heading">
-        <h2>Community Forum</h2>
-        <p>Share ideas, ask questions, and join the discussion.</p>
+        <h2>High School for Health Careers and Sciences Forum</h2>
+        <p>Chat with your friends even if you are in other classes.</p>
     </div>
 
     <section class="forum-container">
@@ -959,8 +959,8 @@
 
                 <select id="sortSelect" class="sort-select"
                         aria-label="Sort posts">
-                    <option value="newest">Newest</option>
-                    <option value="oldest">Oldest</option>
+                    <option value="newest">New</option>
+                    <option value="oldest">Old</option>
                     <option value="top">Top</option>
                 </select>
             </div>
@@ -1417,7 +1417,7 @@ form.id = "postComposerForm";
         </div>
 
         <div class="dialog-field">
-            <label for="composerFile">Add media</label>
+            <label for="composerFile">Add media (optional)</label>
             <input class="dialog-input" id="composerFile"
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif,video/mp4">
@@ -2179,7 +2179,7 @@ function openSettings() {
     const about = document.createElement("p");
     about.style.marginTop = "12px";
     about.textContent =
-        "Community Forum · Share ideas and take part in discussions.";
+        "HSHCS Forum · Share ideas and take part in discussions.";
 
     community.append(heading,feedbackButton,about);
 
