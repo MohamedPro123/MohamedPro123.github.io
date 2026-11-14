@@ -1398,8 +1398,9 @@ function openPostComposer() {
         ]
     );
 
-    const form = document.createElement("form");
-
+const form = document.createElement("form");
+form.id = "postComposerForm";
+    
     form.innerHTML = `
         <div class="dialog-field">
             <label for="composerTitle">Title</label>
@@ -1468,10 +1469,11 @@ function openPostComposer() {
         preview.appendChild(name);
     });
 
-    const publishButton = document.createElement("button");
-    publishButton.type = "submit";
-    publishButton.className = "popup-confirm";
-    publishButton.textContent = "Publish";
+const publishButton = document.createElement("button");
+publishButton.type = "submit";
+publishButton.setAttribute("form", "postComposerForm");
+publishButton.className = "popup-confirm";
+publishButton.textContent = "Publish";
 
     popupFooter.appendChild(publishButton);
 
