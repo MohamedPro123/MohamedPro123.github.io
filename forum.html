@@ -1,1 +1,351 @@
-WIP
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        textarea, input, button {
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            box-sizing: border-box;
+        }
+
+        .post {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .reply {
+            border-left: 2px solid #ccc;
+            padding-left: 12px;
+            margin: 12px 0;
+        }
+
+        .post-content {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Community Forum</h1>
+
+    <p id="status">Connecting...</p>
+
+    <h2>Create a post</h2>
+
+    <input id="postTitle" placeholder="Post title">
+    <textarea id="postContent" placeholder="Write something..."></textarea>
+    <button onclick="createPost()">Publish</button>
+
+    <hr>
+
+    <h2>Posts</h2>
+
+    <div id="posts">Loading posts...</div>
+
+    <script>
+        // 1. SUPABASE CONFIGURATION
+        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+        const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+        const supabase = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+        let currentUser = null;
+
+        // 2. ANONYMOUS SIGN-IN
+        async function initialize() {
+            let { data: { session }, error } =
+                await supabase.auth.getSession();
+
+            if (error) {
+                document.getElementById("status").textContent = error.message;
+                return;
+            }
+
+            if (session) {
+                currentUser = session.user;
+            } else {
+                const { data, error } =
+                    await supabase.auth.signInAnonymously();
+
+                if (error) {
+                    document.getElementById("status").textContent =
+                        "Sign-in error: " + error.message;
+                    return;
+                }
+
+                currentUser = data.user;
+            }
+
+            document.getElementById("status").textContent =
+                "Connected anonymously.";
+
+            loadPosts();
+        }
+
+        // 3. CREATE A POST
+        async function createPost() {
+            const title = document.getElementById("postTitle").value.trim();
+            const content = document.getElementById("postContent").value.trim();
+
+            if (!title || !content) {
+                alert("Please enter a title and message.");
+                return;
+            }
+
+            const { error } = await supabase
+                .from("posts")
+                .insert({
+                    user_id: currentUser.id,
+                    title: title,
+                    content: content
+                });
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            document.getElementById("postTitle").value = "";
+            document.getElementById("postContent").value = "";
+
+            loadPosts();
+        }
+
+        // 4. LOAD POSTS
+        async function loadPosts() {
+            const { data: posts, error } = await supabase
+                .from("posts")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                document.getElementById("posts").textContent = error.message;
+                return;
+            }
+
+            const container = document.getElementById("posts");
+            container.replaceChildren();
+
+            for (const post of posts) {
+                const postElement = document.createElement("div");
+                postElement.className = "post";
+
+                const title = document.createElement("h3");
+                title.textContent = post.title;
+
+                const content = document.createElement("p");
+                content.className = "post-content";
+                content.textContent = post.content;
+
+                const voteCount = await getVoteCount(post.id);
+
+                const votes = document.createElement("p");
+                votes.textContent = "Votes: " + voteCount;
+
+                const upvote = document.createElement("button");
+                upvote.textContent = "Upvote";
+                upvote.onclick = () => vote(post.id, 1);
+
+                const downvote = document.createElement("button");
+                downvote.textContent = "Downvote";
+                downvote.onclick = () => vote(post.id, -1);
+
+                const replyButton = document.createElement("button");
+                replyButton.textContent = "Show / hide replies";
+
+                const repliesArea = document.createElement("div");
+                repliesArea.hidden = true;
+
+                replyButton.onclick = async () => {
+                    repliesArea.hidden = !repliesArea.hidden;
+
+                    if (!repliesArea.hidden) {
+                        await loadReplies(post.id, repliesArea);
+                    }
+                };
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete post";
+                deleteButton.hidden = post.user_id !== currentUser.id;
+                deleteButton.onclick = () => deletePost(post.id);
+
+                postElement.append(
+                    title,
+                    content,
+                    votes,
+                    upvote,
+                    downvote,
+                    replyButton,
+                    deleteButton,
+                    repliesArea
+                );
+
+                container.appendChild(postElement);
+            }
+
+            if (posts.length === 0) {
+                container.textContent = "No posts yet.";
+            }
+        }
+
+        // 5. GET TOTAL VOTES
+        async function getVoteCount(postId) {
+            const { data, error } = await supabase
+                .from("votes")
+                .select("vote")
+                .eq("post_id", postId);
+
+            if (error) return 0;
+
+            return data.reduce((total, item) => total + item.vote, 0);
+        }
+
+        // 6. UPVOTE / DOWNVOTE
+        async function vote(postId, value) {
+            const { error } = await supabase
+                .from("votes")
+                .upsert({
+                    post_id: postId,
+                    user_id: currentUser.id,
+                    vote: value
+                });
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            loadPosts();
+        }
+
+        // 7. LOAD REPLIES
+        async function loadReplies(postId, container) {
+            const { data, error } = await supabase
+                .from("replies")
+                .select("*")
+                .eq("post_id", postId)
+                .order("created_at", { ascending: true });
+
+            if (error) {
+                container.textContent = error.message;
+                return;
+            }
+
+            container.replaceChildren();
+
+            const heading = document.createElement("h4");
+            heading.textContent = "Replies (" + data.length + ")";
+            container.appendChild(heading);
+
+            for (const reply of data) {
+                const replyElement = document.createElement("div");
+                replyElement.className = "reply";
+
+                const replyText = document.createElement("p");
+                replyText.textContent = reply.content;
+
+                replyElement.appendChild(replyText);
+
+                if (reply.user_id === currentUser.id) {
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete reply";
+                    deleteButton.onclick = () => deleteReply(reply.id, postId, container);
+                    replyElement.appendChild(deleteButton);
+                }
+
+                container.appendChild(replyElement);
+            }
+
+            const replyInput = document.createElement("textarea");
+            replyInput.placeholder = "Write a reply...";
+
+            const submitButton = document.createElement("button");
+            submitButton.textContent = "Send reply";
+
+            submitButton.onclick = async () => {
+                const content = replyInput.value.trim();
+
+                if (!content) return;
+
+                const { error } = await supabase
+                    .from("replies")
+                    .insert({
+                        post_id: postId,
+                        user_id: currentUser.id,
+                        content: content
+                    });
+
+                if (error) {
+                    alert(error.message);
+                    return;
+                }
+
+                await loadReplies(postId, container);
+            };
+
+            container.append(replyInput, submitButton);
+        }
+
+        // 8. DELETE A POST
+        async function deletePost(postId) {
+            if (!confirm("Delete this post?")) return;
+
+            const { error } = await supabase
+                .from("posts")
+                .delete()
+                .eq("id", postId)
+                .eq("user_id", currentUser.id);
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            loadPosts();
+        }
+
+        // 9. DELETE A REPLY
+        async function deleteReply(replyId, postId, container) {
+            const { error } = await supabase
+                .from("replies")
+                .delete()
+                .eq("id", replyId)
+                .eq("user_id", currentUser.id);
+
+            if (error) {
+                alert(error.message);
+                return;
+            }
+
+            await loadReplies(postId, container);
+        }
+
+        initialize();
+    </script>
+
+</body>
+</html>
