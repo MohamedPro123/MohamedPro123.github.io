@@ -64,80 +64,173 @@
         }
 
         /* HEADER */
+/* =========================================
+   MAIN WEBSITE HEADER
+   Matches index.html EXACTLY
+========================================= */
 
-        header {
-            position: relative;
-            z-index: 2;
-            min-height: 76px;
-            padding: 16px 35px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #000;
-            color: white;
-        }
+header {
+    position: relative;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    z-index: 1;
+}
 
-        header::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(
-                90deg,
-                #ff0055,
-                #ff7700,
-                #ffdd00,
-                #00ff88,
-                #00bbff,
-                #aa00ff,
-                #ff0055
-            );
-            background-size: 200% 200%;
-            filter: blur(18px);
-            opacity: .8;
-            animation: rgbShift 6s linear infinite;
-        }
+/* Diffused Multi-Color RGB Glow */
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        #ff0055,
+        #ff7700,
+        #ffdd00,
+        #00ff88,
+        #00bbff,
+        #aa00ff,
+        #ff0055
+    );
+    background-size: 200% 200%;
+    filter: blur(18px);
+    opacity: 0.85;
+    z-index: -1;
+    animation: rgbShift 6s linear infinite;
+}
 
-        @keyframes rgbShift {
-            from { background-position: 0% 50%; }
-            to { background-position: 200% 50%; }
-        }
+/* Website title */
+header h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
 
-        .header-title {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            margin: 0;
-            color: white;
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -.5px;
-        }
+/* Navigation links */
+nav a {
+  position: relative;
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 0.95rem;
+  padding-bottom: 4px;
+}
 
-        .header-side {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
 
-        .header-button {
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-            border: 1px solid rgba(255,255,255,.2);
-            border-radius: 10px;
-            background: rgba(255,255,255,.08);
-            color: white;
-            font-size: 20px;
-            transition: .2s ease;
-        }
+nav a:hover::after {
+  transform: scaleX(1);
+}
 
-        .header-button:hover {
-            border-color: #38bdf8;
-            background: rgba(56,189,248,.15);
-            box-shadow: 0 0 12px rgba(56,189,248,.2);
-        }
+
+/* Social icons */
+.social-icons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+}
+
+.social-icon {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.social-icon:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+
+
+
+@view-transition {
+  navigation: auto;
+}
+
+
+    
+
+/* RGB animation */
+@keyframes rgbShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+
+/* fix on mobile */
+    @media (max-width: 768px) {
+  header div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  header h1 {
+    position: static !important;
+    display: block !important;
+    margin: 0 0 12px 0 !important; /* Forces space below the title */
+    padding: 0 !important;
+    line-height: 1.2 !important;
+    transform: none !important;
+  }
+
+  header nav {
+    position: static !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+    transform: none !important;
+  }
+
+  header nav a {
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+    
+/* Disable RGB on mobile */
+@media (max-width: 768px) {
+    header {
+        background: #000000 !important;
+    }
+
+    header::before {
+        display: none !important;
+        animation: none !important;
+    }
+}
 
         /* PAGE LAYOUT */
 
@@ -949,7 +1042,7 @@
 </script>
 
 
-    <h1 class="header-title">HSHCS Forum </h1>
+    <h1 class="header-title">School Forum </h1>
 
     <div class="header-side">
         <button class="header-button" id="settingsButton"
