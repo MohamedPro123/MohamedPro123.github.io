@@ -15,6 +15,14 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
 
+    <!-- KaTeX CSS for styling the math -->
+<link rel="stylesheet" href="https://jsdelivr.net">
+
+<!-- KaTeX JS & Marked extension -->
+<script src="https://jsdelivr.net"></script>
+<script src="https://jsdelivr.net"></script>
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
@@ -1264,16 +1272,11 @@ nav a:hover::after {
         <main id="chat-messages">
             <div class="msg bot">
                 <h3>Welcome!</h3>
-                Hello! I'm Gemini. What would you like to know?
+                Hello! I'm Google Gemini. What would you like to know?
 
                 <p>
-                    I can help with research, programming, explanations,
+                    I can help with homework, research, programming, explanations,
                     brainstorming, and much more.
-                </p>
-
-                <p>
-                    You can also ask me to format answers using Markdown,
-                    including headings, lists, tables, and code blocks.
                 </p>
             </div>
         </main>
@@ -1323,6 +1326,10 @@ let history = [];
    MARKDOWN RENDERING
 ========================================= */
 
+marked.use(markedKatex({
+    throwOnError: false // Prevents invalid math from crashing the renderer
+}));
+
 marked.setOptions({
     gfm: true,
     breaks: true,
@@ -1331,6 +1338,7 @@ marked.setOptions({
 
 function renderMarkdown(text) {
     const rawHTML = marked.parse(text);
+    // DOMPurify 3.2.6 natively supports MathML, so KaTeX output passes through safely
     return DOMPurify.sanitize(rawHTML);
 }
 
