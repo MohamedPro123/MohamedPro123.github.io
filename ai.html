@@ -5,6 +5,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="https://jsdelivr.net">
+<script defer src="https://jsdelivr.net"></script>
+<script defer src="https://jsdelivr.net"></script>
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
@@ -464,6 +469,19 @@ nav a:hover::after {
         animation: none !important;
     }
 }
+
+           .header-button {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 10px;
+            background: rgba(255,255,255,.08);
+            color: white;
+            font-size: 20px;
+            transition: .2s ease;
+        }
 
 
 /* =========================================
@@ -1790,6 +1808,21 @@ document.addEventListener("keydown", (event) => {
         closeNotification();
     }
 });
+
+    // 1. Parse your markdown into the message element as you already do
+msgElement.innerHTML = marked.parse(botReplyText); // (or whatever parser you use)
+
+// 2. Render the math equations inside that element
+renderMathInElement(msgElement, {
+    delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true }
+    ],
+    throwOnError: false
+});
+
     
 </script>
 
