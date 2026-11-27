@@ -21,45 +21,18 @@
 <!-- KaTeX Auto-render -->
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
 
+    <!-- Markdown parser -->
+<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- HTML sanitizer -->
+<script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
 
     
-    <div class="popup-overlay" id="notificationPopup" hidden>
-    <div
-        class="notification-popup"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="popupTitle"
-    >
-        <div class="popup-header">
-            <h2 id="popupTitle">Notificación</h2>
 
-            <button
-                class="popup-close"
-                id="popupClose"
-                aria-label="Cerrar notificación"
-            >
-                ×
-            </button>
-        </div>
-
-        <div class="popup-content">
-            <h3>¡Bienvenido!</h3>
-            <p>
-                Aquí puedes colocar el mensaje que quieras mostrar
-                a los visitantes de tu sitio web.
-            </p>
-        </div>
-
-        <div class="popup-footer">
-            <button class="popup-confirm" id="popupConfirm">
-                OK
-            </button>
-        </div>
-    </div>
-</div>
 
 <style>
 * { box-sizing: border-box; }
@@ -905,6 +878,140 @@ nav a:hover::after {
 
 .source-card:hover .source-external { color: #38bdf8; }
 
+    /* =========================================
+   INLINE SOURCE CITATIONS
+========================================= */
+
+.source-citation {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    margin: 0 2px;
+    font-size: 0.82em;
+    line-height: 1.4;
+}
+
+.source-citation summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    max-width: 240px;
+    padding: 4px 9px;
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.075);
+    color: #e4e4e7;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+}
+
+.source-citation summary::-webkit-details-marker {
+    display: none;
+}
+
+.source-citation summary:hover {
+    background: rgba(56,189,248,0.13);
+    border-color: rgba(56,189,248,0.45);
+}
+
+.citation-favicon {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 3px;
+}
+
+.citation-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #dbeafe;
+}
+
+.citation-more {
+    flex-shrink: 0;
+    color: #7dd3fc;
+    font-size: 0.9em;
+    font-weight: 700;
+}
+
+.citation-list {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 7px);
+    z-index: 50;
+    width: min(320px, 80vw);
+    padding: 7px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    background: rgba(12,15,25,0.98);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+    backdrop-filter: blur(15px);
+}
+
+.citation-source {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px;
+    border-radius: 8px;
+    color: #e4e4e7;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.citation-source:hover {
+    background: rgba(56,189,248,0.12);
+}
+
+.citation-source img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.citation-source-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.citation-source-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e4e4e7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.citation-source-domain {
+    font-size: 10px;
+    color: #858595;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.citation-source-arrow {
+    margin-left: auto;
+    color: #7dd3fc;
+    flex-shrink: 0;
+}
+
+@media (max-width: 500px) {
+    .citation-list {
+        width: min(280px, 75vw);
+    }
+}
+
 /* =========================================
    CHAT FOOTER
 ========================================= */
@@ -1195,6 +1302,41 @@ nav a:hover::after {
 
 <body>
 
+        <div class="popup-overlay" id="notificationPopup" hidden>
+    <div
+        class="notification-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="popupTitle"
+    >
+        <div class="popup-header">
+            <h2 id="popupTitle">Notificación</h2>
+
+            <button
+                class="popup-close"
+                id="popupClose"
+                aria-label="Cerrar notificación"
+            >
+                ×
+            </button>
+        </div>
+
+        <div class="popup-content">
+            <h3>¡Bienvenido!</h3>
+            <p>
+                Aquí puedes colocar el mensaje que quieras mostrar
+                a los visitantes de tu sitio web.
+            </p>
+        </div>
+
+        <div class="popup-footer">
+            <button class="popup-confirm" id="popupConfirm">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
 
@@ -1324,7 +1466,262 @@ let history = [];
    MARKDOWN RENDERING
 ========================================= */
 
-function renderMarkdown(text) {
+/* =========================================
+   INLINE SOURCE CITATIONS
+========================================= */
+
+function createCitationBubble(sourceNumbers, sources) {
+
+    // Match citation numbers with the Worker source array.
+    const matchedSources = [];
+
+    for (const number of sourceNumbers) {
+
+        const source = sources[number - 1];
+
+        if (!source || typeof source.url !== "string") {
+            continue;
+        }
+
+        let url;
+
+        try {
+            url = new URL(source.url);
+        } catch {
+            continue;
+        }
+
+        if (url.protocol !== "https:") {
+            continue;
+        }
+
+        // Avoid duplicate citations.
+        if (matchedSources.some(item => item.url === url.href)) {
+            continue;
+        }
+
+        matchedSources.push({
+            title:
+                typeof source.title === "string" && source.title.trim()
+                    ? source.title.trim()
+                    : url.hostname,
+
+            url: url.href,
+
+            domain: url.hostname.replace(/^www\./, "")
+        });
+    }
+
+    if (matchedSources.length === 0) {
+        return null;
+    }
+
+    const details = document.createElement("details");
+    details.className = "source-citation";
+
+    const summary = document.createElement("summary");
+
+    // Display the first source in the bubble.
+    const firstSource = matchedSources[0];
+
+    const favicon = document.createElement("img");
+
+    favicon.className = "citation-favicon";
+    favicon.alt = "";
+    favicon.loading = "lazy";
+    favicon.referrerPolicy = "no-referrer";
+
+    favicon.src =
+        "https://www.google.com/s2/favicons?domain=" +
+        encodeURIComponent(firstSource.domain) +
+        "&sz=64";
+
+    const title = document.createElement("span");
+    title.className = "citation-title";
+    title.textContent = firstSource.domain;
+
+    summary.append(favicon, title);
+
+    // Indicate additional sources.
+    if (matchedSources.length > 1) {
+
+        const more = document.createElement("span");
+
+        more.className = "citation-more";
+        more.textContent = `+${matchedSources.length - 1}`;
+
+        summary.appendChild(more);
+    }
+
+    details.appendChild(summary);
+
+    // Expanded list of sources.
+    const list = document.createElement("div");
+    list.className = "citation-list";
+
+    for (const source of matchedSources) {
+
+        const link = document.createElement("a");
+
+        link.className = "citation-source";
+        link.href = source.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+
+        const sourceFavicon = document.createElement("img");
+
+        sourceFavicon.src =
+            "https://www.google.com/s2/favicons?domain=" +
+            encodeURIComponent(source.domain) +
+            "&sz=64";
+
+        sourceFavicon.alt = "";
+        sourceFavicon.loading = "lazy";
+        sourceFavicon.referrerPolicy = "no-referrer";
+
+        sourceFavicon.addEventListener("error", () => {
+            sourceFavicon.style.display = "none";
+        });
+
+        const info = document.createElement("div");
+        info.className = "citation-source-info";
+
+        const name = document.createElement("span");
+        name.className = "citation-source-name";
+        name.textContent = source.title;
+
+        const domain = document.createElement("span");
+        domain.className = "citation-source-domain";
+        domain.textContent = source.domain;
+
+        info.append(name, domain);
+
+        const arrow = document.createElement("span");
+        arrow.className = "citation-source-arrow";
+        arrow.textContent = "↗";
+
+        link.append(sourceFavicon, info, arrow);
+
+        list.appendChild(link);
+    }
+
+    details.appendChild(list);
+
+    return details;
+}
+
+
+/* =========================================
+   CONVERT CITATION TEXT INTO BUBBLES
+========================================= */
+
+function renderCitations(container, sources = []) {
+
+    if (!Array.isArray(sources) || sources.length === 0) {
+        return;
+    }
+
+    // Recognizes:
+    // [Source 1]
+    // [Source 2, Source 4]
+    // [Source 1, Source 3, Source 5]
+
+    const citationRegex =
+        /\[Source\s+(\d+(?:\s*,\s*Source\s+\d+)*)\]/gi;
+
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode(node) {
+
+                const parent = node.parentElement;
+
+                if (!parent) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                // Never replace citation-like text inside code,
+                // links, or rendered mathematical expressions.
+                if (
+                    parent.closest(
+                        "pre, code, a, script, style, .katex"
+                    )
+                ) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                if (!citationRegex.test(node.textContent)) {
+                    citationRegex.lastIndex = 0;
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                citationRegex.lastIndex = 0;
+
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+
+    const textNodes = [];
+
+    while (walker.nextNode()) {
+        textNodes.push(walker.currentNode);
+    }
+
+    for (const node of textNodes) {
+
+        const text = node.textContent;
+        const fragment = document.createDocumentFragment();
+
+        let lastIndex = 0;
+
+        citationRegex.lastIndex = 0;
+
+        let match;
+
+        while ((match = citationRegex.exec(text)) !== null) {
+
+            // Preserve text before the citation.
+            fragment.appendChild(
+                document.createTextNode(
+                    text.slice(lastIndex, match.index)
+                )
+            );
+
+            const numbers = match[1]
+                .match(/\d+/g)
+                .map(Number);
+
+            const bubble = createCitationBubble(numbers, sources);
+
+            if (bubble) {
+                fragment.appendChild(bubble);
+            } else {
+                // Keep the original text if no source matches.
+                fragment.appendChild(
+                    document.createTextNode(match[0])
+                );
+            }
+
+            lastIndex = citationRegex.lastIndex;
+        }
+
+        // Preserve the remaining text.
+        fragment.appendChild(
+            document.createTextNode(text.slice(lastIndex))
+        );
+
+        node.parentNode.replaceChild(fragment, node);
+    }
+}
+
+
+/* =========================================
+   MARKDOWN RENDERING
+========================================= */
+
+function renderMarkdown(text, sources = []) {
 
     const html = marked.parse(text);
 
@@ -1334,31 +1731,38 @@ function renderMarkdown(text) {
 
     container.innerHTML = cleanHTML;
 
-    renderMathInElement(container, {
+    // Render mathematical expressions.
+    if (window.renderMathInElement) {
 
-        delimiters: [
-            { left: "$$", right: "$$", display: true },
-            { left: "$", right: "$", display: false },
-            { left: "\\(", right: "\\)", display: false },
-            { left: "\\[", right: "\\]", display: true }
-        ],
+        renderMathInElement(container, {
 
-        throwOnError: false,
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
 
-        ignoredTags: [
-            "script",
-            "noscript",
-            "style",
-            "textarea",
-            "pre",
-            "code"
-        ]
+            throwOnError: false,
 
-    });
+            ignoredTags: [
+                "script",
+                "noscript",
+                "style",
+                "textarea",
+                "pre",
+                "code"
+            ]
+
+        });
+
+    }
+
+    // Convert [Source N] references into clickable bubbles.
+    renderCitations(container, sources);
 
     return container.innerHTML;
 }
-
 
 /* =========================================
    CODE HIGHLIGHTING
@@ -1663,13 +2067,12 @@ chatForm.addEventListener("submit", async (event) => {
         }
 
         // Display the AI response.
-        loading.innerHTML = renderMarkdown(data.reply);
-        formatCodeBlocks(loading);
+loading.innerHTML = renderMarkdown(
+    data.reply,
+    Array.isArray(data.sources) ? data.sources : []
+);
 
-        // Display Google Search sources separately.
-        if (Array.isArray(data.sources)) {
-            addSources(loading, data.sources);
-        }
+formatCodeBlocks(loading);   
 
         // Save the AI response to conversation history.
         history.push({
