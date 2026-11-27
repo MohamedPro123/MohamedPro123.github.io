@@ -888,154 +888,426 @@ function addImageGallery(container, images) {
 }
 
 
+/* =====================================================================
+   REPLACE everything from the "MESSAGES" comment block (function addMessage...)
+   down to (but NOT including) the "CUSTOM CURSOR" comment block with this.
+
+   Also delete these two lines near the top of the script, they are replaced below:
+     let chatHistory = [];
+   and make sure your <script> still has WORKER_URL, MAX_HISTORY_MESSAGES,
+   NOTICE_TEXT, el(), renderMarkdown(), formatCodeBlocks(), addSources(),
+   addImageGallery(), chatForm, chatInput, chatMessages, chatSend, newChat, statusEl.
+===================================================================== */
+
 /* =========================================
-   MESSAGES
+   STATE + STORAGE
 ========================================= */
-function addMessage(text, sender) {
+const STORAGE_KEY = "gemini-chat-v1";
+const CITATION_STRIP = /\s*\[\s*Sources?\s+\d+(?:\s*(?:,|and|&)\s*(?:Sources?\s+)?\d+)*\s*\]/gi;
 
-    const bubble = el("div", `msg ${sender}`);
+let records = [];            // { role: "user" | "model", text, sources, images }
+let busy = false;
+let abortController = null;
+let stickToBottom = true;
 
-    if (sender === "bot") {
-        bubble.innerHTML = renderMarkdown(text);
-        formatCodeBlocks(bubble);
-    } else {
-        bubble.textContent = text;
+const toContents = () =>
+    records.slice(-MAX_HISTORY_MESSAGES).map(r => ({ role: r.role, parts: [{ text: r.text }] }));
+
+function saveChat() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records.slice(-MAX_HISTORY_MESSAGES)));
+    } catch { /* storage full or blocked: not critical */ }
+}
+
+/* =========================================
+   SCROLLING (only follow the stream if the user is at the bottom)
+========================================= */
+chatMessages.setAttribute("role", "log");
+chatMessages.setAttribute("aria-live", "polite");
+
+const jumpBtn = el("button", "jump-latest", "↓ Latest");
+jumpBtn.type = "button";
+jumpBtn.hidden = true;
+document.querySelector(".chat-container").appendChild(jumpBtn);
+
+chatMessages.addEventListener("scroll", () => {
+    stickToBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 80;
+    jumpBtn.hidden = stickToBottom;
+});
+
+jumpBtn.addEventListener("click", () => scrollToBottom(true));
+
+function scrollToBottom(force = false) {
+    if (force || stickToBottom) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        stickToBottom = true;
     }
+}
 
+/* =========================================
+   INPUT (textarea: Enter sends, Shift+Enter = new line)
+========================================= */
+function autosize() {
+    chatInput.style.height = "auto";
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 200) + "px";
+}
+
+chatInput.addEventListener("input", autosize);
+
+chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+        e.preventDefault();
+        chatForm.requestSubmit();
+    }
+});
+
+function setBusy(value) {
+    busy = value;
+    chatMessages.setAttribute("aria-busy", String(value));
+    chatSend.textContent = value ? "■ Stop" : "Send ↑";
+    chatSend.classList.toggle("stop", value);
+    chatSend.disabled = false;
+}
+
+/* =========================================
+   MESSAGE RENDERING
+========================================= */
+function createBubble(sender) {
+    const bubble = el("div", `msg ${sender}`);
     chatMessages.appendChild(bubble);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
     return bubble;
 }
 
-newChat.addEventListener("click", () => {
-    chatHistory = [];
-    chatMessages.innerHTML = "";
-    statusEl.textContent = "● Ready to chat";
-    statusEl.className = "status";
-    addMessage("New conversation started. What would you like to know?", "bot");
-    chatInput.focus();
-});
+function addUserMessage(text) {
+    const bubble = createBubble("user");
+    bubble.textContent = text;
+    scrollToBottom(true);
+    return bubble;
+}
+
+function addNotice(text) {
+    const bubble = createBubble("bot");
+    bubble.innerHTML = renderMarkdown(text);
+    return bubble;
+}
+
+// Final (non-streaming) render of a finished answer. Also used when restoring saved chats.
+function fillBotBubble(bubble, rec) {
+    bubble.replaceChildren();
+
+    addImageGallery(bubble, rec.images);
+
+    const answer = el("div", "answer-content");
+    answer.innerHTML = renderMarkdown(rec.text, rec.sources || []);
+    bubble.appendChild(answer);
+
+    formatCodeBlocks(answer);
+    addSources(bubble, rec.sources);
+    addActions(bubble, rec);
+}
+
+function addActions(bubble, rec) {
+    bubble.querySelector(".msg-actions")?.remove();
+
+    const bar = el("div", "msg-actions");
+
+    const copy = el("button", "msg-action", "Copy");
+    copy.type = "button";
+    copy.addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText(rec.text.replace(CITATION_STRIP, ""));
+            copy.textContent = "Copied!";
+        } catch {
+            copy.textContent = "Copy failed";
+        }
+        setTimeout(() => { copy.textContent = "Copy"; }, 1500);
+    });
+
+    const regen = el("button", "msg-action regen", "↻ Regenerate");
+    regen.type = "button";
+    regen.addEventListener("click", regenerate);
+
+    bar.append(copy, regen);
+    bubble.appendChild(bar);
+}
 
 /* =========================================
-   SEND MESSAGE
+   GENERATION (streaming with smooth typewriter reveal)
 ========================================= */
-chatForm.addEventListener("submit", async (event) => {
+async function generate(restoreText = "") {
 
-    event.preventDefault();
-
-    const message = chatInput.value.trim();
-    if (!message || chatSend.disabled) return;
-
-    const previousHistory = [...chatHistory];
-
-    addMessage(message, "user");
-
-    chatHistory.push({ role: "user", parts: [{ text: message }] });
-    chatHistory = chatHistory.slice(-MAX_HISTORY_MESSAGES);
-
-    chatInput.value = "";
-    chatInput.disabled = true;
-    chatSend.disabled = true;
+    setBusy(true);
+    abortController = new AbortController();
 
     statusEl.textContent = "● Thinking...";
     statusEl.className = "status thinking";
 
-    const loading = addMessage("Thinking...", "bot");
+    const bubble = createBubble("bot");
+    const pending = el("div", "pending-text", "Thinking");
+    bubble.appendChild(pending);
+    scrollToBottom(true);
+
+    const rec = { role: "model", text: "", sources: [], images: [] };
+
+    let received = "";     // everything the server has sent
+    let shown = 0;         // how much of it is revealed on screen
+    let ended = false;     // network stream finished
+    let raf = null;
+    let lastDraw = 0;
+    let answerEl = null;
+    let doneEvent = null;
+    let errorMessage = "";
+    let aborted = false;
+
+    function draw() {
+        if (!answerEl) {
+            pending.remove();
+            answerEl = el("div", "answer-content streaming");
+            bubble.appendChild(answerEl);
+        }
+        // hide a half-typed "[Source 1" marker until its closing bracket arrives
+        const visible = received.slice(0, shown).replace(/\s*\[\s*S[^\]\n]*$/i, "");
+        answerEl.innerHTML = renderMarkdown(visible, rec.sources);
+        scrollToBottom();
+    }
+
+    // Reveal speed adapts to the backlog: smooth for trickles, catches up on bursts.
+    function tick(now) {
+        raf = null;
+        const backlog = received.length - shown;
+
+        if (backlog > 0) {
+            shown = Math.min(received.length, shown + Math.max(ended ? 4 : 1, Math.ceil(backlog / (ended ? 4 : 10))));
+            if (now - lastDraw > 40 || shown >= received.length) {
+                draw();
+                lastDraw = now;
+            }
+        }
+        if (shown < received.length) raf = requestAnimationFrame(tick);
+    }
+
+    function handleEvent(evt) {
+        switch (evt.type) {
+            case "status":
+                if (!answerEl) pending.textContent = evt.text.replace(/…$/, "");
+                statusEl.textContent = "● " + evt.text;
+                break;
+            case "meta":
+                rec.sources = Array.isArray(evt.sources) ? evt.sources : [];
+                rec.images = Array.isArray(evt.images) ? evt.images : [];
+                addImageGallery(bubble, rec.images);
+                break;
+            case "delta":
+                received += evt.text;
+                if (!raf) raf = requestAnimationFrame(tick);
+                break;
+            case "done":
+                doneEvent = evt;
+                break;
+            case "error":
+                errorMessage = evt.error || "Something went wrong.";
+                break;
+        }
+    }
+
+    function handleRaw(raw) {
+        const line = raw.split("\n")
+            .filter(l => l.startsWith("data:"))
+            .map(l => l.slice(5).trim())
+            .join("");
+        if (!line) return;
+        try { handleEvent(JSON.parse(line)); } catch { /* ignore malformed event */ }
+    }
 
     try {
-
         const response = await fetch(WORKER_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: chatHistory })
+            body: JSON.stringify({ contents: toContents() }),
+            signal: abortController.signal
         });
 
-        const responseText = await response.text();
-
-        let data;
-        try {
-            data = JSON.parse(responseText);
-        } catch {
-            throw new Error(`Invalid server response (${response.status}): ` + responseText.slice(0, 200));
+        if (!response.ok || !response.body) {
+            let message = `Server error: ${response.status}`;
+            try { message = (await response.json()).error || message; } catch { /* not JSON */ }
+            throw new Error(message);
         }
 
-        if (!response.ok) throw new Error(data.error || `Server error: ${response.status}`);
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
 
-        if (typeof data.reply !== "string" || !data.reply.trim()) {
-            throw new Error("Gemini returned an empty response.");
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, "\n");
+
+            let index;
+            while ((index = buffer.indexOf("\n\n")) !== -1) {
+                handleRaw(buffer.slice(0, index));
+                buffer = buffer.slice(index + 2);
+            }
         }
+        if (buffer.trim()) handleRaw(buffer);
 
-const sources = Array.isArray(data.sources) ? data.sources : [];
-const images = Array.isArray(data.images) ? data.images : [];
+        ended = true;
+        if (!raf && shown < received.length) raf = requestAnimationFrame(tick);
 
-console.log("Worker response:", data);
-console.log("Images received:", images.length);
-console.log("Image search attempted:", data.imageSearchAttempted);
-console.log("Image search succeeded:", data.imageSearchSucceeded);
-console.log("Image search failed:", data.imageSearchFailed);
-console.log("Image search error:", data.imageSearchError);
-
-// Clear the temporary "Thinking..." message.
-loading.replaceChildren();
-
-// Display retrieved images first.
-addImageGallery(loading, images);
-
-// Render Gemini's answer separately.
-const answerContainer = el("div", "answer-content");
-
-answerContainer.innerHTML = renderMarkdown(data.reply, sources);
-
-loading.appendChild(answerContainer);
-
-// Preserve existing code highlighting and copy buttons.
-formatCodeBlocks(answerContainer);
-
-// Preserve existing web source cards.
-addSources(loading, sources);
-
-        chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
-        chatHistory = chatHistory.slice(-MAX_HISTORY_MESSAGES);
-
-if (data.groundingUsed && data.imageSearchSucceeded) {
-
-    statusEl.textContent = "● Answered using web search and images";
-
-} else if (data.groundingUsed) {
-
-    statusEl.textContent = "● Answered using web search";
-
-} else if (data.imageSearchSucceeded) {
-
-    statusEl.textContent = "● Answered with images";
-
-} else {
-
-    statusEl.textContent = "● Ready to chat";
-}
-        statusEl.className = "status";
+        // let the typewriter finish (skip the wait if the tab is in the background)
+        await new Promise(resolve => {
+            const check = () => (shown >= received.length || document.hidden) ? resolve() : setTimeout(check, 30);
+            check();
+        });
 
     } catch (error) {
-
-        console.error("Gemini error:", error);
-
-        loading.textContent = "Error: " + error.message;
-        loading.classList.add("error");
-
-        chatHistory = previousHistory;
-
-        statusEl.textContent = "● Connection error";
-        statusEl.className = "status error-status";
-
-    } finally {
-
-        chatInput.disabled = false;
-        chatSend.disabled = false;
-        chatInput.focus();
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (error.name === "AbortError") aborted = true;
+        else errorMessage = errorMessage || error.message;
     }
+
+    if (raf) cancelAnimationFrame(raf);
+
+    // ----- Finish up -----
+    const text = aborted ? received.slice(0, shown) : received;
+
+    if (!text.trim()) {
+        if (aborted) {
+            bubble.remove();
+            statusEl.textContent = "● Stopped";
+        } else {
+            bubble.replaceChildren();
+            bubble.textContent = "Error: " + (errorMessage || "No response received.");
+            bubble.classList.add("error");
+            statusEl.textContent = "● Connection error";
+            statusEl.className = "status error-status";
+
+            // give the user their message back so they can resend it
+            if (restoreText) {
+                records.pop();
+                chatInput.value = restoreText;
+                autosize();
+                saveChat();
+            }
+        }
+        if (aborted) statusEl.className = "status";
+
+    } else {
+        rec.text = text;
+        if (doneEvent?.sources) rec.sources = doneEvent.sources;
+
+        fillBotBubble(bubble, rec);
+
+        const note =
+            aborted ? "Stopped." :
+            errorMessage ? errorMessage :
+            doneEvent?.finishReason === "MAX_TOKENS" ? "Response reached the length limit." : "";
+
+        if (note) bubble.insertBefore(el("div", "msg-note", note), bubble.querySelector(".msg-actions"));
+
+        records.push(rec);
+        saveChat();
+
+        statusEl.textContent =
+            doneEvent?.groundingUsed && doneEvent?.imageSearchSucceeded ? "● Answered using web search and images" :
+            doneEvent?.groundingUsed ? "● Answered using web search" :
+            doneEvent?.imageSearchSucceeded ? "● Answered with images" : "● Ready to chat";
+        statusEl.className = "status";
+    }
+
+    abortController = null;
+    setBusy(false);
+    chatInput.focus();
+    scrollToBottom();
+}
+
+function regenerate() {
+    if (busy || records.at(-1)?.role !== "model") return;
+
+    records.pop();
+    chatMessages.lastElementChild?.remove();
+    saveChat();
+    generate();
+}
+
+/* =========================================
+   SEND / STOP / NEW CHAT
+========================================= */
+chatForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (busy) {                       // the send button is the Stop button while generating
+        abortController?.abort();
+        return;
+    }
+
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    chatInput.value = "";
+    autosize();
+
+    addUserMessage(message);
+    records.push({ role: "user", text: message });
+    saveChat();
+
+    generate(message);
 });
+
+newChat.addEventListener("click", () => {
+    abortController?.abort();
+    records = [];
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+
+    chatMessages.replaceChildren();
+    statusEl.textContent = "● Ready to chat";
+    statusEl.className = "status";
+    addNotice("New conversation started. What would you like to know?");
+    chatInput.focus();
+});
+
+/* =========================================
+   RESTORE SAVED CHAT (waits for the deferred marked/DOMPurify scripts)
+========================================= */
+window.addEventListener("DOMContentLoaded", () => {
+    try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (!Array.isArray(saved) || !saved.length) return;
+
+        records = saved.filter(r => r && (r.role === "user" || r.role === "model") && typeof r.text === "string");
+        if (!records.length) return;
+
+        chatMessages.replaceChildren();
+
+        for (const r of records) {
+            if (r.role === "user") addUserMessage(r.text);
+            else fillBotBubble(createBubble("bot"), r);
+        }
+        scrollToBottom(true);
+    } catch { /* corrupted storage: start fresh */ }
+});
+
+/* =========================================
+   OPTIONAL CUSTOM CURSOR (off switch, and never hides the real cursor if JS fails)
+========================================= */
+const cursorToggle = document.getElementById("cursor-toggle");
+let cursorOn = true;
+try { cursorOn = localStorage.getItem("custom-cursor") !== "off"; } catch { /* ignore */ }
+
+function applyCursor() {
+    document.body.classList.toggle("custom-cursor", cursorOn);
+    if (cursorToggle) {
+        cursorToggle.textContent = "Cursor: " + (cursorOn ? "On" : "Off");
+        cursorToggle.setAttribute("aria-pressed", String(cursorOn));
+    }
+}
+
+cursorToggle?.addEventListener("click", () => {
+    cursorOn = !cursorOn;
+    try { localStorage.setItem("custom-cursor", cursorOn ? "on" : "off"); } catch { /* ignore */ }
+    applyCursor();
+});
+
+applyCursor();
 
 /* =========================================
    CUSTOM CURSOR
