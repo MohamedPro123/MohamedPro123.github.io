@@ -1397,30 +1397,6 @@ window.addEventListener("blur", hideCustomCursor);
 
 applyCursor();
 
-  
-/* =========================================
-   OPTIONAL CUSTOM CURSOR (off switch, and never hides the real cursor if JS fails)
-========================================= */
-const cursorToggle = document.getElementById("cursor-toggle");
-let cursorOn = true;
-try { cursorOn = localStorage.getItem("custom-cursor") !== "off"; } catch { /* ignore */ }
-
-function applyCursor() {
-    document.body.classList.toggle("custom-cursor", cursorOn);
-    if (cursorToggle) {
-        cursorToggle.textContent = "Cursor: " + (cursorOn ? "On" : "Off");
-        cursorToggle.setAttribute("aria-pressed", String(cursorOn));
-    }
-}
-
-cursorToggle?.addEventListener("click", () => {
-    cursorOn = !cursorOn;
-    try { localStorage.setItem("custom-cursor", cursorOn ? "on" : "off"); } catch { /* ignore */ }
-    applyCursor();
-});
-
-applyCursor();
-
 /* =========================================
    CUSTOM CURSOR
 ========================================= */
