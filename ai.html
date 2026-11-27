@@ -1,1938 +1,558 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-
 <title>Google Classroom</title>
 <link rel="icon" href="https://imglink.cc/cdn/A1ldO2SbuE.webp">
-
-    <!-- KaTeX CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
-
-<!-- KaTeX JavaScript -->
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
-
-<!-- KaTeX Auto-render -->
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
-
-    <!-- Markdown parser -->
-<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-<!-- HTML sanitizer -->
+<!-- pinned: an unpinned marked can change its API/file layout under you -->
+<script defer src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-
-
-    
-
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
 <style>
-* { box-sizing: border-box; }
-
-html {
-    scroll-behavior: smooth;
-}
-
-
-
-    /* NOTIFICATIONS */
-
-    /* Fondo oscuro detrás de la ventana */
-.popup-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.78);
-    backdrop-filter: blur(5px);
-
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
-/* El atributo hidden debe prevalecer sobre display:flex */
-.popup-overlay[hidden] {
-    display: none;
-}
-
-.popup-overlay.active {
-    opacity: 1;
-}
-    .popup-content p {
-white-space: pre-wrap;
-}
-
-/* Ventana principal */
-.notification-popup {
-    position: relative;
-    width: 100%;
-    max-width: 450px;
-
-    background: #080808;
-    color: white;
-
-    border: 1px solid rgba(0, 220, 255, 0.35);
-    border-radius: 8px;
-
-    overflow: hidden;
-
-    box-shadow:
-        0 0 25px rgba(0, 200, 255, 0.12),
-        0 15px 60px rgba(0, 0, 0, 0.7);
-
-    transform: translateY(20px) scale(0.97);
-    transition: transform 0.3s ease;
-}
-
-.popup-overlay.active .notification-popup {
-    transform: translateY(0) scale(1);
-}
-
-/* Encabezado RGB */
-.popup-header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 18px 22px;
-    background: #000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Franja RGB animada */
-.popup-header::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-
-    background: linear-gradient(
-        90deg,
-        #ff0055,
-        #ff7700,
-        #ffdd00,
-        #00ff88,
-        #00bbff,
-        #aa00ff,
-        #ff0055
-    );
-
-    background-size: 200% 200%;
-    animation: rgbShift 6s linear infinite;
-}
-
-.popup-header h2 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-/* Botón X */
-.popup-close {
-    background: transparent;
-    border: none;
-    color: #aaa;
-
-    font-size: 27px;
-    line-height: 1;
-    cursor: pointer;
-
-    transition: color 0.2s, transform 0.2s;
-}
-
-.popup-close:hover {
-    color: #00d9ff;
-    transform: rotate(90deg);
-}
-
-/* Contenido */
-.popup-content {
-    padding: 25px 22px;
-}
-
-.popup-content h3 {
-    margin: 0 0 10px;
-    color: #00d9ff;
-    font-size: 1.25rem;
-}
-
-.popup-content p {
-    margin: 0;
-    color: #bbb;
-    line-height: 1.65;
-    font-size: 0.95rem;
-}
-
-/* Pie de la ventana */
-.popup-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 22px 22px;
-}
-
-.popup-confirm {
-    padding: 10px 22px;
-    background: transparent;
-
-    border: 1px solid #00d9ff;
-    border-radius: 6px;
-
-    color: #00d9ff;
-    font-size: 0.9rem;
-    cursor: pointer;
-
-    transition: background 0.2s, color 0.2s;
-}
-
-.popup-confirm:hover {
-    background: #00d9ff;
-    color: #000;
-}
-
-@media (max-width: 500px) {
-    .notification-popup {
-        max-width: 100%;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .popup-header::before {
-        animation: none;
-    }
-
-    .popup-overlay,
-    .notification-popup,
-    .popup-close,
-    .popup-confirm {
-        transition: none;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: 'Google Sans', Arial, sans-serif;
-  background-color: rgba(0, 0, 0, 0.65); 
-  
-
-    background-image: url('https://imglink.cc/cdn/mJXIEE9M_k.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    color: #e4e4e7;
-    line-height: 1.6;
-    overflow-x: clip;
-}
-
-    body {
-  position: relative;
-  min-height: 100vh;
-  margin: 0;
-  color: white;
-}
-
-body::before {
-  content: "";
-  position: absolute;
-
-  inset: -30px;    /* Prevents white/faded edges from the heavy blur */
-  z-index: -1;
-  
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-    url("https://imglink.cc/cdn/mJXIEE9M_k.jpg") center / cover no-repeat;
-    
-  filter: blur(8px);
-}
-
-
-/* =========================================
-   MAIN WEBSITE HEADER
-   Matches index.html EXACTLY
-========================================= */
-
-header {
-    position: relative;
-    background-color: #000000;
-    color: #ffffff;
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    z-index: 1;
-}
-
-/* Diffused Multi-Color RGB Glow */
-header::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        90deg,
-        #ff0055,
-        #ff7700,
-        #ffdd00,
-        #00ff88,
-        #00bbff,
-        #aa00ff,
-        #ff0055
-    );
-    background-size: 200% 200%;
-    filter: blur(18px);
-    opacity: 0.85;
-    z-index: -1;
-    animation: rgbShift 6s linear infinite;
-}
-
-/* Website title */
-header h1 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: bold;
-    letter-spacing: -1px;
-}
-
-/* Navigation links */
-nav a {
-  position: relative;
-  color: #ffffff;
-  text-decoration: none;
-  margin-left: 20px;
-  font-size: 0.95rem;
-  padding-bottom: 4px;
-}
-
-nav a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #ffffff;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-nav a:hover::after {
-  transform: scaleX(1);
-}
-
-
-/* Social icons */
-.social-icons {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    flex-shrink: 0;
-}
-
-.social-icon {
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.social-icon:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-}
-
-
-
-
-@view-transition {
-  navigation: auto;
-}
-
-
-    
-
-/* RGB animation */
-@keyframes rgbShift {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    100% {
-        background-position: 200% 50%;
-    }
-}
-
-
-/* fix on mobile */
-    @media (max-width: 768px) {
-  header div {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-
-  header h1 {
-    position: static !important;
-    display: block !important;
-    margin: 0 0 12px 0 !important; /* Forces space below the title */
-    padding: 0 !important;
-    line-height: 1.2 !important;
-    transform: none !important;
-  }
-
-  header nav {
-    position: static !important;
-    display: flex !important;
-    justify-content: center !important;
-    gap: 16px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1.2 !important;
-    transform: none !important;
-  }
-
-  header nav a {
-    position: static !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-}
-
-    
-/* Disable RGB on mobile */
-@media (max-width: 768px) {
-    header {
-        background: #000000 !important;
-    }
-
-    header::before {
-        display: none !important;
-        animation: none !important;
-    }
-}
-
-
-
-/* =========================================
-   PAGE LAYOUT
-========================================= */
-
-.page-container {
-    width: min(1500px, 96%);
-    margin: 45px auto 35px;
-}
-
-.page-heading {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.page-heading h2 {
-    font-size: 2rem;
-    margin: 0;
-    color: white;
-    letter-spacing: -1px;
-}
-
-.page-heading p {
-    color: #a1a1aa;
-    margin: 5px 0 0;
-    font-size: 0.95rem;
-}
-
-/* =========================================
-   CHAT CONTAINER
-========================================= */
-
-.chat-container {
-    width: 100%;
-    height: min(780px, calc(100vh - 230px));
-    min-height: 480px;
-    display: flex;
-    flex-direction: column;
-    background: rgba(10, 10, 18, 0.70);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 18px;
-    box-shadow:
-        0 8px 35px rgba(0, 0, 0, 0.35),
-        0 0 25px rgba(0, 180, 255, 0.06);
-    overflow: hidden;
-}
-
-/* =========================================
-   CHAT HEADER
-========================================= */
-
-.chat-header {
-    padding: 17px 25px;
-    background: rgba(0, 0, 0, 0.45);
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.header-title {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.ai-icon {
-    width: 45px;
-    height: 45px;
-    flex-shrink: 0;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #4285f4, #a142f4, #e879f9);
-    box-shadow: 0 0 18px rgba(161,66,244,0.35);
-    color: white;
-    display: grid;
-    place-items: center;
-    font-size: 24px;
-}
-
-.header-title h2 {
-    margin: 0;
-    font-size: 17px;
-    color: white;
-}
-
-.status {
-    color: #4ade80;
-    font-size: 12px;
-    margin-top: 2px;
-}
-
-.status.thinking { color: #facc15; }
-.status.error-status { color: #f87171; }
-
-#new-chat {
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.08);
-    color: white;
-    padding: 10px 16px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#new-chat:hover {
-    background: rgba(56,189,248,0.15);
-    border-color: #38bdf8;
-    box-shadow: 0 0 12px rgba(56,189,248,0.2);
-}
-
-/* =========================================
-   CHAT MESSAGES
-========================================= */
-
-#chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 30px 35px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    scroll-behavior: smooth;
-}
-
-#chat-messages::-webkit-scrollbar { width: 7px; }
-#chat-messages::-webkit-scrollbar-track { background: transparent; }
-#chat-messages::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.18);
-    border-radius: 10px;
-}
-#chat-messages::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.35);
-}
-
-.msg {
-    max-width: 85%;
-    padding: 15px 19px;
-    border-radius: 14px;
-    font-size: 14px;
-    line-height: 1.75;
-    overflow-wrap: anywhere;
-    animation: messageAppear 0.25s ease;
-}
-
-@keyframes messageAppear {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.msg.bot {
-    align-self: flex-start;
-    background: rgba(255,255,255,0.075);
-    border: 1px solid rgba(255,255,255,0.11);
-    border-bottom-left-radius: 4px;
-    color: #e4e4e7;
-    max-width: 90%;
-}
-
-.msg.user {
-    align-self: flex-end;
-    background: rgba(37,99,235,0.35);
-    border: 1px solid rgba(59,130,246,0.35);
-    border-bottom-right-radius: 4px;
-    color: #fff;
-}
-
-.msg.error {
-    background: rgba(127,29,29,0.25);
-    border: 1px solid rgba(248,113,113,0.3);
-    color: #fca5a5;
-}
-
-/* =========================================
-   MARKDOWN FORMATTING
-========================================= */
-
-.msg.bot h1,
-.msg.bot h2,
-.msg.bot h3,
-.msg.bot h4 {
-    color: #fff;
-    line-height: 1.3;
-    margin-top: 22px;
-    margin-bottom: 10px;
-}
-
-.msg.bot h1 { font-size: 1.65rem; }
-.msg.bot h2 { font-size: 1.4rem; }
-.msg.bot h3 { font-size: 1.15rem; }
-.msg.bot h4 { font-size: 1rem; }
-
-.msg.bot p { margin: 10px 0; }
-.msg.bot p:first-child { margin-top: 0; }
-.msg.bot p:last-child { margin-bottom: 0; }
-
-.msg.bot strong {
-    color: #fff;
-    font-weight: 700;
-}
-
-.msg.bot a {
-    color: #38bdf8;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-
-.msg.bot a:hover {
-    color: white;
-    text-shadow: 0 0 10px rgba(56,189,248,0.8);
-}
-
-.msg.bot ul,
-.msg.bot ol {
-    padding-left: 25px;
-    margin: 12px 0;
-}
-
-.msg.bot li { margin: 5px 0; }
-
-.msg.bot blockquote {
-    position: relative;
-    margin: 16px 0;
-    padding: 12px 18px;
-    background: rgba(15,23,42,0.35);
-    border-radius: 0 8px 8px 0;
-    border-left: 3px solid rgba(255,255,255,0.8);
-    color: #cbd5e1;
-}
-
-.msg.bot hr {
-    border: 0;
-    border-top: 1px solid rgba(255,255,255,0.2);
-    margin: 20px 0;
-}
-
-.msg.bot table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 13px;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-.msg.bot th,
-.msg.bot td {
-    border: 1px solid rgba(255,255,255,0.14);
-    padding: 9px 12px;
-    text-align: left;
-}
-
-.msg.bot th {
-    background: rgba(56,189,248,0.15);
-    color: white;
-}
-
-.msg.bot td { background: rgba(255,255,255,0.025); }
-
-.msg.bot code:not(pre code) {
-    background: rgba(255,255,255,0.12);
-    color: #7dd3fc;
-    padding: 2px 6px;
-    border-radius: 5px;
-    font-family: Consolas, monospace;
-    font-size: 0.9em;
-}
-
-.msg.bot pre {
-    position: relative;
-    background: rgba(0,0,0,0.55);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    padding: 18px;
-    margin: 14px 0;
-    overflow-x: auto;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.msg.bot pre code {
-    font-family: Consolas, 'Courier New', monospace;
-    background: transparent;
-    padding: 0;
-    color: #e4e4e7;
-    white-space: pre;
-}
-
-.code-copy {
-    position: absolute;
-    top: 9px;
-    right: 9px;
-    padding: 5px 10px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 6px;
-    color: #d4d4d8;
-    font-size: 11px;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.code-copy:hover {
-    background: rgba(56,189,248,0.2);
-    color: white;
-    border-color: #38bdf8;
-}
-
-/* =========================================
-   GOOGLE SEARCH SOURCES
-========================================= */
-
-.sources-section {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255,255,255,0.13);
-}
-
-.sources-heading {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin-bottom: 12px;
-    color: #cbd5e1;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.sources-icon {
-    width: 25px;
-    height: 25px;
-    display: grid;
-    place-items: center;
-    border-radius: 7px;
-    background: rgba(56,189,248,0.13);
-    color: #38bdf8;
-    font-size: 16px;
-}
-
-.sources-count {
-    margin-left: auto;
-    padding: 3px 8px;
-    border-radius: 20px;
-    background: rgba(56,189,248,0.12);
-    color: #7dd3fc;
-    font-size: 10px;
-    font-weight: 600;
-}
-
-.sources-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px;
-}
-
-.source-card {
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 11px 12px;
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 10px;
-    background: rgba(255,255,255,0.035);
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-
-.source-card:hover {
-    background: rgba(56,189,248,0.09);
-    border-color: rgba(56,189,248,0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-}
-
-.source-favicon {
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.08);
-}
-
-.source-favicon img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.source-info {
-    min-width: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.source-title {
-    color: #e4e4e7;
-    font-size: 12px;
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.source-domain {
-    color: #858595;
-    font-size: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.source-external {
-    color: #71717a;
-    font-size: 13px;
-    flex-shrink: 0;
-    transition: color 0.2s ease;
-}
-
-.source-card:hover .source-external { color: #38bdf8; }
-
-    /* =========================================
-   INLINE SOURCE CITATIONS
-========================================= */
-
-.source-citation {
-    display: inline-block;
-    position: relative;
-    vertical-align: middle;
-    margin: 0 2px;
-    font-size: 0.82em;
-    line-height: 1.4;
-}
-
-.source-citation summary {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    max-width: 240px;
-    padding: 4px 9px;
-    border: 1px solid rgba(255,255,255,0.13);
-    border-radius: 20px;
-    background: rgba(255,255,255,0.075);
-    color: #e4e4e7;
-    cursor: pointer;
-    list-style: none;
-    transition: background 0.2s ease, border-color 0.2s ease;
-    user-select: none;
-}
-
-.source-citation summary::-webkit-details-marker {
-    display: none;
-}
-
-.source-citation summary:hover {
-    background: rgba(56,189,248,0.13);
-    border-color: rgba(56,189,248,0.45);
-}
-
-.citation-favicon {
-    width: 15px;
-    height: 15px;
-    object-fit: contain;
-    flex-shrink: 0;
-    border-radius: 3px;
-}
-
-.citation-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
-    color: #dbeafe;
-}
-
-.citation-more {
-    flex-shrink: 0;
-    color: #7dd3fc;
-    font-size: 0.9em;
-    font-weight: 700;
-}
-
-.citation-list {
-    position: absolute;
-    left: 0;
-    top: calc(100% + 7px);
-    z-index: 50;
-    width: min(320px, 80vw);
-    padding: 7px;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    background: rgba(12,15,25,0.98);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.45);
-    backdrop-filter: blur(15px);
-}
-
-.citation-source {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px;
-    border-radius: 8px;
-    color: #e4e4e7;
-    text-decoration: none;
-    transition: background 0.2s ease;
-}
-
-.citation-source:hover {
-    background: rgba(56,189,248,0.12);
-}
-
-.citation-source img {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.citation-source-info {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.citation-source-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: #e4e4e7;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.citation-source-domain {
-    font-size: 10px;
-    color: #858595;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.citation-source-arrow {
-    margin-left: auto;
-    color: #7dd3fc;
-    flex-shrink: 0;
-}
-
-@media (max-width: 500px) {
-    .citation-list {
-        width: min(280px, 75vw);
-    }
-}
-
-/* =========================================
-   CHAT FOOTER
-========================================= */
-
-.chat-footer {
-    padding: 20px 25px;
-    background: rgba(0,0,0,0.35);
-    border-top: 1px solid rgba(255,255,255,0.12);
-}
-
-#chat-form {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-#chat-input {
-    flex: 1;
-    min-width: 0;
-    padding: 15px 18px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 11px;
-    outline: none;
-    color: white;
-    font-family: inherit;
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
-
-#chat-input::placeholder { color: #888899; }
-
-#chat-input:focus {
-    border-color: #38bdf8;
-    box-shadow: 0 0 12px rgba(56,189,248,0.15);
-    background: rgba(255,255,255,0.11);
-}
-
-#chat-send {
-    border: 1px solid rgba(56,189,248,0.5);
-    border-radius: 10px;
-    padding: 14px 25px;
-    background: linear-gradient(135deg, #2563eb, #4f46e5);
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#chat-send:hover {
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
-    box-shadow: 0 0 18px rgba(59,130,246,0.35);
-    transform: translateY(-1px);
-}
-
-#chat-send:disabled {
-    opacity: 0.5;
-    transform: none;
-    box-shadow: none;
-    cursor: not-allowed;
-}
-
-.footer-note {
-    color: #71717a;
-    text-align: center;
-    font-size: 11px;
-    margin-top: 13px;
-}
-
-/* =========================================
-   CUSTOM CURSOR
-========================================= */
-
-@media (hover: hover) and (pointer: fine) {
-    html,
-    html *,
-    body,
-    body *,
-    body *::before,
-    body *::after {
-        cursor: none !important;
-    }
-
-    .cursor-dot {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 6px;
-        height: 6px;
-        background: #00f3ff;
-        border-radius: 50%;
-        box-shadow: 0 0 8px #00f3ff;
-        pointer-events: none;
-        z-index: 100001;
-        transform: translate(-50%, -50%);
-    }
-
-    .cursor-ring {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 14px;
-        height: 14px;
-        border: 2px solid rgba(0,243,255,0.8);
-        border-radius: 50%;
-        box-shadow: 0 0 12px rgba(0,243,255,0.4);
-        pointer-events: none;
-        z-index: 100001;
-        transform: translate(-50%, -50%);
-        transition:
-            width 0.2s ease,
-            height 0.2s ease,
-            border-color 0.2s ease;
-    }
-
-    .cursor-ring.hover {
-        width: 12px;
-        height: 12px;
-        border-color: #8af9ff;
-        box-shadow: 0 0 16px rgba(138,249,255,0.6);
-    }
-
-    .cursor-dot.hover {
-        background: #8af9ff;
-        box-shadow: 0 0 8px #8af9ff;
-    }
-
-    .cursor-ring.click {
-        width: 8px;
-        height: 8px;
-    }
-}
-
-@media (hover: none) and (pointer: coarse) {
-    .cursor-dot,
-    .cursor-ring { display: none; }
-}
-
-/* =========================================
-   RESPONSIVE DESIGN
-========================================= */
-
-@media (max-width: 900px) {
-    .page-container { width: 96%; }
-    .chat-container { height: calc(100vh - 220px); }
-    #chat-messages { padding: 22px; }
-    .msg { max-width: 94%; }
-}
-
-@media (max-width: 768px) {
-    header {
-        background: #000000 !important;
-        flex-direction: column;
-        text-align: center;
-        padding: 16px 20px;
-    }
-
-    header::before {
-        display: none !important;
-        animation: none !important;
-    }
-
-    header h1 {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        margin: 0;
-        font-size: 1.25rem;
-    }
-
-    header > div:first-child {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    header nav {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin: 0;
-    }
-
-    header nav a {
-        margin-left: 0;
-    }
-
-    .social-icons {
-        margin-top: 12px;
-    }
-
-    /* Keep the rest of your existing mobile CSS below this */
-
-    header::before {
-        display: none;
-        animation: none;
-    }
-
-    header h1 {
-        display: block;
-        margin-bottom: 12px;
-        font-size: 1.4rem;
-        
-    }
-    header h1 {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-}
-    header > div:first-child {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    header nav {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin: 0;
-    }
-
-    header nav a { margin-left: 0; }
-    .social-icons { margin-top: 12px; }
-
-    .page-container {
-        width: 100%;
-        margin: 25px auto 0;
-        padding: 0 10px;
-    }
-
-    .page-heading h2 { font-size: 1.6rem; }
-
-    .chat-container {
-        height: calc(100vh - 190px);
-        min-height: 400px;
-        border-radius: 12px;
-    }
-
-    .chat-header { padding: 13px 15px; }
-    #chat-messages { padding: 17px 12px; gap: 14px; }
-
-    .msg {
-        max-width: 96%;
-        padding: 12px 14px;
-        font-size: 13px;
-    }
-
-    .chat-footer { padding: 14px 12px; }
-
-    #chat-input {
-        padding: 13px 12px;
-        font-size: 13px;
-    }
-
-    #chat-send { padding: 13px 16px; }
-
-    .msg.bot table {
-        display: block;
-        overflow-x: auto;
-    }
-
-    .sources-grid { grid-template-columns: 1fr; }
-    .source-card { padding: 10px; }
-}
-
-@media (max-width: 400px) {
-    .header-title { gap: 8px; }
-
-    .ai-icon {
-        width: 38px;
-        height: 38px;
-    }
-
-    #new-chat {
-        padding: 9px 10px;
-        font-size: 11px;
-    }
-
-    header nav a { font-size: 0.85rem; }
-}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@view-transition{navigation:auto}
+@keyframes rgbShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes messageAppear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+body{margin:0;min-height:100vh;font-family:'Google Sans',Arial,sans-serif;background:#000;color:#e4e4e7;line-height:1.6;overflow-x:clip}
+/* blurred fixed background (was position:absolute, which only covered the body height) */
+body::before{content:"";position:fixed;inset:-30px;z-index:-1;filter:blur(8px);
+  background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),url("https://imglink.cc/cdn/mJXIEE9M_k.jpg") center/cover no-repeat}
+
+/* ---------- Popup ---------- */
+.popup-overlay{position:fixed;inset:0;z-index:99999;display:flex;justify-content:center;align-items:center;padding:20px;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);opacity:0;transition:opacity .25s ease}
+.popup-overlay[hidden]{display:none}
+.popup-overlay.active{opacity:1}
+.notification-popup{position:relative;width:100%;max-width:450px;background:#080808;color:#fff;border:1px solid rgba(0,220,255,.35);border-radius:8px;overflow:hidden;box-shadow:0 0 25px rgba(0,200,255,.12),0 15px 60px rgba(0,0,0,.7);transform:translateY(20px) scale(.97);transition:transform .3s ease}
+.popup-overlay.active .notification-popup{transform:none}
+.popup-header{position:relative;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:#000;border-bottom:1px solid rgba(255,255,255,.08)}
+.popup-header::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,#ff0055,#ff7700,#ffdd00,#00ff88,#00bbff,#aa00ff,#ff0055);background-size:200% 200%;animation:rgbShift 6s linear infinite}
+.popup-header h2{margin:0;font-size:1.2rem;font-weight:600}
+.popup-close{background:transparent;border:none;color:#aaa;font-size:27px;line-height:1;transition:color .2s,transform .2s}
+.popup-close:hover{color:#00d9ff;transform:rotate(90deg)}
+.popup-content{padding:25px 22px}
+.popup-content h3{margin:0 0 10px;color:#00d9ff;font-size:1.25rem}
+.popup-content p{margin:0;color:#bbb;line-height:1.65;font-size:.95rem;white-space:pre-wrap}
+.popup-footer{display:flex;justify-content:flex-end;padding:0 22px 22px}
+.popup-confirm{padding:10px 22px;background:transparent;border:1px solid #00d9ff;border-radius:6px;color:#00d9ff;font-size:.9rem;transition:background .2s,color .2s}
+.popup-confirm:hover{background:#00d9ff;color:#000}
+
+/* ---------- Header ---------- */
+header{position:relative;background:#000;color:#fff;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;gap:16px;z-index:1}
+header::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#ff0055,#ff7700,#ffdd00,#00ff88,#00bbff,#aa00ff,#ff0055);background-size:200% 200%;filter:blur(18px);opacity:.85;z-index:-1;animation:rgbShift 6s linear infinite}
+header h1{position:absolute;left:50%;transform:translateX(-50%);margin:0;font-size:1.25rem;font-weight:bold;letter-spacing:-1px}
+nav a{position:relative;color:#fff;text-decoration:none;margin-left:20px;font-size:.95rem;padding-bottom:4px}
+nav a::after{content:'';position:absolute;left:0;bottom:0;width:100%;height:2px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+nav a:hover::after{transform:scaleX(1)}
+.social-icons{display:flex;align-items:center;gap:24px;flex-shrink:0}
+.social-icon{color:#fff;display:flex;align-items:center;transition:transform .2s ease,opacity .2s ease}
+.social-icon:hover{opacity:.9;transform:translateY(-2px)}
+
+/* ---------- Layout ---------- */
+.page-container{width:min(1500px,96%);margin:45px auto 35px}
+.page-heading{text-align:center;margin-bottom:25px}
+.page-heading h2{font-size:2rem;margin:0;color:#fff;letter-spacing:-1px}
+.page-heading p{color:#fff;margin:5px 0 0;font-size:.95rem}
+.chat-container{width:100%;height:min(780px,calc(100vh - 230px));min-height:480px;display:flex;flex-direction:column;background:rgba(10,10,18,.7);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,.18);border-radius:18px;box-shadow:0 8px 35px rgba(0,0,0,.35),0 0 25px rgba(0,180,255,.06);overflow:hidden}
+.chat-header{padding:17px 25px;background:rgba(0,0,0,.45);border-bottom:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:space-between;gap:15px}
+.header-title{display:flex;align-items:center;gap:14px}
+.ai-icon{width:45px;height:45px;flex-shrink:0;border-radius:14px;background:linear-gradient(135deg,#4285f4,#a142f4,#e879f9);box-shadow:0 0 18px rgba(161,66,244,.35);color:#fff;display:grid;place-items:center;font-size:24px}
+.header-title h2{margin:0;font-size:17px;color:#fff}
+.status{color:#4ade80;font-size:12px;margin-top:2px}
+.status.thinking{color:#facc15}
+.status.error-status{color:#f87171}
+#new-chat{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;transition:all .2s ease}
+#new-chat:hover{background:rgba(56,189,248,.15);border-color:#38bdf8;box-shadow:0 0 12px rgba(56,189,248,.2)}
+
+/* ---------- Messages ---------- */
+#chat-messages{flex:1;overflow-y:auto;padding:30px 35px;display:flex;flex-direction:column;gap:20px;scroll-behavior:smooth}
+#chat-messages::-webkit-scrollbar{width:7px}
+#chat-messages::-webkit-scrollbar-track{background:transparent}
+#chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:10px}
+.msg{max-width:85%;padding:15px 19px;border-radius:14px;font-size:14px;line-height:1.75;overflow-wrap:anywhere;animation:messageAppear .25s ease}
+.msg.bot{align-self:flex-start;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.11);border-bottom-left-radius:4px;max-width:90%}
+.msg.user{align-self:flex-end;background:rgba(37,99,235,.35);border:1px solid rgba(59,130,246,.35);border-bottom-right-radius:4px;color:#fff}
+.msg.error{background:rgba(127,29,29,.25);border:1px solid rgba(248,113,113,.3);color:#fca5a5}
+
+/* ---------- Markdown ---------- */
+.msg.bot h1,.msg.bot h2,.msg.bot h3,.msg.bot h4{color:#fff;line-height:1.3;margin:22px 0 10px}
+.msg.bot h1{font-size:1.65rem}.msg.bot h2{font-size:1.4rem}.msg.bot h3{font-size:1.15rem}.msg.bot h4{font-size:1rem}
+.msg.bot>:first-child{margin-top:0}
+.msg.bot p{margin:10px 0}
+.msg.bot p:last-child{margin-bottom:0}
+.msg.bot strong{color:#fff;font-weight:700}
+.msg.bot a:not(.citation-source):not(.source-card){color:#38bdf8;text-decoration:none;font-weight:600;transition:.2s ease}
+.msg.bot a:not(.citation-source):not(.source-card):hover{color:#fff;text-shadow:0 0 10px rgba(56,189,248,.8)}
+.msg.bot ul,.msg.bot ol{padding-left:25px;margin:12px 0}
+.msg.bot li{margin:5px 0}
+.msg.bot blockquote{margin:16px 0;padding:12px 18px;background:rgba(15,23,42,.35);border-radius:0 8px 8px 0;border-left:3px solid rgba(255,255,255,.8);color:#cbd5e1}
+.msg.bot hr{border:0;border-top:1px solid rgba(255,255,255,.2);margin:20px 0}
+.msg.bot table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.msg.bot th,.msg.bot td{border:1px solid rgba(255,255,255,.14);padding:9px 12px;text-align:left}
+.msg.bot th{background:rgba(56,189,248,.15);color:#fff}
+.msg.bot td{background:rgba(255,255,255,.025)}
+.msg.bot code:not(pre code){background:rgba(255,255,255,.12);color:#7dd3fc;padding:2px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:.9em}
+.msg.bot pre{position:relative;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:18px;margin:14px 0;overflow-x:auto;font-size:13px;line-height:1.6}
+.msg.bot pre code{font-family:Consolas,'Courier New',monospace;background:transparent;padding:0;color:#e4e4e7;white-space:pre}
+.code-copy{position:absolute;top:9px;right:9px;padding:5px 10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:#d4d4d8;font-size:11px;transition:.2s ease}
+.code-copy:hover{background:rgba(56,189,248,.2);color:#fff;border-color:#38bdf8}
+
+/* ---------- Source list ---------- */
+.sources-section{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.13)}
+.sources-heading{display:flex;align-items:center;gap:9px;margin-bottom:12px;color:#cbd5e1;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.sources-icon{width:25px;height:25px;display:grid;place-items:center;border-radius:7px;background:rgba(56,189,248,.13);color:#38bdf8;font-size:16px}
+.sources-count{margin-left:auto;padding:3px 8px;border-radius:20px;background:rgba(56,189,248,.12);color:#7dd3fc;font-size:10px;font-weight:600}
+.sources-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.source-card{min-width:0;display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.035);text-decoration:none;transition:all .2s ease}
+.source-card:hover{background:rgba(56,189,248,.09);border-color:rgba(56,189,248,.4);transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,.15)}
+.source-favicon{width:30px;height:30px;flex-shrink:0;display:grid;place-items:center;overflow:hidden;border-radius:8px;background:rgba(255,255,255,.08)}
+.source-favicon img{width:20px;height:20px;object-fit:contain}
+.source-info,.citation-source-info{min-width:0;display:flex;flex-direction:column;gap:2px}
+.source-info{flex:1}
+.source-title,.citation-source-name{color:#e4e4e7;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.source-domain,.citation-source-domain{color:#858595;font-size:10px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.source-external{color:#71717a;font-size:13px;flex-shrink:0;transition:color .2s ease}
+.source-card:hover .source-external{color:#38bdf8}
+
+/* ---------- Inline citation bubbles ---------- */
+.source-citation{display:inline-block;position:relative;vertical-align:middle;margin:0 2px;font-size:.82em;line-height:1.4}
+.source-citation summary{display:inline-flex;align-items:center;gap:7px;max-width:240px;padding:4px 9px;border:1px solid rgba(255,255,255,.13);border-radius:20px;background:rgba(255,255,255,.075);color:#e4e4e7;list-style:none;user-select:none;transition:background .2s ease,border-color .2s ease}
+.source-citation summary::-webkit-details-marker{display:none}
+.source-citation summary:hover,.source-citation[open] summary{background:rgba(56,189,248,.13);border-color:rgba(56,189,248,.45)}
+.citation-favicon{width:15px;height:15px;object-fit:contain;flex-shrink:0;border-radius:3px}
+.citation-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:#dbeafe}
+.citation-more{flex-shrink:0;color:#7dd3fc;font-size:.9em;font-weight:700}
+.citation-list{position:absolute;left:0;top:calc(100% + 7px);z-index:50;width:min(320px,70vw);padding:7px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:rgba(12,15,25,.98);box-shadow:0 12px 35px rgba(0,0,0,.45)}
+.citation-source{display:flex;align-items:center;gap:10px;padding:9px;border-radius:8px;color:#e4e4e7;text-decoration:none;transition:background .2s ease}
+.citation-source:hover{background:rgba(56,189,248,.12)}
+.citation-source img{width:20px;height:20px;flex-shrink:0;object-fit:contain;border-radius:4px}
+.citation-source-arrow{margin-left:auto;color:#7dd3fc;flex-shrink:0}
+
+/* ---------- Footer ---------- */
+.chat-footer{padding:20px 25px;background:rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.12)}
+#chat-form{display:flex;align-items:center;gap:12px;max-width:1200px;margin:auto}
+#chat-input{flex:1;min-width:0;padding:15px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:11px;outline:none;color:#fff;font-family:inherit;font-size:14px;transition:all .2s ease}
+#chat-input::placeholder{color:#888899}
+#chat-input:focus{border-color:#38bdf8;box-shadow:0 0 12px rgba(56,189,248,.15);background:rgba(255,255,255,.11)}
+#chat-send{border:1px solid rgba(56,189,248,.5);border-radius:10px;padding:14px 25px;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;font-weight:bold;font-size:14px;transition:all .2s ease}
+#chat-send:hover{background:linear-gradient(135deg,#3b82f6,#6366f1);box-shadow:0 0 18px rgba(59,130,246,.35);transform:translateY(-1px)}
+#chat-send:disabled{opacity:.5;transform:none;box-shadow:none;cursor:not-allowed}
+.footer-note{color:#71717a;text-align:center;font-size:11px;margin-top:13px}
+#notice-link{text-decoration:underline}
+
+/* ---------- Custom cursor ---------- */
+@media (hover:hover) and (pointer:fine){
+  html,html *,body,body *,body *::before,body *::after{cursor:none!important}
+  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:100001;transform:translate(-50%,-50%)}
+  .cursor-dot{width:6px;height:6px;background:#00f3ff;box-shadow:0 0 8px #00f3ff}
+  .cursor-ring{width:14px;height:14px;border:2px solid rgba(0,243,255,.8);box-shadow:0 0 12px rgba(0,243,255,.4);transition:width .2s ease,height .2s ease,border-color .2s ease}
+  .cursor-ring.hover{width:12px;height:12px;border-color:#8af9ff;box-shadow:0 0 16px rgba(138,249,255,.6)}
+  .cursor-dot.hover{background:#8af9ff;box-shadow:0 0 8px #8af9ff}
+  .cursor-ring.click{width:8px;height:8px}
+}
+@media (hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){#chat-messages{padding:22px}.msg{max-width:94%}.chat-container{height:calc(100vh - 220px)}}
+@media (max-width:768px){
+  header{background:#000;flex-direction:column;text-align:center;padding:16px 20px}
+  header::before{display:none}
+  /* only the FIRST div (title + nav); the old "header div" rule also hit .social-icons */
+  header>div:first-child{display:flex;flex-direction:column;align-items:center}
+  header h1{position:static;transform:none;margin:0 0 12px;font-size:1.4rem;line-height:1.2}
+  header nav{display:flex;justify-content:center;gap:12px;margin:0!important}
+  header nav a{margin:0!important}
+  .social-icons{margin-top:12px}
+  .page-container{width:100%;margin:25px auto 0;padding:0 10px}
+  .page-heading h2{font-size:1.6rem}
+  .chat-container{height:calc(100vh - 190px);min-height:400px;border-radius:12px}
+  .chat-header{padding:13px 15px}
+  #chat-messages{padding:17px 12px;gap:14px}
+  .msg{max-width:96%;padding:12px 14px;font-size:13px}
+  .chat-footer{padding:14px 12px}
+  #chat-input{padding:13px 12px;font-size:13px}
+  #chat-send{padding:13px 16px}
+  .msg.bot table{display:block;overflow-x:auto}
+  .sources-grid{grid-template-columns:1fr}
+}
+@media (max-width:400px){.header-title{gap:8px}.ai-icon{width:38px;height:38px}#new-chat{padding:9px 10px;font-size:11px}header nav a{font-size:.85rem}}
+@media (prefers-reduced-motion:reduce){.popup-header::before,header::before{animation:none}.popup-overlay,.notification-popup,.popup-close,.popup-confirm{transition:none}}
 </style>
 </head>
 
 <body>
 
-        <div class="popup-overlay" id="notificationPopup" hidden>
-    <div
-        class="notification-popup"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="popupTitle"
-    >
-        <div class="popup-header">
-            <h2 id="popupTitle">Notificación</h2>
-
-            <button
-                class="popup-close"
-                id="popupClose"
-                aria-label="Cerrar notificación"
-            >
-                ×
-            </button>
-        </div>
-
-        <div class="popup-content">
-            <h3>¡Bienvenido!</h3>
-            <p>
-                Aquí puedes colocar el mensaje que quieras mostrar
-                a los visitantes de tu sitio web.
-            </p>
-        </div>
-
-        <div class="popup-footer">
-            <button class="popup-confirm" id="popupConfirm">
-                OK
-            </button>
-        </div>
+<div class="popup-overlay" id="notificationPopup" hidden>
+  <div class="notification-popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="popup-header">
+      <h2 id="popupTitle">Notificación</h2>
+      <button class="popup-close" id="popupClose" aria-label="Cerrar notificación">×</button>
     </div>
+    <div class="popup-content">
+      <h3>¡Bienvenido!</h3>
+      <p>Aquí puedes colocar el mensaje que quieras mostrar a los visitantes de tu sitio web.</p>
+    </div>
+    <div class="popup-footer"><button class="popup-confirm" id="popupConfirm">OK</button></div>
+  </div>
 </div>
 
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
 
-<!-- =========================================
-     MAIN WEBSITE HEADER
-========================================= -->
-
 <header>
   <div>
-    <h1 style="font-family: 'Google Sans', Arial, sans-serif; font-weight: bold; letter-spacing: -1px; margin: 0;">
-      Mohamed's Website
-    </h1>
-    <nav style="margin-top: 6px;">
-      <b><i><a href="https://mohamedpro123.github.io/" style="margin-right: 8px; color: #ffffff;">About</a></i></b>
-      <b><i><a href="https://www.instagram.com/mohamedhshcs/"  style="margin-right: 8px; color: #ffffff;">Contact</a></i></b>
-      <b><i><a href="https://mohamedpro123.github.io/ai" style="margin-right: 8px; color: #ffffff;">AI</a></i></b>
-      <b><i><a href="https://mohamedpro123.github.io/forum" style="color: #ffffff;">Forums</a></i></b>
-
+    <h1>Mohamed's Website</h1>
+    <nav style="margin-top:6px">
+      <b><i><a href="https://mohamedpro123.github.io/" style="margin-right:8px">About</a></i></b>
+      <b><i><a href="https://www.instagram.com/mohamedhshcs/" style="margin-right:8px">Contact</a></i></b>
+      <b><i><a href="https://mohamedpro123.github.io/ai" style="margin-right:8px">AI</a></i></b>
+      <b><i><a href="https://mohamedpro123.github.io/forum">Forums</a></i></b>
     </nav>
   </div>
 
-    <div class="social-icons">
-        <a href="https://github.com/MohamedPro123" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="social-icon">
-            <svg height="28" width="28" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-            </svg>
-        </a>
-
-        <a href="https://www.youtube.com/@mohamedaHSHCS" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" class="social-icon">
-            <svg height="32" width="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
-            </svg>
-        </a>
-
-        <a href="https://www.instagram.com/mohamedhshcs/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" class="social-icon">
-            <svg height="28" width="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
-            </svg>
-        </a>
-    </div>
+  <div class="social-icons">
+    <a href="https://github.com/MohamedPro123" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="social-icon">
+      <svg height="28" width="28" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@mohamedaHSHCS" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" class="social-icon">
+      <svg height="32" width="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/mohamedhshcs/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" class="social-icon">
+      <svg height="28" width="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+  </div>
 </header>
 
-<!-- =========================================
-     AI PAGE
-========================================= -->
-
 <div class="page-container">
+  <div class="page-heading">
+    <h2>AI Assistant</h2>
+    <p>Ask questions, explore ideas, and get answers powered by Google Gemini.</p>
+  </div>
 
-    <div class="page-heading">
-        <h2>AI Assistant</h2>
-        <p>
-            <span style="color: white;">
-                Ask questions, explore ideas, and get answers powered by Google Gemini.
-            </span>
-        </p>
-    </div>
-
-    <div class="chat-container">
-
-        <div class="chat-header">
-            <div class="header-title">
-                <div class="ai-icon">✦</div>
-
-                <div>
-                    <h2>Gemini AI</h2>
-                    <div class="status" id="status">● Ready to chat</div>
-                </div>
-            </div>
-
-            <button id="new-chat" type="button">+ New chat</button>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="header-title">
+        <div class="ai-icon">✦</div>
+        <div>
+          <h2>Gemini AI</h2>
+          <div class="status" id="status">● Ready to chat</div>
         </div>
-
-        <main id="chat-messages">
-            <div class="msg bot">
-                <h3>Welcome!</h3>
-                Hello! I'm Google Gemini. What would you like to know?
-
-                <p>
-                    I can help with homework, research, programming, explanations,
-                    brainstorming, and much more.
-                </p>
-            </div>
-        </main>
-
-        <footer class="chat-footer">
-            <form id="chat-form">
-                <input
-                    type="text"
-                    id="chat-input"
-                    placeholder="Message Gemini..."
-                    autocomplete="off"
-                    required
-                >
-
-                <button type="submit" id="chat-send">Send ↑</button>
-            </form>
-
-            <div class="footer-note">
-                Powered by Gemini™ 3.5 Flash Lite · AI can make mistakes. · <u><span style="" role="button" tabindex="0" onclick="showNotification('Important Notices', '· If you got an error about exceeding your current quota, this means that too many students used it and my API limit has been reached. Sorry, there is nothing I can do about this unless I pay money. My limit resets tommorow.\n· Gemini can make mistakes. Please, double check your work.\n· Google can use data you enter for training their models. Avoid entering sensitive information.\n· I am not responsible if your teacher catches you using AI in class, and any punishments they may give if you get caught. \n\nCoded by Mohamed Abdalrahman, credit to Google for Gemini API.')">Notice</span></u>
-            </div>
-        </footer>
-
+      </div>
+      <button id="new-chat" type="button">+ New chat</button>
     </div>
+
+    <main id="chat-messages">
+      <div class="msg bot">
+        <h3>Welcome!</h3>
+        <p>Hello! I'm Google Gemini. What would you like to know?</p>
+        <p>I can help with homework, research, programming, explanations, brainstorming, and much more.</p>
+      </div>
+    </main>
+
+    <footer class="chat-footer">
+      <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Message Gemini..." autocomplete="off" required>
+        <button type="submit" id="chat-send">Send ↑</button>
+      </form>
+      <div class="footer-note">
+        Powered by Gemini™ 3.5 Flash Lite · AI can make mistakes. · <span id="notice-link" role="button" tabindex="0">Notice</span>
+      </div>
+    </footer>
+  </div>
 </div>
 
 <script>
 /* =========================================
-   GEMINI CONNECTION
+   CONFIG
 ========================================= */
-
-const WORKER_URL =
-    "https://gemini-chat.mappinggerman04.workers.dev";
-
+const WORKER_URL = "https://gemini-chat.mappinggerman04.workers.dev";
 const MAX_HISTORY_MESSAGES = 40;
+
+const NOTICE_TEXT =
+"· If you got an error about exceeding your current quota, this means that too many students used it and my API limit has been reached. Sorry, there is nothing I can do about this unless I pay money. My limit resets tomorrow.\n" +
+"· Gemini can make mistakes. Please, double check your work.\n" +
+"· Google can use data you enter for training their models. Avoid entering sensitive information.\n" +
+"· I am not responsible if your teacher catches you using AI in class, and any punishments they may give if you get caught.\n\n" +
+"Coded by Mohamed Abdalrahman, credit to Google for Gemini API.";
 
 const chatForm = document.getElementById("chat-form");
 const chatInput = document.getElementById("chat-input");
 const chatMessages = document.getElementById("chat-messages");
 const chatSend = document.getElementById("chat-send");
 const newChat = document.getElementById("new-chat");
-const status = document.getElementById("status");
+const statusEl = document.getElementById("status");
 
-let history = [];
-
-
-/* =========================================
-   MARKDOWN RENDERING
-========================================= */
+let chatHistory = [];
 
 /* =========================================
-   INLINE SOURCE CITATIONS
+   SMALL HELPERS
 ========================================= */
+function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+}
 
-function createCitationBubble(sourceNumbers, sources) {
+function faviconURL(domain) {
+    return "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(domain) + "&sz=64";
+}
 
-    // Match citation numbers with the Worker source array.
-    const matchedSources = [];
+function makeFavicon(domain, className) {
+    const img = el("img", className);
+    img.alt = "";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    img.src = faviconURL(domain);
+    img.addEventListener("error", () => { img.style.display = "none"; });
+    return img;
+}
 
-    for (const number of sourceNumbers) {
+/* Validate one source from the worker ({title, url}) */
+function cleanSource(source) {
+    if (!source || typeof source.url !== "string") return null;
+    let url;
+    try { url = new URL(source.url); } catch { return null; }
+    if (url.protocol !== "https:") return null;
+    return {
+        title: typeof source.title === "string" && source.title.trim() ? source.title.trim() : url.hostname,
+        url: url.href,
+        domain: url.hostname.replace(/^www\./, "")
+    };
+}
 
-        const source = sources[number - 1];
+/* =========================================
+   INLINE CITATION BUBBLES
+   The worker tells Gemini to write [Source 1], [Source 1, Source 3] ...
+   Source N maps to sources[N - 1].
+========================================= */
+const CITATION_SOURCE = String.raw`\[\s*Sources?\s+(\d+(?:\s*(?:,|and|&)\s*(?:Sources?\s+)?\d+)*)\s*\]`;
+const CITATION_TEST = new RegExp(CITATION_SOURCE, "i");
 
-        if (!source || typeof source.url !== "string") {
-            continue;
-        }
+function createCitationBubble(numbers, sources) {
 
-        let url;
+    const matched = [];
 
-        try {
-            url = new URL(source.url);
-        } catch {
-            continue;
-        }
-
-        if (url.protocol !== "https:") {
-            continue;
-        }
-
-        // Avoid duplicate citations.
-        if (matchedSources.some(item => item.url === url.href)) {
-            continue;
-        }
-
-        matchedSources.push({
-            title:
-                typeof source.title === "string" && source.title.trim()
-                    ? source.title.trim()
-                    : url.hostname,
-
-            url: url.href,
-
-            domain: url.hostname.replace(/^www\./, "")
-        });
+    for (const n of numbers) {
+        const source = cleanSource(sources[n - 1]);
+        if (source && !matched.some(m => m.url === source.url)) matched.push(source);
     }
 
-    if (matchedSources.length === 0) {
-        return null;
+    if (!matched.length) return null;
+
+    const details = el("details", "source-citation");
+    const summary = el("summary");
+
+    summary.append(makeFavicon(matched[0].domain, "citation-favicon"), el("span", "citation-title", matched[0].domain));
+
+    if (matched.length > 1) {
+        summary.appendChild(el("span", "citation-more", "+" + (matched.length - 1)));
     }
 
-    const details = document.createElement("details");
-    details.className = "source-citation";
+    const list = el("div", "citation-list");
 
-    const summary = document.createElement("summary");
-
-    // Display the first source in the bubble.
-    const firstSource = matchedSources[0];
-
-    const favicon = document.createElement("img");
-
-    favicon.className = "citation-favicon";
-    favicon.alt = "";
-    favicon.loading = "lazy";
-    favicon.referrerPolicy = "no-referrer";
-
-    favicon.src =
-        "https://www.google.com/s2/favicons?domain=" +
-        encodeURIComponent(firstSource.domain) +
-        "&sz=64";
-
-    const title = document.createElement("span");
-    title.className = "citation-title";
-    title.textContent = firstSource.domain;
-
-    summary.append(favicon, title);
-
-    // Indicate additional sources.
-    if (matchedSources.length > 1) {
-
-        const more = document.createElement("span");
-
-        more.className = "citation-more";
-        more.textContent = `+${matchedSources.length - 1}`;
-
-        summary.appendChild(more);
-    }
-
-    details.appendChild(summary);
-
-    // Expanded list of sources.
-    const list = document.createElement("div");
-    list.className = "citation-list";
-
-    for (const source of matchedSources) {
-
-        const link = document.createElement("a");
-
-        link.className = "citation-source";
+    for (const source of matched) {
+        const link = el("a", "citation-source");
         link.href = source.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
 
-        const sourceFavicon = document.createElement("img");
+        const info = el("div", "citation-source-info");
+        info.append(el("span", "citation-source-name", source.title), el("span", "citation-source-domain", source.domain));
 
-        sourceFavicon.src =
-            "https://www.google.com/s2/favicons?domain=" +
-            encodeURIComponent(source.domain) +
-            "&sz=64";
-
-        sourceFavicon.alt = "";
-        sourceFavicon.loading = "lazy";
-        sourceFavicon.referrerPolicy = "no-referrer";
-
-        sourceFavicon.addEventListener("error", () => {
-            sourceFavicon.style.display = "none";
-        });
-
-        const info = document.createElement("div");
-        info.className = "citation-source-info";
-
-        const name = document.createElement("span");
-        name.className = "citation-source-name";
-        name.textContent = source.title;
-
-        const domain = document.createElement("span");
-        domain.className = "citation-source-domain";
-        domain.textContent = source.domain;
-
-        info.append(name, domain);
-
-        const arrow = document.createElement("span");
-        arrow.className = "citation-source-arrow";
-        arrow.textContent = "↗";
-
-        link.append(sourceFavicon, info, arrow);
-
+        link.append(makeFavicon(source.domain), info, el("span", "citation-source-arrow", "↗"));
         list.appendChild(link);
     }
 
-    details.appendChild(list);
-
+    details.append(summary, list);
     return details;
 }
 
+function renderCitations(container, sources) {
 
-/* =========================================
-   CONVERT CITATION TEXT INTO BUBBLES
-========================================= */
-
-function renderCitations(container, sources = []) {
-
-    if (!Array.isArray(sources) || sources.length === 0) {
-        return;
-    }
-
-    // Recognizes:
-    // [Source 1]
-    // [Source 2, Source 4]
-    // [Source 1, Source 3, Source 5]
-
-    const citationRegex =
-        /\[Source\s+(\d+(?:\s*,\s*Source\s+\d+)*)\]/gi;
-
-    const walker = document.createTreeWalker(
-        container,
-        NodeFilter.SHOW_TEXT,
-        {
-            acceptNode(node) {
-
-                const parent = node.parentElement;
-
-                if (!parent) {
-                    return NodeFilter.FILTER_REJECT;
-                }
-
-                // Never replace citation-like text inside code,
-                // links, or rendered mathematical expressions.
-                if (
-                    parent.closest(
-                        "pre, code, a, script, style, .katex"
-                    )
-                ) {
-                    return NodeFilter.FILTER_REJECT;
-                }
-
-                if (!citationRegex.test(node.textContent)) {
-                    citationRegex.lastIndex = 0;
-                    return NodeFilter.FILTER_REJECT;
-                }
-
-                citationRegex.lastIndex = 0;
-
-                return NodeFilter.FILTER_ACCEPT;
-            }
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+            const parent = node.parentElement;
+            if (!parent || parent.closest("pre, code, a, script, style, .katex")) return NodeFilter.FILTER_REJECT;
+            return CITATION_TEST.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
         }
-    );
+    });
 
     const textNodes = [];
-
-    while (walker.nextNode()) {
-        textNodes.push(walker.currentNode);
-    }
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
 
     for (const node of textNodes) {
 
         const text = node.textContent;
         const fragment = document.createDocumentFragment();
-
         let lastIndex = 0;
 
-        citationRegex.lastIndex = 0;
+        for (const match of text.matchAll(new RegExp(CITATION_SOURCE, "gi"))) {
 
-        let match;
+            fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
 
-        while ((match = citationRegex.exec(text)) !== null) {
+            const numbers = match[1].match(/\d+/g).map(Number);
+            const bubble = sources.length ? createCitationBubble(numbers, sources) : null;
 
-            // Preserve text before the citation.
-            fragment.appendChild(
-                document.createTextNode(
-                    text.slice(lastIndex, match.index)
-                )
-            );
+            // No matching source: drop the marker instead of showing "[Source 7]" as raw text
+            if (bubble) fragment.appendChild(bubble);
 
-            const numbers = match[1]
-                .match(/\d+/g)
-                .map(Number);
-
-            const bubble = createCitationBubble(numbers, sources);
-
-            if (bubble) {
-                fragment.appendChild(bubble);
-            } else {
-                // Keep the original text if no source matches.
-                fragment.appendChild(
-                    document.createTextNode(match[0])
-                );
-            }
-
-            lastIndex = citationRegex.lastIndex;
+            lastIndex = match.index + match[0].length;
         }
 
-        // Preserve the remaining text.
-        fragment.appendChild(
-            document.createTextNode(text.slice(lastIndex))
-        );
-
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
         node.parentNode.replaceChild(fragment, node);
     }
 }
 
+/* Dropdown behaviour: one open at a time, close on outside click, keep inside the chat */
+chatMessages.addEventListener("toggle", (event) => {
+
+    const details = event.target;
+    if (!details.matches || !details.matches("details.source-citation") || !details.open) return;
+
+    document.querySelectorAll("details.source-citation[open]").forEach(d => { if (d !== details) d.open = false; });
+
+    const list = details.querySelector(".citation-list");
+    list.style.left = "0";
+    list.style.right = "auto";
+
+    const listBox = list.getBoundingClientRect();
+    const boundary = chatMessages.getBoundingClientRect();
+
+    if (listBox.right > boundary.right - 8) {
+        list.style.left = "auto";
+        list.style.right = "0";
+    }
+}, true);
+
+document.addEventListener("click", (event) => {
+    document.querySelectorAll("details.source-citation[open]").forEach(d => {
+        if (!d.contains(event.target)) d.open = false;
+    });
+});
 
 /* =========================================
    MARKDOWN RENDERING
 ========================================= */
-
 function renderMarkdown(text, sources = []) {
 
-    const html = marked.parse(text);
-
-    const cleanHTML = DOMPurify.sanitize(html);
+    const cleanHTML = DOMPurify.sanitize(marked.parse(text));
 
     const container = document.createElement("div");
-
     container.innerHTML = cleanHTML;
 
-    // Render mathematical expressions.
+    container.querySelectorAll("a[href]").forEach(a => {
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+    });
+
     if (window.renderMathInElement) {
-
         renderMathInElement(container, {
-
+            // Single "$" is NOT a delimiter: it turned "$5 million ... $10" into broken math.
             delimiters: [
                 { left: "$$", right: "$$", display: true },
-                { left: "$", right: "$", display: false },
                 { left: "\\(", right: "\\)", display: false },
                 { left: "\\[", right: "\\]", display: true }
             ],
-
             throwOnError: false,
-
-            ignoredTags: [
-                "script",
-                "noscript",
-                "style",
-                "textarea",
-                "pre",
-                "code"
-            ]
-
+            ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
         });
-
     }
 
-    // Convert [Source N] references into clickable bubbles.
-    renderCitations(container, sources);
+    renderCitations(container, Array.isArray(sources) ? sources : []);
 
     return container.innerHTML;
 }
 
 /* =========================================
-   CODE HIGHLIGHTING
+   CODE BLOCKS
 ========================================= */
-
 function formatCodeBlocks(container) {
 
     container.querySelectorAll("pre code").forEach(code => {
 
-        if (window.hljs) {
-            hljs.highlightElement(code);
-        }
+        if (window.hljs) hljs.highlightElement(code);
 
         const pre = code.parentElement;
-
         if (pre.querySelector(".code-copy")) return;
 
-        const copyButton = document.createElement("button");
+        const button = el("button", "code-copy", "Copy code");
+        button.type = "button";
 
-        copyButton.className = "code-copy";
-        copyButton.textContent = "Copy code";
-        copyButton.type = "button";
-
-        copyButton.addEventListener("click", async () => {
-
+        button.addEventListener("click", async () => {
             try {
                 await navigator.clipboard.writeText(code.innerText);
-
-                copyButton.textContent = "Copied!";
-
-                setTimeout(() => {
-                    copyButton.textContent = "Copy code";
-                }, 1500);
-
+                button.textContent = "Copied!";
             } catch (error) {
-                copyButton.textContent = "Copy failed";
+                button.textContent = "Copy failed";
                 console.error(error);
             }
-
+            setTimeout(() => { button.textContent = "Copy code"; }, 1500);
         });
 
-        pre.appendChild(copyButton);
+        pre.appendChild(button);
     });
 }
 
-
 /* =========================================
-   GOOGLE SEARCH SOURCES
+   "WEB SOURCES" CARD GRID (was defined but never called)
 ========================================= */
-
 function addSources(container, sources) {
 
-    if (!Array.isArray(sources) || sources.length === 0) {
-        return;
-    }
+    if (!Array.isArray(sources)) return;
 
-    const validSources = [];
+    const valid = [];
     const seen = new Set();
 
-    for (const source of sources) {
-
-        if (!source || typeof source.url !== "string") {
-            continue;
+    for (const raw of sources) {
+        const source = cleanSource(raw);
+        if (source && !seen.has(source.url)) {
+            seen.add(source.url);
+            valid.push(source);
         }
-
-        let parsedURL;
-
-        try {
-            parsedURL = new URL(source.url);
-        } catch {
-            continue;
-        }
-
-        if (parsedURL.protocol !== "https:") {
-            continue;
-        }
-
-        if (seen.has(parsedURL.href)) {
-            continue;
-        }
-
-        seen.add(parsedURL.href);
-
-        validSources.push({
-            title:
-                typeof source.title === "string" && source.title.trim()
-                    ? source.title.trim()
-                    : parsedURL.hostname,
-
-            url: parsedURL.href,
-
-            domain: parsedURL.hostname.replace(/^www\./, "")
-        });
     }
 
-    if (validSources.length === 0) {
-        return;
-    }
+    if (!valid.length) return;
 
-    const section = document.createElement("section");
-    section.className = "sources-section";
+    const section = el("section", "sources-section");
+    const heading = el("div", "sources-heading");
 
-    const heading = document.createElement("div");
-    heading.className = "sources-heading";
+    heading.append(
+        el("span", "sources-icon", "⌕"),
+        el("span", "", "Web sources"),
+        el("span", "sources-count", `${valid.length} ${valid.length === 1 ? "source" : "sources"}`)
+    );
 
-    const icon = document.createElement("span");
-    icon.className = "sources-icon";
-    icon.textContent = "⌕";
+    const grid = el("div", "sources-grid");
 
-    const headingText = document.createElement("span");
-    headingText.textContent = "Web sources";
+    for (const source of valid) {
 
-    const count = document.createElement("span");
-    count.className = "sources-count";
-    count.textContent =
-        `${validSources.length} ${validSources.length === 1 ? "source" : "sources"}`;
-
-    heading.append(icon, headingText, count);
-
-    const grid = document.createElement("div");
-    grid.className = "sources-grid";
-
-    for (const source of validSources) {
-
-        const link = document.createElement("a");
-
-        link.className = "source-card";
+        const link = el("a", "source-card");
         link.href = source.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         link.title = source.title;
 
-        const faviconContainer = document.createElement("div");
-        faviconContainer.className = "source-favicon";
+        const faviconBox = el("div", "source-favicon");
+        const favicon = makeFavicon(source.domain);
+        favicon.addEventListener("error", () => { faviconBox.textContent = "🌐"; });
+        faviconBox.appendChild(favicon);
 
-        const favicon = document.createElement("img");
+        const info = el("div", "source-info");
+        info.append(el("span", "source-title", source.title), el("span", "source-domain", source.domain));
 
-        favicon.src =
-            "https://www.google.com/s2/favicons?domain=" +
-            encodeURIComponent(source.domain) +
-            "&sz=64";
-
-        favicon.alt = "";
-        favicon.loading = "lazy";
-        favicon.referrerPolicy = "no-referrer";
-
-        favicon.addEventListener("error", () => {
-            faviconContainer.textContent = "🌐";
-        });
-
-        faviconContainer.appendChild(favicon);
-
-        const info = document.createElement("div");
-        info.className = "source-info";
-
-        const title = document.createElement("span");
-        title.className = "source-title";
-        title.textContent = source.title;
-
-        const domain = document.createElement("span");
-        domain.className = "source-domain";
-        domain.textContent = source.domain;
-
-        info.append(title, domain);
-
-        const external = document.createElement("span");
-        external.className = "source-external";
-        external.textContent = "↗";
-
-        link.append(faviconContainer, info, external);
+        link.append(faviconBox, info, el("span", "source-external", "↗"));
         grid.appendChild(link);
     }
 
@@ -1940,25 +560,18 @@ function addSources(container, sources) {
     container.appendChild(section);
 }
 
-
 /* =========================================
-   MESSAGE CREATION
+   MESSAGES
 ========================================= */
-
 function addMessage(text, sender) {
 
-    const bubble = document.createElement("div");
-    bubble.className = `msg ${sender}`;
+    const bubble = el("div", `msg ${sender}`);
 
     if (sender === "bot") {
-
         bubble.innerHTML = renderMarkdown(text);
         formatCodeBlocks(bubble);
-
     } else {
-
         bubble.textContent = text;
-
     }
 
     chatMessages.appendChild(bubble);
@@ -1967,64 +580,38 @@ function addMessage(text, sender) {
     return bubble;
 }
 
-
-/* =========================================
-   NEW CONVERSATION
-========================================= */
-
 newChat.addEventListener("click", () => {
-
-    history = [];
+    chatHistory = [];
     chatMessages.innerHTML = "";
-
-    status.textContent = "● Ready to chat";
-    status.className = "status";
-
-    addMessage(
-        "New conversation started. What would you like to know?",
-        "bot"
-    );
-
+    statusEl.textContent = "● Ready to chat";
+    statusEl.className = "status";
+    addMessage("New conversation started. What would you like to know?", "bot");
     chatInput.focus();
 });
-
 
 /* =========================================
    SEND MESSAGE
 ========================================= */
-
 chatForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
     const message = chatInput.value.trim();
+    if (!message || chatSend.disabled) return;
 
-    if (!message || chatSend.disabled) {
-        return;
-    }
+    const previousHistory = [...chatHistory];
 
-    // Preserve history if the request fails.
-    const previousHistory = [...history];
-
-    // Display the user's message.
     addMessage(message, "user");
 
-    // Add the message to conversation history.
-    history.push({
-        role: "user",
-        parts: [{ text: message }]
-    });
+    chatHistory.push({ role: "user", parts: [{ text: message }] });
+    chatHistory = chatHistory.slice(-MAX_HISTORY_MESSAGES);
 
-    // Keep the latest 40 messages.
-    history = history.slice(-MAX_HISTORY_MESSAGES);
-
-    // Disable input while processing.
     chatInput.value = "";
     chatInput.disabled = true;
     chatSend.disabled = true;
 
-    status.textContent = "● Thinking...";
-    status.className = "status thinking";
+    statusEl.textContent = "● Thinking...";
+    statusEl.className = "status thinking";
 
     const loading = addMessage("Thinking...", "bot");
 
@@ -2032,63 +619,38 @@ chatForm.addEventListener("submit", async (event) => {
 
         const response = await fetch(WORKER_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                contents: history
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: chatHistory })
         });
 
         const responseText = await response.text();
 
         let data;
-
         try {
             data = JSON.parse(responseText);
         } catch {
-            throw new Error(
-                `Invalid server response (${response.status}): ` +
-                responseText.slice(0, 200)
-            );
+            throw new Error(`Invalid server response (${response.status}): ` + responseText.slice(0, 200));
         }
 
-        if (!response.ok) {
-            throw new Error(
-                data.error || `Server error: ${response.status}`
-            );
-        }
+        if (!response.ok) throw new Error(data.error || `Server error: ${response.status}`);
 
-        if (
-            typeof data.reply !== "string" ||
-            !data.reply.trim()
-        ) {
+        if (typeof data.reply !== "string" || !data.reply.trim()) {
             throw new Error("Gemini returned an empty response.");
         }
 
-        // Display the AI response.
-loading.innerHTML = renderMarkdown(
-    data.reply,
-    Array.isArray(data.sources) ? data.sources : []
-);
+        const sources = Array.isArray(data.sources) ? data.sources : [];
 
-formatCodeBlocks(loading);   
+        loading.innerHTML = renderMarkdown(data.reply, sources);
+        formatCodeBlocks(loading);
+        addSources(loading, sources);
 
-        // Save the AI response to conversation history.
-        history.push({
-            role: "model",
-            parts: [{ text: data.reply }]
-        });
+        chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+        chatHistory = chatHistory.slice(-MAX_HISTORY_MESSAGES);
 
-        history = history.slice(-MAX_HISTORY_MESSAGES);
-
-        // Update status.
-        status.textContent =
-            data.groundingUsed && data.sources?.length
-                ? "● Answered using web search"
-                : "● Ready to chat";
-
-        status.className = "status";
+        statusEl.textContent = data.groundingUsed && sources.length
+            ? "● Answered using web search"
+            : "● Ready to chat";
+        statusEl.className = "status";
 
     } catch (error) {
 
@@ -2097,82 +659,64 @@ formatCodeBlocks(loading);
         loading.textContent = "Error: " + error.message;
         loading.classList.add("error");
 
-        // Restore the conversation history.
-        history = previousHistory;
+        chatHistory = previousHistory;
 
-        status.textContent = "● Connection error";
-        status.className = "status error-status";
+        statusEl.textContent = "● Connection error";
+        statusEl.className = "status error-status";
 
     } finally {
 
         chatInput.disabled = false;
         chatSend.disabled = false;
         chatInput.focus();
-
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 });
 
-
 /* =========================================
    CUSTOM CURSOR
 ========================================= */
+const dot = document.querySelector(".cursor-dot");
+const ring = document.querySelector(".cursor-ring");
 
-const dot = document.querySelector('.cursor-dot');
-const ring = document.querySelector('.cursor-ring');
+let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+let ringX = mouseX, ringY = mouseY;
+const CURSOR_SPEED = 0.18;
 
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
-let ringX = mouseX;
-let ringY = mouseY;
-
-// Lower = smoother/slower lag, Higher = snappier (0.1 to 0.3 is ideal)
-const speed = 0.18;
-
-// Track mouse position
-window.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-
-  // Move center dot immediately
-  dot.style.left = `${mouseX}px`;
-  dot.style.top = `${mouseY}px`;
+window.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + "px";
+    dot.style.top = mouseY + "px";
 });
 
-// Smooth animation loop for the outer ring
-function animateRing() {
-  ringX += (mouseX - ringX) * speed;
-  ringY += (mouseY - ringY) * speed;
+(function animateRing() {
+    ringX += (mouseX - ringX) * CURSOR_SPEED;
+    ringY += (mouseY - ringY) * CURSOR_SPEED;
+    ring.style.left = ringX + "px";
+    ring.style.top = ringY + "px";
+    requestAnimationFrame(animateRing);
+})();
 
-  ring.style.left = `${ringX}px`;
-  ring.style.top = `${ringY}px`;
+/* Event delegation: also works for elements created later (citations, copy buttons, source cards) */
+const INTERACTIVE = "a, button, input, summary, [role='button']";
 
-  requestAnimationFrame(animateRing);
-}
-animateRing();
-
-// Expand & change color on interactive elements
-const clickables = document.querySelectorAll('a, button, input, [role="button"]');
-clickables.forEach((el) => {
-  el.addEventListener('mouseenter', () => {
-    ring.classList.add('hover');
-    dot.classList.add('hover');
-  });
-  el.addEventListener('mouseleave', () => {
-    ring.classList.remove('hover');
-    dot.classList.remove('hover');
-  });
+document.addEventListener("mouseover", (e) => {
+    const on = !!(e.target.closest && e.target.closest(INTERACTIVE));
+    ring.classList.toggle("hover", on);
+    dot.classList.toggle("hover", on);
 });
 
-// Pulse inward on click
-window.addEventListener('mousedown', () => ring.classList.add('click'));
-window.addEventListener('mouseup', () => ring.classList.remove('click'));
+window.addEventListener("mousedown", () => ring.classList.add("click"));
+window.addEventListener("mouseup", () => ring.classList.remove("click"));
 
-    /* NOTIFICATION CODE */
-
+/* =========================================
+   NOTIFICATION POPUP
+========================================= */
 const popup = document.getElementById("notificationPopup");
 const closeButton = document.getElementById("popupClose");
 const confirmButton = document.getElementById("popupConfirm");
+const noticeLink = document.getElementById("notice-link");
 
 let previousFocus = null;
 
@@ -2198,30 +742,24 @@ function closeNotification() {
     setTimeout(() => {
         popup.hidden = true;
         document.body.style.overflow = "";
-
-        if (previousFocus) {
-            previousFocus.focus();
-        }
+        if (previousFocus) previousFocus.focus();
     }, 250);
 }
 
+noticeLink.addEventListener("click", () => showNotification("Important Notices", NOTICE_TEXT));
+noticeLink.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        showNotification("Important Notices", NOTICE_TEXT);
+    }
+});
+
 closeButton.addEventListener("click", closeNotification);
 confirmButton.addEventListener("click", closeNotification);
-
-popup.addEventListener("click", (event) => {
-    if (event.target === popup) {
-        closeNotification();
-    }
+popup.addEventListener("click", (e) => { if (e.target === popup) closeNotification(); });
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !popup.hidden) closeNotification();
 });
-
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !popup.hidden) {
-        closeNotification();
-    }
-});
-
-    
 </script>
-
 </body>
 </html>
