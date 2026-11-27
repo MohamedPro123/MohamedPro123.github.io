@@ -312,7 +312,7 @@ nav a:hover::after{transform:scaleX(1)}
 @media (max-width:400px){.header-title{gap:8px}.ai-icon{width:38px;height:38px}#new-chat{padding:9px 10px;font-size:11px}header nav a{font-size:.85rem}}
 @media (prefers-reduced-motion:reduce){.popup-header::before,header::before{animation:none}.popup-overlay,.notification-popup,.popup-close,.popup-confirm{transition:none}}
 
-  /* =====================================================================
+/* =====================================================================
    PASTE this at the very END of your <style> block (after the responsive
    and reduced-motion rules) so it overrides the earlier gallery rules.
 ===================================================================== */
@@ -321,17 +321,31 @@ nav a:hover::after{transform:scaleX(1)}
 .chat-container{position:relative}
 #chat-messages{scroll-behavior:auto}          /* smooth scrolling fights with streaming */
 .header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-#cursor-toggle{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;padding:10px 14px;border-radius:9px;font-size:13px;font-weight:600;transition:all .2s ease}
-#cursor-toggle:hover{background:rgba(56,189,248,.15);border-color:#38bdf8}
-@media (hover:none),(pointer:coarse){#cursor-toggle{display:none}}
-
-/* ---------- Custom cursor is opt-in via body.custom-cursor ---------- */
+/* ---------- Custom cursor: real cursor hidden ONLY while body.custom-cursor ---------- */
 body:not(.custom-cursor),body:not(.custom-cursor) *{cursor:auto!important}
+@media (hover:hover) and (pointer:fine){
+  body.custom-cursor,body.custom-cursor *,body.custom-cursor *::before,body.custom-cursor *::after{cursor:none!important}
+}
+/* the custom cursor only shows when the real one is not (see JS: scrollbars, window edge, before first move) */
+.cursor-dot,.cursor-ring{opacity:0;transition:opacity .12s ease}
+.cursor-ring{transition:opacity .12s ease,width .2s ease,height .2s ease,border-color .2s ease}
+body.custom-cursor.cursor-visible .cursor-dot,body.custom-cursor.cursor-visible .cursor-ring{opacity:1}
 body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{display:none!important}
+
+/* ---------- Setting row inside the Notice popup ---------- */
+.popup-setting{display:flex;align-items:center;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);color:#d4d4d8;font-size:.9rem}
+.popup-setting input{width:16px;height:16px;accent-color:#00d9ff}
+@media (hover:none),(pointer:coarse){.popup-setting{display:none}}
 
 /* ---------- Textarea input + Stop button ---------- */
 #chat-form{align-items:flex-end}
 #chat-input{resize:none;max-height:200px;line-height:1.5;overflow-y:auto;display:block}
+#chat-input{color-scheme:dark;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
+#chat-input::-webkit-scrollbar{width:6px}
+#chat-input::-webkit-scrollbar-track{background:transparent;margin:6px 0}
+#chat-input::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:10px}
+#chat-input::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.5)}
+#chat-input::-webkit-scrollbar-corner{background:transparent}
 #chat-send{min-width:92px;height:50px}
 #chat-send.stop{background:linear-gradient(135deg,#dc2626,#b91c1c);border-color:rgba(248,113,113,.6)}
 #chat-send.stop:hover{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 0 18px rgba(239,68,68,.35)}
@@ -345,11 +359,12 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
 .answer-content.streaming>pre:last-child::after{content:none}
 
 /* ---------- Copy / Regenerate bar ---------- */
-.msg-actions{display:flex;gap:8px;margin-top:14px}
-.msg-action{padding:5px 11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:7px;color:#cbd5e1;font-size:12px;transition:.2s ease}
-.msg-action:hover{background:rgba(56,189,248,.18);border-color:#38bdf8;color:#fff}
+.msg-actions{display:flex;gap:4px;margin-top:12px}
+.msg-action{width:26px;height:26px;padding:0;display:inline-grid;place-items:center;background:transparent;border:1px solid transparent;border-radius:6px;color:#8b8b9a;transition:color .15s ease,background .15s ease}
+.msg-action:hover{background:rgba(255,255,255,.1);color:#fff}
+.msg-action.ok{color:#4ade80}
 .msg-action.regen{display:none}
-.msg.bot:last-child .msg-action.regen{display:inline-block}
+.msg.bot:last-child .msg-action.regen{display:inline-grid}
 .msg-note{margin-top:12px;color:#a1a1aa;font-size:12px;font-style:italic}
 
 /* ---------- "Jump to latest" ---------- */
@@ -428,10 +443,8 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
           <div class="status" id="status">● Ready to chat</div>
         </div>
       </div>
-<div class="header-actions">
-  <button id="cursor-toggle" type="button">Custom Cursor: On</button>
-  <button id="new-chat" type="button">+ New chat</button>
-</div>
+      <button id="new-chat" type="button">+ New chat</button>
+
     </div>
 
     <main id="chat-messages">
@@ -467,7 +480,10 @@ const NOTICE_TEXT =
 "· Gemini can make mistakes. Please, double check your work.\n" +
 "· Google can use data you enter for training their models. Avoid entering sensitive information.\n" +
 "· I am not responsible if your teacher catches you using AI in class, and any punishments they may give if you get caught.\n\n" +
-"Coded by Mohamed Abdalrahman, credit to Google for Gemini API.";
+"Coded by Mohamed Abdalrahman, credit to Google for Gemini API."; +
+  "<label class="popup-setting">
+  <input type="checkbox" id="cursor-toggle"> Custom cursor
+</label>"
 
 const chatForm = document.getElementById("chat-form");
 const chatInput = document.getElementById("chat-input");
@@ -887,7 +903,6 @@ function addImageGallery(container, images) {
     container.insertBefore(section, container.firstChild);
 }
 
-
 /* =====================================================================
    REPLACE everything from the "MESSAGES" comment block (function addMessage...)
    down to (but NOT including) the "CUSTOM CURSOR" comment block with this.
@@ -904,6 +919,11 @@ function addImageGallery(container, images) {
 ========================================= */
 const STORAGE_KEY = "gemini-chat-v1";
 const CITATION_STRIP = /\s*\[\s*Sources?\s+\d+(?:\s*(?:,|and|&)\s*(?:Sources?\s+)?\d+)*\s*\]/gi;
+
+const SVG_ATTRS = 'width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const ICON_COPY  = `<svg ${SVG_ATTRS}><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
+const ICON_CHECK = `<svg ${SVG_ATTRS}><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+const ICON_REGEN = `<svg ${SVG_ATTRS}><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>`;
 
 let records = [];            // { role: "user" | "model", text, sources, images }
 let busy = false;
@@ -1011,20 +1031,31 @@ function addActions(bubble, rec) {
 
     const bar = el("div", "msg-actions");
 
-    const copy = el("button", "msg-action", "Copy");
+    const copy = el("button", "msg-action");
     copy.type = "button";
+    copy.title = "Copy";
+    copy.setAttribute("aria-label", "Copy answer");
+    copy.innerHTML = ICON_COPY;
     copy.addEventListener("click", async () => {
         try {
             await navigator.clipboard.writeText(rec.text.replace(CITATION_STRIP, ""));
-            copy.textContent = "Copied!";
+            copy.innerHTML = ICON_CHECK;
+            copy.classList.add("ok");
         } catch {
-            copy.textContent = "Copy failed";
+            copy.title = "Copy failed";
         }
-        setTimeout(() => { copy.textContent = "Copy"; }, 1500);
+        setTimeout(() => {
+            copy.innerHTML = ICON_COPY;
+            copy.classList.remove("ok");
+            copy.title = "Copy";
+        }, 1500);
     });
 
-    const regen = el("button", "msg-action regen", "↻ Regenerate");
+    const regen = el("button", "msg-action regen");
     regen.type = "button";
+    regen.title = "Regenerate";
+    regen.setAttribute("aria-label", "Regenerate answer");
+    regen.innerHTML = ICON_REGEN;
     regen.addEventListener("click", regenerate);
 
     bar.append(copy, regen);
@@ -1054,6 +1085,10 @@ async function generate(restoreText = "") {
     let ended = false;     // network stream finished
     let raf = null;
     let lastDraw = 0;
+    let lastTime = 0;
+    let carry = 0;         // fractional characters owed to the reveal
+    let drawGap = 33;      // minimum ms between redraws (adapts to render cost)
+    let dirty = false;
     let answerEl = null;
     let doneEvent = null;
     let errorMessage = "";
@@ -1071,19 +1106,39 @@ async function generate(restoreText = "") {
         scrollToBottom();
     }
 
-    // Reveal speed adapts to the backlog: smooth for trickles, catches up on bursts.
+    // Time-based reveal: characters per SECOND scale with the backlog, so the pace
+    // is independent of frame rate and eases in and out instead of jumping per chunk.
+    // Redraws are throttled by how long the last draw took, so long answers stay smooth.
     function tick(now) {
         raf = null;
+
+        const dt = lastTime ? Math.min(now - lastTime, 100) : 16;
+        lastTime = now;
+
         const backlog = received.length - shown;
 
         if (backlog > 0) {
-            shown = Math.min(received.length, shown + Math.max(ended ? 4 : 1, Math.ceil(backlog / (ended ? 4 : 10))));
-            if (now - lastDraw > 40 || shown >= received.length) {
-                draw();
-                lastDraw = now;
+            const rate = Math.max(40, backlog * (ended ? 10 : 4));   // chars per second
+            carry += rate * dt / 1000;
+            const step = Math.floor(carry);
+
+            if (step > 0) {
+                carry -= step;
+                shown = Math.min(received.length, shown + step);
+                dirty = true;
             }
         }
-        if (shown < received.length) raf = requestAnimationFrame(tick);
+
+        if (dirty && (now - lastDraw >= drawGap || shown >= received.length)) {
+            const t0 = performance.now();
+            draw();
+            drawGap = Math.max(33, (performance.now() - t0) * 2);
+            lastDraw = now;
+            dirty = false;
+        }
+
+        if (shown < received.length || dirty) raf = requestAnimationFrame(tick);
+        else lastTime = 0;
     }
 
     function handleEvent(evt) {
@@ -1287,6 +1342,63 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================================
+   CUSTOM CURSOR: optional (switch lives in the Notice popup) and never doubled up.
+   The real cursor is hidden by CSS only while body.custom-cursor is set. The custom
+   one is hidden whenever the real one has to show: before the first mouse move,
+   over scrollbars (the browser always draws its own arrow there), and outside the window.
+========================================= */
+const cursorToggle = document.getElementById("cursor-toggle");   // checkbox in the popup
+let cursorOn = true;
+try { cursorOn = localStorage.getItem("custom-cursor") !== "off"; } catch { /* ignore */ }
+
+function applyCursor() {
+    document.body.classList.toggle("custom-cursor", cursorOn);
+    if (!cursorOn) document.body.classList.remove("cursor-visible");
+    if (cursorToggle) cursorToggle.checked = cursorOn;
+}
+
+cursorToggle?.addEventListener("change", () => {
+    cursorOn = cursorToggle.checked;
+    try { localStorage.setItem("custom-cursor", cursorOn ? "on" : "off"); } catch { /* ignore */ }
+    applyCursor();
+});
+
+function overScrollbar(e) {
+    for (let n = e.target; n && n.nodeType === 1; n = n.parentElement) {
+        const cs = getComputedStyle(n);
+        const r = n.getBoundingClientRect();
+
+        if (/(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight &&
+            e.clientX > r.left + n.clientLeft + n.clientWidth) return true;
+
+        if (/(auto|scroll)/.test(cs.overflowX) && n.scrollWidth > n.clientWidth &&
+            e.clientY > r.top + n.clientTop + n.clientHeight) return true;
+    }
+    const root = document.documentElement;
+    return e.clientX >= root.clientWidth || e.clientY >= root.clientHeight;
+}
+
+let cursorEvent = null;
+let cursorFrame = 0;
+
+window.addEventListener("mousemove", (e) => {
+    if (!cursorOn) return;
+    cursorEvent = e;
+    if (cursorFrame) return;
+    cursorFrame = requestAnimationFrame(() => {
+        cursorFrame = 0;
+        document.body.classList.toggle("cursor-visible", !overScrollbar(cursorEvent));
+    });
+});
+
+const hideCustomCursor = () => document.body.classList.remove("cursor-visible");
+document.documentElement.addEventListener("mouseleave", hideCustomCursor);
+window.addEventListener("blur", hideCustomCursor);
+
+applyCursor();
+
+  
+/* =========================================
    OPTIONAL CUSTOM CURSOR (off switch, and never hides the real cursor if JS fails)
 ========================================= */
 const cursorToggle = document.getElementById("cursor-toggle");
@@ -1362,6 +1474,7 @@ function showNotification(title, message) {
     document.getElementById("popupTitle").textContent = title;
     document.querySelector(".popup-content h3").textContent = title;
     document.querySelector(".popup-content p").textContent = message;
+  
 
     popup.hidden = false;
     document.body.style.overflow = "hidden";
