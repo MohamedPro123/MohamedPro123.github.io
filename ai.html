@@ -107,6 +107,183 @@ nav a:hover::after{transform:scaleX(1)}
 .code-copy{position:absolute;top:9px;right:9px;padding:5px 10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:#d4d4d8;font-size:11px;transition:.2s ease}
 .code-copy:hover{background:rgba(56,189,248,.2);color:#fff;border-color:#38bdf8}
 
+  /* ---------- Image results gallery ---------- */
+
+.image-gallery-section {
+    width: 100%;
+    margin: 0 0 20px;
+    padding: 0 0 17px;
+    border-bottom: 1px solid rgba(255,255,255,.13);
+}
+
+.image-gallery-heading {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.image-gallery-icon {
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    background: rgba(56,189,248,.13);
+    color: #38bdf8;
+    font-size: 16px;
+}
+
+.image-gallery-count {
+    margin-left: auto;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(56,189,248,.12);
+    color: #7dd3fc;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.image-gallery-track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 12px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56,189,248,.4) transparent;
+}
+
+.image-gallery-track::-webkit-scrollbar {
+    height: 6px;
+}
+
+.image-gallery-track::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.image-gallery-track::-webkit-scrollbar-thumb {
+    background: rgba(56,189,248,.35);
+    border-radius: 10px;
+}
+
+.image-gallery-card {
+    flex: 0 0 210px;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 11px;
+    background: rgba(0,0,0,.28);
+    scroll-snap-align: start;
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.image-gallery-card:hover {
+    border-color: rgba(56,189,248,.55);
+    background: rgba(56,189,248,.06);
+    transform: translateY(-2px);
+}
+
+.image-gallery-image-link {
+    display: block;
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    background: rgba(255,255,255,.04);
+}
+
+.image-gallery-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .3s ease;
+}
+
+.image-gallery-card:hover .image-gallery-image {
+    transform: scale(1.045);
+}
+
+.image-gallery-info {
+    padding: 10px 11px 11px;
+}
+
+.image-gallery-title {
+    display: block;
+    color: #e4e4e7;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.45;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 32px;
+}
+
+.image-gallery-artist {
+    margin-top: 6px;
+    color: #858595;
+    font-size: 10px;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.image-gallery-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.image-gallery-license {
+    min-width: 0;
+    color: #7dd3fc;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.image-gallery-license:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.image-gallery-source {
+    flex-shrink: 0;
+    color: #a1a1aa;
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.image-gallery-source:hover {
+    color: #38bdf8;
+}
+
+@media (max-width: 768px) {
+    .image-gallery-card {
+        flex-basis: 175px;
+    }
+
+    .image-gallery-image-link {
+        height: 120px;
+    }
+}
+
 /* ---------- Source list ---------- */
 .sources-section{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.13)}
 .sources-heading{display:flex;align-items:center;gap:9px;margin-bottom:12px;color:#cbd5e1;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
@@ -560,6 +737,211 @@ function addSources(container, sources) {
     container.appendChild(section);
 }
 
+  /* =========================================
+   IMAGE RESULTS GALLERY
+========================================= */
+
+// Validate image data received from the Worker.
+function cleanImage(image) {
+
+    if (!image || typeof image !== "object") return null;
+
+    let thumbnailURL;
+    let pageURL;
+
+    try {
+        thumbnailURL = new URL(image.thumbnailUrl);
+        pageURL = new URL(image.pageUrl);
+    } catch {
+        return null;
+    }
+
+    // Only accept images hosted by Wikimedia.
+    if (
+        thumbnailURL.protocol !== "https:" ||
+        thumbnailURL.hostname !== "upload.wikimedia.org"
+    ) {
+        return null;
+    }
+
+    // Only accept original source pages hosted by Commons.
+    if (
+        pageURL.protocol !== "https:" ||
+        pageURL.hostname !== "commons.wikimedia.org"
+    ) {
+        return null;
+    }
+
+    let licenseURL = null;
+
+    if (typeof image.licenseUrl === "string") {
+        try {
+            const parsed = new URL(image.licenseUrl);
+
+            if (parsed.protocol === "https:") {
+                licenseURL = parsed.href;
+            }
+        } catch {
+            // License link is optional.
+        }
+    }
+
+    return {
+        title: typeof image.title === "string"
+            ? image.title.slice(0, 180)
+            : "Untitled image",
+
+        thumbnailUrl: thumbnailURL.href,
+        pageUrl: pageURL.href,
+
+        license: typeof image.license === "string"
+            ? image.license.slice(0, 100)
+            : "See source page",
+
+        licenseUrl,
+
+        artist: typeof image.artist === "string"
+            ? image.artist.slice(0, 250)
+            : ""
+    };
+}
+
+
+// Construct the image gallery using DOM methods.
+// Text is inserted with textContent rather than innerHTML.
+function addImageGallery(container, images) {
+
+    if (!Array.isArray(images)) return;
+
+    const validImages = [];
+    const seen = new Set();
+
+    for (const raw of images) {
+
+        const image = cleanImage(raw);
+
+        if (!image || seen.has(image.pageUrl)) continue;
+
+        seen.add(image.pageUrl);
+        validImages.push(image);
+    }
+
+    if (validImages.length === 0) return;
+
+    const section = el("section", "image-gallery-section");
+
+    const heading = el("div", "image-gallery-heading");
+
+    heading.append(
+        el("span", "image-gallery-icon", "▧"),
+        el("span", "", "Images"),
+        el(
+            "span",
+            "image-gallery-count",
+            `${validImages.length} ${validImages.length === 1 ? "image" : "images"}`
+        )
+    );
+
+    const track = el("div", "image-gallery-track");
+
+    for (const image of validImages) {
+
+        const card = el("article", "image-gallery-card");
+
+        // Image links to its original Wikimedia Commons page.
+        const imageLink = el("a", "image-gallery-image-link");
+
+        imageLink.href = image.pageUrl;
+        imageLink.target = "_blank";
+        imageLink.rel = "noopener noreferrer";
+        imageLink.setAttribute("aria-label", "View original image source");
+
+        const img = el("img", "image-gallery-image");
+
+        img.src = image.thumbnailUrl;
+        img.alt = image.title;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.referrerPolicy = "no-referrer";
+
+        img.addEventListener("error", () => {
+            card.style.display = "none";
+        });
+
+        imageLink.appendChild(img);
+
+        const info = el("div", "image-gallery-info");
+
+        const title = el(
+            "span",
+            "image-gallery-title",
+            image.title
+        );
+
+        info.appendChild(title);
+
+        if (image.artist) {
+            info.appendChild(
+                el(
+                    "div",
+                    "image-gallery-artist",
+                    "By " + image.artist
+                )
+            );
+        }
+
+        const footer = el("div", "image-gallery-footer");
+
+        // Link to the license terms when available.
+        let licenseElement;
+
+        if (image.licenseUrl) {
+
+            licenseElement = el(
+                "a",
+                "image-gallery-license",
+                image.license
+            );
+
+            licenseElement.href = image.licenseUrl;
+            licenseElement.target = "_blank";
+            licenseElement.rel = "noopener noreferrer";
+
+        } else {
+
+            licenseElement = el(
+                "span",
+                "image-gallery-license",
+                image.license
+            );
+        }
+
+        const sourceLink = el(
+            "a",
+            "image-gallery-source",
+            "Source ↗"
+        );
+
+        sourceLink.href = image.pageUrl;
+        sourceLink.target = "_blank";
+        sourceLink.rel = "noopener noreferrer";
+
+        footer.append(licenseElement, sourceLink);
+
+        info.appendChild(footer);
+
+        card.append(imageLink, info);
+        track.appendChild(card);
+    }
+
+    if (!track.children.length) return;
+
+    section.append(heading, track);
+
+    // The gallery appears before the answer.
+    container.insertBefore(section, container.firstChild);
+}
+
 /* =========================================
    MESSAGES
 ========================================= */
@@ -638,18 +1020,47 @@ chatForm.addEventListener("submit", async (event) => {
             throw new Error("Gemini returned an empty response.");
         }
 
-        const sources = Array.isArray(data.sources) ? data.sources : [];
+const sources = Array.isArray(data.sources) ? data.sources : [];
+const images = Array.isArray(data.images) ? data.images : [];
 
-        loading.innerHTML = renderMarkdown(data.reply, sources);
-        formatCodeBlocks(loading);
-        addSources(loading, sources);
+// Clear the temporary "Thinking..." message.
+loading.replaceChildren();
+
+// Display retrieved images first.
+addImageGallery(loading, images);
+
+// Render Gemini's answer separately.
+const answerContainer = el("div", "answer-content");
+
+answerContainer.innerHTML = renderMarkdown(data.reply, sources);
+
+loading.appendChild(answerContainer);
+
+// Preserve existing code highlighting and copy buttons.
+formatCodeBlocks(answerContainer);
+
+// Preserve existing web source cards.
+addSources(loading, sources);
 
         chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
         chatHistory = chatHistory.slice(-MAX_HISTORY_MESSAGES);
 
-        statusEl.textContent = data.groundingUsed && sources.length
-            ? "● Answered using web search"
-            : "● Ready to chat";
+if (data.groundingUsed && data.imageSearchSucceeded) {
+
+    statusEl.textContent = "● Answered using web search and images";
+
+} else if (data.groundingUsed) {
+
+    statusEl.textContent = "● Answered using web search";
+
+} else if (data.imageSearchSucceeded) {
+
+    statusEl.textContent = "● Answered with images";
+
+} else {
+
+    statusEl.textContent = "● Ready to chat";
+}
         statusEl.className = "status";
 
     } catch (error) {
