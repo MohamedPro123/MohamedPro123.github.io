@@ -311,6 +311,62 @@ nav a:hover::after{transform:scaleX(1)}
 }
 @media (max-width:400px){.header-title{gap:8px}.ai-icon{width:38px;height:38px}#new-chat{padding:9px 10px;font-size:11px}header nav a{font-size:.85rem}}
 @media (prefers-reduced-motion:reduce){.popup-header::before,header::before{animation:none}.popup-overlay,.notification-popup,.popup-close,.popup-confirm{transition:none}}
+
+  /* =====================================================================
+   PASTE this at the very END of your <style> block (after the responsive
+   and reduced-motion rules) so it overrides the earlier gallery rules.
+===================================================================== */
+
+/* ---------- Layout bits ---------- */
+.chat-container{position:relative}
+#chat-messages{scroll-behavior:auto}          /* smooth scrolling fights with streaming */
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#cursor-toggle{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;padding:10px 14px;border-radius:9px;font-size:13px;font-weight:600;transition:all .2s ease}
+#cursor-toggle:hover{background:rgba(56,189,248,.15);border-color:#38bdf8}
+@media (hover:none),(pointer:coarse){#cursor-toggle{display:none}}
+
+/* ---------- Custom cursor is opt-in via body.custom-cursor ---------- */
+body:not(.custom-cursor),body:not(.custom-cursor) *{cursor:auto!important}
+body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{display:none!important}
+
+/* ---------- Textarea input + Stop button ---------- */
+#chat-form{align-items:flex-end}
+#chat-input{resize:none;max-height:200px;line-height:1.5;overflow-y:auto;display:block}
+#chat-send{min-width:92px;height:50px}
+#chat-send.stop{background:linear-gradient(135deg,#dc2626,#b91c1c);border-color:rgba(248,113,113,.6)}
+#chat-send.stop:hover{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 0 18px rgba(239,68,68,.35)}
+
+/* ---------- Streaming ---------- */
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+.pending-text{color:#a1a1aa;font-style:italic}
+.pending-text::after{content:"";animation:dots 1.2s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.answer-content.streaming>:last-child::after{content:"▍";margin-left:2px;color:#7dd3fc;animation:caret 1s steps(1) infinite}
+.answer-content.streaming>pre:last-child::after{content:none}
+
+/* ---------- Copy / Regenerate bar ---------- */
+.msg-actions{display:flex;gap:8px;margin-top:14px}
+.msg-action{padding:5px 11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:7px;color:#cbd5e1;font-size:12px;transition:.2s ease}
+.msg-action:hover{background:rgba(56,189,248,.18);border-color:#38bdf8;color:#fff}
+.msg-action.regen{display:none}
+.msg.bot:last-child .msg-action.regen{display:inline-block}
+.msg-note{margin-top:12px;color:#a1a1aa;font-size:12px;font-style:italic}
+
+/* ---------- "Jump to latest" ---------- */
+.jump-latest{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);z-index:5;padding:8px 16px;border-radius:20px;border:1px solid rgba(56,189,248,.5);background:rgba(15,23,42,.92);color:#e0f2fe;font-size:12px;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+.jump-latest[hidden]{display:none}
+.jump-latest:hover{background:rgba(56,189,248,.25)}
+
+/* ---------- BIGGER IMAGE GALLERY ----------
+   Cards are taller and each one takes the width of its image (natural aspect
+   ratio, slightly cropped if extremely wide), so there is no empty padding. */
+.image-gallery-track{gap:10px}
+.image-gallery-card{flex:0 0 auto;width:auto;min-width:150px;height:270px;border-radius:12px;background:rgba(255,255,255,.06)}
+.image-gallery-image-link{display:block;width:auto;height:100%;padding:0;background:none}
+.image-gallery-image{width:auto;height:100%;min-width:150px;max-width:min(480px,80vw);object-fit:cover}
+.image-gallery-card:hover .image-gallery-image{transform:scale(1.03)}
+@media (max-width:768px){.image-gallery-card{flex:0 0 auto;height:220px}}
+@media (max-width:480px){.image-gallery-card{flex:0 0 auto;height:190px}}
 </style>
 </head>
 
@@ -372,7 +428,10 @@ nav a:hover::after{transform:scaleX(1)}
           <div class="status" id="status">● Ready to chat</div>
         </div>
       </div>
-      <button id="new-chat" type="button">+ New chat</button>
+<div class="header-actions">
+  <button id="cursor-toggle" type="button">Cursor: On</button>
+  <button id="new-chat" type="button">+ New chat</button>
+</div>
     </div>
 
     <main id="chat-messages">
@@ -386,7 +445,7 @@ nav a:hover::after{transform:scaleX(1)}
 
     <footer class="chat-footer">
       <form id="chat-form">
-        <input type="text" id="chat-input" placeholder="Message Gemini..." autocomplete="off" required>
+<textarea id="chat-input" rows="1" placeholder="Message Gemini..." autocomplete="off"></textarea>
         <button type="submit" id="chat-send">Send ↑</button>
       </form>
       <div class="footer-note">
