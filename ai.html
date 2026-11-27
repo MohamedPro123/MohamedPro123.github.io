@@ -690,6 +690,7 @@ function addSources(container, sources) {
 ========================================= */
 
 // Validate image data received from the Worker.
+
 function cleanImage(image) {
 
     if (!image || typeof image !== "object") return null;
@@ -704,19 +705,13 @@ function cleanImage(image) {
         return null;
     }
 
-    // Only accept images hosted by Wikimedia.
-    if (
-        thumbnailURL.protocol !== "https:" ||
-        thumbnailURL.hostname !== "upload.wikimedia.org"
-    ) {
+    // Allow HTTPS images from Google Images result providers.
+    // Do not allow insecure HTTP URLs.
+    if (thumbnailURL.protocol !== "https:") {
         return null;
     }
 
-    // Only accept original source pages hosted by Commons.
-    if (
-        pageURL.protocol !== "https:" ||
-        pageURL.hostname !== "commons.wikimedia.org"
-    ) {
+    if (pageURL.protocol !== "https:") {
         return null;
     }
 
@@ -746,8 +741,8 @@ function cleanImage(image) {
             ? image.license.slice(0, 100)
             : "See source page",
 
-licenseUrl: licenseURL,
-      
+        licenseUrl: licenseURL,
+
         artist: typeof image.artist === "string"
             ? image.artist.slice(0, 250)
             : ""
