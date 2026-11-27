@@ -335,7 +335,7 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
 /* ---------- Setting row inside the Notice popup ---------- */
 .popup-setting{display:flex;align-items:center;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);color:#d4d4d8;font-size:.9rem}
 .popup-setting input{width:16px;height:16px;accent-color:#00d9ff}
-@media (hover:none),(pointer:coarse){.popup-setting{display:none}}
+@media (hover:none),(pointer:coarse){.-setting{display:none}}
 
 /* ---------- Textarea input + Stop button ---------- */
 #chat-form{align-items:flex-end}
@@ -396,6 +396,9 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
     <div class="popup-content">
       <h3>¡Bienvenido!</h3>
       <p>Aquí puedes colocar el mensaje que quieras mostrar a los visitantes de tu sitio web.</p>
+      <label class="popup-setting">
+  <input type="checkbox" id="cursor-toggle"> Custom cursor
+</label>
     </div>
     <div class="popup-footer"><button class="popup-confirm" id="popupConfirm">OK</button></div>
   </div>
@@ -480,10 +483,7 @@ const NOTICE_TEXT =
 "· Gemini can make mistakes. Please, double check your work.\n" +
 "· Google can use data you enter for training their models. Avoid entering sensitive information.\n" +
 "· I am not responsible if your teacher catches you using AI in class, and any punishments they may give if you get caught.\n\n" +
-"Coded by Mohamed Abdalrahman, credit to Google for Gemini API."; +
-  "<label class="popup-setting">
-  <input type="checkbox" id="cursor-toggle"> Custom cursor
-</label>"
+"Coded by Mohamed Abdalrahman, credit to Google for Gemini API."; 
 
 const chatForm = document.getElementById("chat-form");
 const chatInput = document.getElementById("chat-input");
