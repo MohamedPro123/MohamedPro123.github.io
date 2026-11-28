@@ -2042,62 +2042,6 @@ window.addEventListener("blur", hideCustomCursor);
 applyCursor();
 
 /* =========================================
-   CUSTOM CURSOR: optional (switch lives in the Notice popup) and never doubled up.
-   The real cursor is hidden by CSS only while body.custom-cursor is set. The custom
-   one is hidden whenever the real one has to show: before the first mouse move,
-   over scrollbars (the browser always draws its own arrow there), and outside the window.
-========================================= */
-const cursorToggle = document.getElementById("cursor-toggle");   // checkbox in the popup
-let cursorOn = true;
-try { cursorOn = localStorage.getItem("custom-cursor") !== "off"; } catch { /* ignore */ }
-
-function applyCursor() {
-    document.body.classList.toggle("custom-cursor", cursorOn);
-    if (!cursorOn) document.body.classList.remove("cursor-visible");
-    if (cursorToggle) cursorToggle.checked = cursorOn;
-}
-
-cursorToggle?.addEventListener("change", () => {
-    cursorOn = cursorToggle.checked;
-    try { localStorage.setItem("custom-cursor", cursorOn ? "on" : "off"); } catch { /* ignore */ }
-    applyCursor();
-});
-
-function overScrollbar(e) {
-    for (let n = e.target; n && n.nodeType === 1; n = n.parentElement) {
-        const cs = getComputedStyle(n);
-        const r = n.getBoundingClientRect();
-
-        if (/(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight &&
-            e.clientX > r.left + n.clientLeft + n.clientWidth) return true;
-
-        if (/(auto|scroll)/.test(cs.overflowX) && n.scrollWidth > n.clientWidth &&
-            e.clientY > r.top + n.clientTop + n.clientHeight) return true;
-    }
-    const root = document.documentElement;
-    return e.clientX >= root.clientWidth || e.clientY >= root.clientHeight;
-}
-
-let cursorEvent = null;
-let cursorFrame = 0;
-
-window.addEventListener("mousemove", (e) => {
-    if (!cursorOn) return;
-    cursorEvent = e;
-    if (cursorFrame) return;
-    cursorFrame = requestAnimationFrame(() => {
-        cursorFrame = 0;
-        document.body.classList.toggle("cursor-visible", !overScrollbar(cursorEvent));
-    });
-});
-
-const hideCustomCursor = () => document.body.classList.remove("cursor-visible");
-document.documentElement.addEventListener("mouseleave", hideCustomCursor);
-window.addEventListener("blur", hideCustomCursor);
-
-applyCursor();
-
-/* =========================================
    CUSTOM CURSOR
 ========================================= */
 const dot = document.querySelector(".cursor-dot");
