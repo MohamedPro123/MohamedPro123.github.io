@@ -354,9 +354,6 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
 @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
 .pending-text{color:#a1a1aa;font-style:italic}
 .pending-text::after{content:"";animation:dots 1.2s steps(1) infinite}
-@keyframes caret{50%{opacity:0}}
-.answer-content.streaming>:last-child::after{content:"▍";margin-left:2px;color:#7dd3fc;animation:caret 1s steps(1) infinite}
-.answer-content.streaming>pre:last-child::after{content:none}
 
 /* ---------- Copy / Regenerate bar ---------- */
 .msg-actions{display:flex;gap:4px;margin-top:12px}
@@ -452,7 +449,7 @@ img{-webkit-user-drag:none}
   .fi,.image-gallery-section,.image-gallery-card,.sources-section,.msg-actions,.msg-note,.pending-text,.attach-thumb{animation:none!important}
   .jump-pill,.chats-panel{transition:none}
 }
-</style>
+  </style>
 </head>
 <body>
 
@@ -1110,10 +1107,10 @@ const MAX_IMAGES = 4;                 // per message (the worker enforces the sa
 const FADE_MS = 450;                  // must match the .fi animation duration in the CSS
 
 // ---- Typing feel: tweak these ----
-const TARGET_LAG_S = 1.6;             // how far behind the network the typing may run (bigger = steadier)
-const MIN_SPEED = 28;                 // slowest typing speed, characters per second
-const MAX_SPEED = 240;                // fastest while the answer is still arriving
-const MAX_SPEED_ENDED = 380;          // fastest once the whole answer has arrived
+const TARGET_LAG_S = 1.4;             // how far behind the network the typing may run (bigger = steadier)
+const MIN_SPEED = 36;                 // slowest typing speed, characters per second
+const MAX_SPEED = 300;                // fastest while the answer is still arriving
+const MAX_SPEED_ENDED = 480;          // fastest once the whole answer has arrived
 const SPEED_EASING_S = 0.6;           // how slowly the speed changes (bigger = smoother)
 const DEFAULT_IMAGE_PROMPT = "Please analyze the attached image(s).";
 const CITATION_STRIP = /\s*\[\s*Sources?\s+\d+(?:\s*(?:,|and|&)\s*(?:Sources?\s+)?\d+)*\s*\]/gi;
@@ -2074,7 +2071,6 @@ document.documentElement.addEventListener("mouseleave", hideCustomCursor);
 window.addEventListener("blur", hideCustomCursor);
 
 applyCursor();
-
 
 /* =========================================
    CUSTOM CURSOR
