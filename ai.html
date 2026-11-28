@@ -707,7 +707,40 @@ function restoreMathInHTML(container, expressions) {
 /* =========================================
    MARKDOWN RENDERING
 ========================================= */
+function normalizeMathDelimiters(text) {
+    if (typeof text !== "string") return text;
 
+    // Convert standalone square-bracket equations into display math.
+    text = text.replace(
+        /(^|\n)([ \t]*)\[(?!\\)([^\[\]\n]+)\]([ \t]*)(?=\n|$)/g,
+        (match, newline, leading, math) => {
+            return `${newline}${leading}\\[${math.trim()}\\]`;
+        }
+    );
+
+    // Convert unambiguous parenthesized mathematical expressions into inline math.
+    text = text.replace(
+        /(?<!\\)\(([^()\n]+)\)(?!\\)/g,
+        (match, expression) => {
+            const math = expression.trim();
+
+            const looksMathematical =
+                /^[a-zA-Z]$/.test(math) ||
+                /^\d+(?:\.\d+)?$/.test(math) ||
+                (
+                    /[=+\-*/^_\\]/.test(math) &&
+                    /^[a-zA-Z0-9\\{}_^=+\-*/.,\s]+$/.test(math)
+                );
+
+            if (!looksMathematical) return match;
+
+            return `\\(${math}\\)`;
+        }
+    );
+
+    return text;
+}
+  
 function renderMarkdown(text, sources = []) {
 
     // First, repair math formatting from Gemini.
