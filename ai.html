@@ -643,101 +643,130 @@ document.addEventListener("click", (event) => {
 });
 
 /* =========================================
+   MATHEMATICAL EXPRESSION PROTECTION
+========================================= */
+
+// Protect math delimiters from Marked.
+// Marked can interpret backslashes before punctuation as Markdown escapes.
+// We temporarily replace math expressions with plain-text tokens, parse the
+// Markdown, and restore the original expressions before running KaTeX.
+
+function protectMathForMarkdown(text) {
+    const expressions = [];
+
+    const protectedText = text.replace(
+        /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g,
+        (match) => {
+            const token = `MATHPROTECTEDTOKEN${expressions.length}END`;
+            expressions.push(match);
+            return token;
+        }
+    );
+
+    return {
+        text: protectedText,
+        expressions
+    };
+}
+
+
+// Restore protected expressions inside the parsed HTML.
+// This operates on text nodes, not HTML, so it cannot inject markup.
+
+function restoreMathInHTML(container, expressions) {
+    if (!expressions.length) return;
+
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT
+    );
+
+    const nodes = [];
+
+    while (walker.nextNode()) {
+        if (walker.currentNode.textContent.includes("MATHPROTECTEDTOKEN")) {
+            nodes.push(walker.currentNode);
+        }
+    }
+
+    for (const node of nodes) {
+        let text = node.textContent;
+
+        text = text.replace(
+            /MATHPROTECTEDTOKEN(\d+)END/g,
+            (match, index) => {
+                return expressions[Number(index)] ?? match;
+            }
+        );
+
+        node.textContent = text;
+    }
+}
+
+
+/* =========================================
    MARKDOWN RENDERING
 ========================================= */
+
 function renderMarkdown(text, sources = []) {
+
+    // First, repair math formatting from Gemini.
     text = normalizeMathDelimiters(text);
 
-    const cleanHTML = DOMPurify.sanitize(marked.parse(text));
+    // Second, protect math before Markdown parsing.
+    const protectedMath = protectMathForMarkdown(text);
+
+    // Third, parse and sanitize Markdown.
+    const cleanHTML = DOMPurify.sanitize(
+        marked.parse(protectedMath.text)
+    );
 
     const container = document.createElement("div");
     container.innerHTML = cleanHTML;
+
+    // Fourth, restore the original mathematical delimiters.
+    restoreMathInHTML(container, protectedMath.expressions);
 
     container.querySelectorAll("a[href]").forEach(a => {
         a.target = "_blank";
         a.rel = "noopener noreferrer";
     });
 
- 
-if (window.renderMathInElement) {
-    renderMathInElement(container, {
-        delimiters: [
-            { left: "$$", right: "$$", display: true },
-            { left: "\\[", right: "\\]", display: true },
-            { left: "\\(", right: "\\)", display: false }
-        ],
-        throwOnError: false,
-        strict: "ignore",
-        ignoredTags: [
-            "script",
-            "noscript",
-            "style",
-            "textarea",
-            "pre",
-            "code"
-        ]
-    });
-}
+    // Fifth, render mathematical expressions with KaTeX.
+    if (window.renderMathInElement) {
 
+        renderMathInElement(container, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "\\(", right: "\\)", display: false }
+            ],
 
-    renderCitations(container, Array.isArray(sources) ? sources : []);
+            throwOnError: false,
+            strict: "ignore",
+
+            ignoredTags: [
+                "script",
+                "noscript",
+                "style",
+                "textarea",
+                "pre",
+                "code"
+            ]
+        });
+
+    } else {
+        console.error("KaTeX auto-render is not available.");
+    }
+
+    // Finally, render source citations.
+    renderCitations(
+        container,
+        Array.isArray(sources) ? sources : []
+    );
 
     return container.innerHTML;
 }
-
-
-
-function normalizeMathDelimiters(text) {
-    if (typeof text !== "string") return text;
-
-    // ------------------------------------------------
-    // 1. Repair standalone square-bracket equations.
-    //
-    // [ x = 4 ]
-    // becomes:
-    // \[ x = 4 \]
-    //
-    // Only matches brackets occupying an entire line.
-    // ------------------------------------------------
-
-    text = text.replace(
-        /(^|\n)([ \t]*)\[(?!\\)([^\[\]\n]+)\]([ \t]*)(?=\n|$)/g,
-        (match, newline, leading, math) => {
-            return `${newline}${leading}\\[${math.trim()}\\]`;
-        }
-    );
-
-    // ------------------------------------------------
-    // 2. Repair simple mathematical parentheses.
-    //
-    // (x) becomes \(x\)
-    // (5) becomes \(5\)
-    // (5x) becomes \(5x\)
-    //
-    // Ordinary parenthetical sentences remain unchanged.
-    // ------------------------------------------------
-
-    text = text.replace(
-        /(?<!\\)\(([^()\n]+)\)(?!\\)/g,
-        (match, expression) => {
-
-            const math = expression.trim();
-
-            const looksMathematical =
-                /^[a-zA-Z0-9\\{}_^=+\-*/.,\s]+$/.test(math) &&
-                /[a-zA-Z0-9\\]/.test(math);
-
-            if (!looksMathematical) {
-                return match;
-            }
-
-            return `\\(${math}\\)`;
-        }
-    );
-
-    return text;
-}
-
 
 /* =========================================
    CODE BLOCKS
