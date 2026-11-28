@@ -646,6 +646,7 @@ document.addEventListener("click", (event) => {
    MARKDOWN RENDERING
 ========================================= */
 function renderMarkdown(text, sources = []) {
+    text = normalizeMathDelimiters(text);
 
     const cleanHTML = DOMPurify.sanitize(marked.parse(text));
 
@@ -673,6 +674,26 @@ function renderMarkdown(text, sources = []) {
     renderCitations(container, Array.isArray(sources) ? sources : []);
 
     return container.innerHTML;
+}
+
+  function normalizeMathDelimiters(text) {
+    return text
+        // Convert [ \frac{...} ] into \[ \frac{...} \]
+        .replace(
+            /(^|\n)[ \t]*\[\s*([\s\S]*?)\s*\][ \t]*(?=\n|$)/g,
+            (match, prefix, math) => {
+                if (!math.includes("\\") && !/[=^_]/.test(math)) {
+                    return match;
+                }
+
+                return `${prefix}\\[${math.trim()}\\]`;
+            }
+        )
+        // Convert standalone parenthesized LaTeX expressions into inline math.
+        .replace(
+            /(?<!\\)\(([^()\n]*\\[a-zA-Z]+[^()\n]*)\)(?!\))/g,
+            (match, math) => `\\(${math}\\)`
+        );
 }
 
 /* =========================================
