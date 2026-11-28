@@ -690,45 +690,49 @@ if (window.renderMathInElement) {
 function normalizeMathDelimiters(text) {
     if (typeof text !== "string") return text;
 
-    // Protect existing LaTeX delimiters so they are not modified.
-    const protectedMath = [];
-
-    function protect(value) {
-        const index = protectedMath.length;
-        protectedMath.push(value);
-        return `MATHPLACEHOLDER${index}END`;
-    }
-
-    // Protect existing display math.
-    text = text.replace(
-        /\\\[([\s\S]*?)\\\]/g,
-        (match) => protect(match)
-    );
+    // ------------------------------------------------
+    // 1. Repair standalone square-bracket equations.
+    //
+    // [ x = 4 ]
+    // becomes:
+    // \[ x = 4 \]
+    //
+    // Only matches brackets occupying an entire line.
+    // ------------------------------------------------
 
     text = text.replace(
-        /\$\$([\s\S]*?)\$\$/g,
-        (match) => protect(match)
-    );
-
-    // Protect existing inline math.
-    text = text.replace(
-        /\\\(([\s\S]*?)\\\)/g,
-        (match) => protect(match)
-    );
-
-    // Convert standalone square-bracket expressions into display math.
-    // Only matches brackets occupying their own lines.
-    text = text.replace(
-        /(^|\n)[ \t]*\[\s*([^\[\]\n]+(?:\n[^\[\]]*)?)\s*\][ \t]*(?=\n|$)/g,
-        (match, prefix, math) => {
-            return `${prefix}\\[${math.trim()}\\]`;
+        /(^|\n)([ \t]*)\[(?!\\)([^\[\]\n]+)\]([ \t]*)(?=\n|$)/g,
+        (match, newline, leading, math) => {
+            return `${newline}${leading}\\[${math.trim()}\\]`;
         }
     );
 
-    // Restore previously protected math.
+    // ------------------------------------------------
+    // 2. Repair simple mathematical parentheses.
+    //
+    // (x) becomes \(x\)
+    // (5) becomes \(5\)
+    // (5x) becomes \(5x\)
+    //
+    // Ordinary parenthetical sentences remain unchanged.
+    // ------------------------------------------------
+
     text = text.replace(
-        /MATHPLACEHOLDER(\d+)END/g,
-        (match, index) => protectedMath[Number(index)]
+        /(?<!\\)\(([^()\n]+)\)(?!\\)/g,
+        (match, expression) => {
+
+            const math = expression.trim();
+
+            const looksMathematical =
+                /^[a-zA-Z0-9\\{}_^=+\-*/.,\s]+$/.test(math) &&
+                /[a-zA-Z0-9\\]/.test(math);
+
+            if (!looksMathematical) {
+                return match;
+            }
+
+            return `\\(${math}\\)`;
+        }
     );
 
     return text;
