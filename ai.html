@@ -383,9 +383,9 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
    v3 ADDITIONS
 ===================================================================== */
 
-/* ---------- Letter-by-letter fade (FADE_MS in the script = 320) ---------- */
+/* ---------- Letter-by-letter fade (FADE_MS in the script = 450) ---------- */
 @keyframes fi{from{opacity:0}to{opacity:1}}
-.fi{animation:fi .32s ease-out both}
+.fi{animation:fi .45s ease-out both}
 
 /* ---------- Whole-message fade: gallery, sources, actions, notes ---------- */
 @keyframes blockFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -1107,7 +1107,14 @@ const STORE_KEY = "gemini-chats-v2";
 const LEGACY_KEY = "gemini-chat-v1";
 const MAX_CHATS = 5;
 const MAX_IMAGES = 4;                 // per message (the worker enforces the same limit)
-const FADE_MS = 320;                  // must match the .fi animation duration in the CSS
+const FADE_MS = 450;                  // must match the .fi animation duration in the CSS
+
+// ---- Typing feel: tweak these ----
+const TARGET_LAG_S = 1.6;             // how far behind the network the typing may run (bigger = steadier)
+const MIN_SPEED = 28;                 // slowest typing speed, characters per second
+const MAX_SPEED = 240;                // fastest while the answer is still arriving
+const MAX_SPEED_ENDED = 380;          // fastest once the whole answer has arrived
+const SPEED_EASING_S = 0.6;           // how slowly the speed changes (bigger = smoother)
 const DEFAULT_IMAGE_PROMPT = "Please analyze the attached image(s).";
 const CITATION_STRIP = /\s*\[\s*Sources?\s+\d+(?:\s*(?:,|and|&)\s*(?:Sources?\s+)?\d+)*\s*\]/gi;
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1774,6 +1781,7 @@ async function generate(restore = null) {
     let lastDraw = 0;
     let lastTime = 0;
     let carry = 0;
+    let speed = 0;         // current typing speed (chars/s), eased so it never jumps
     let drawGap = 16;
     let dirty = false;
     let answerEl = null;
@@ -1794,8 +1802,8 @@ async function generate(restore = null) {
         scrollToBottom();
     }
 
-    // Time-based reveal (characters per second scale with the backlog), so the pace is the
-    // same on any screen and eases in and out. Render throttle adapts to render cost.
+    // Time-based reveal: same pace on any screen, speed eased (see the constants at the top).
+    // The render throttle adapts to how long a render takes.
     function tick(now) {
         raf = null;
         if (!alive()) return;
@@ -1805,8 +1813,15 @@ async function generate(restore = null) {
 
         const backlog = received.length - shown;
 
+        // Aim to stay about TARGET_LAG_S behind the network: that buffer absorbs Gemini's
+        // bursty chunks. The speed EASES toward that aim instead of jumping to it.
+        const aim = backlog > 0
+            ? Math.min(ended ? MAX_SPEED_ENDED : MAX_SPEED, Math.max(MIN_SPEED, backlog / TARGET_LAG_S))
+            : MIN_SPEED;
+        speed += (aim - speed) * (1 - Math.exp(-dt / 1000 / SPEED_EASING_S));
+
         if (backlog > 0) {
-            carry += Math.max(40, backlog * (ended ? 10 : 4)) * dt / 1000;
+            carry += speed * dt / 1000;
             const step = Math.floor(carry);
             if (step > 0) {
                 carry -= step;
@@ -2059,6 +2074,7 @@ document.documentElement.addEventListener("mouseleave", hideCustomCursor);
 window.addEventListener("blur", hideCustomCursor);
 
 applyCursor();
+
 
 /* =========================================
    CUSTOM CURSOR
