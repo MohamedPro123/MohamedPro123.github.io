@@ -452,7 +452,26 @@ img{-webkit-user-drag:none}
   .fi,.image-gallery-section,.image-gallery-card,.sources-section,.msg-actions,.msg-note,.pending-text,.attach-thumb{animation:none!important}
   .jump-pill,.chats-panel{transition:none}
 }
-  </style>
+</style>
+</head>
+<body>
+
+<div class="popup-overlay" id="notificationPopup" hidden>
+  <div class="notification-popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="popup-header">
+      <h2 id="popupTitle">Notice</h2>
+      <button class="popup-close" id="popupClose" aria-label="Close notice">×</button>
+    </div>
+    <div class="popup-content">
+      <h3>Notice</h3>
+      <p></p>
+      <label class="popup-setting">
+        <input type="checkbox" id="cursor-toggle"> Custom cursor
+      </label>
+    </div>
+    <div class="popup-footer"><button class="popup-confirm" id="popupConfirm">OK</button></div>
+  </div>
+</div>
 
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
