@@ -712,10 +712,6 @@ function normalizeMathDelimiters(text) {
     if (typeof text !== "string") return text;
 
     // 1. Convert multiline square-bracket math into display math.
-    // Handles:
-    // [
-    // \frac{5x}{5} = \frac{20}{5}
-    // ]
     text = text.replace(
         /(^|\n)([ \t]*)\[(?!\\)[ \t]*\n([\s\S]*?)\n[ \t]*\]([ \t]*)(?=\n|$)/g,
         (match, newline, leading, math) => {
@@ -731,28 +727,9 @@ function normalizeMathDelimiters(text) {
         }
     );
 
-    // 3. Convert simple parenthesized mathematical expressions into inline math.
-    text = text.replace(
-        /(?<!\\)\(([^()\n]+)\)(?!\\)/g,
-        (match, expression) => {
-            const math = expression.trim();
-
-            const looksMathematical =
-                /^[a-zA-Z]$/.test(math) ||
-                /^\d+(?:\.\d+)?$/.test(math) ||
-                (
-                    /[=+\-*/^_\\]/.test(math) &&
-                    /^[a-zA-Z0-9\\{}_^=+\-*/.,\s]+$/.test(math)
-                );
-
-            if (!looksMathematical) return match;
-
-            return `\\(${math}\\)`;
-        }
-    );
-
     return text;
 }
+
 
   
 function renderMarkdown(text, sources = []) {
