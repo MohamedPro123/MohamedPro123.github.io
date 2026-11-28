@@ -676,26 +676,27 @@ function renderMarkdown(text, sources = []) {
     return container.innerHTML;
 }
 
-  function normalizeMathDelimiters(text) {
-    return text
-        // Convert [ \frac{...} ] into \[ \frac{...} \]
-        .replace(
-            /(^|\n)[ \t]*\[\s*([\s\S]*?)\s*\][ \t]*(?=\n|$)/g,
-            (match, prefix, math) => {
-                if (!math.includes("\\") && !/[=^_]/.test(math)) {
-                    return match;
-                }
+function normalizeMathDelimiters(text) {
+    if (typeof text !== "string") return text;
 
-                return `${prefix}\\[${math.trim()}\\]`;
-            }
-        )
-        // Convert standalone parenthesized LaTeX expressions into inline math.
-        .replace(
-            /(?<!\\)\(([^()\n]*\\[a-zA-Z]+[^()\n]*)\)(?!\))/g,
-            (match, math) => `\\(${math}\\)`
-        );
+    // Convert standalone square-bracket equations into display math.
+    text = text.replace(
+        /(^|\n)[ \t]*\[\s*([\s\S]*?)\s*\][ \t]*(?=\n|$)/g,
+        (match, prefix, math) => {
+            return `${prefix}\\[${math.trim()}\\]`;
+        }
+    );
+
+    // Convert parenthesized LaTeX expressions into inline math.
+    // Requires a LaTeX command or mathematical operator to avoid
+    // converting ordinary prose parentheses.
+    text = text.replace(
+        /(?<!\\)\(([^()\n]*?(?:\\[a-zA-Z]+|[=^_])[^\n]*?)\)(?!\))/g,
+        (match, math) => `\\(${math.trim()}\\)`
+    );
+
+    return text;
 }
-
 /* =========================================
    CODE BLOCKS
 ========================================= */
