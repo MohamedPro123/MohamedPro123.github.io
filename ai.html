@@ -335,7 +335,7 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
 /* ---------- Setting row inside the Notice popup ---------- */
 .popup-setting{display:flex;align-items:center;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);color:#d4d4d8;font-size:.9rem}
 .popup-setting input{width:16px;height:16px;accent-color:#00d9ff}
-@media (hover:none),(pointer:coarse){.-setting{display:none}}
+@media (hover:none),(pointer:coarse){.popup-setting{display:none}}
 
 /* ---------- Textarea input + Stop button ---------- */
 #chat-form{align-items:flex-end}
@@ -367,11 +367,6 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
 .msg.bot:last-child .msg-action.regen{display:inline-grid}
 .msg-note{margin-top:12px;color:#a1a1aa;font-size:12px;font-style:italic}
 
-/* ---------- "Jump to latest" ---------- */
-.jump-latest{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);z-index:5;padding:8px 16px;border-radius:20px;border:1px solid rgba(56,189,248,.5);background:rgba(15,23,42,.92);color:#e0f2fe;font-size:12px;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.4)}
-.jump-latest[hidden]{display:none}
-.jump-latest:hover{background:rgba(56,189,248,.25)}
-
 /* ---------- BIGGER IMAGE GALLERY ----------
    Cards are taller and each one takes the width of its image (natural aspect
    ratio, slightly cropped if extremely wide), so there is no empty padding. */
@@ -382,27 +377,81 @@ body:not(.custom-cursor) .cursor-dot,body:not(.custom-cursor) .cursor-ring{displ
 .image-gallery-card:hover .image-gallery-image{transform:scale(1.03)}
 @media (max-width:768px){.image-gallery-card{flex:0 0 auto;height:220px}}
 @media (max-width:480px){.image-gallery-card{flex:0 0 auto;height:190px}}
-</style>
-</head>
 
-<body>
 
-<div class="popup-overlay" id="notificationPopup" hidden>
-  <div class="notification-popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
-    <div class="popup-header">
-      <h2 id="popupTitle">Notificación</h2>
-      <button class="popup-close" id="popupClose" aria-label="Cerrar notificación">×</button>
-    </div>
-    <div class="popup-content">
-      <h3>¡Bienvenido!</h3>
-      <p>Aquí puedes colocar el mensaje que quieras mostrar a los visitantes de tu sitio web.</p>
-      <label class="popup-setting">
-  <input type="checkbox" id="cursor-toggle"> Custom cursor
-</label>
-    </div>
-    <div class="popup-footer"><button class="popup-confirm" id="popupConfirm">OK</button></div>
-  </div>
-</div>
+/* =====================================================================
+   v3 ADDITIONS
+===================================================================== */
+
+/* ---------- Letter-by-letter fade (FADE_MS in the script = 320) ---------- */
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.fi{animation:fi .32s ease-out both}
+
+/* ---------- Whole-message fade: gallery, sources, actions, notes ---------- */
+@keyframes blockFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.image-gallery-section,.sources-section,.msg-actions,.msg-note,.pending-text{animation:blockFade .6s ease backwards}
+.image-gallery-card{animation:blockFade .55s ease backwards}
+.image-gallery-card:nth-child(2){animation-delay:.06s}
+.image-gallery-card:nth-child(3){animation-delay:.12s}
+.image-gallery-card:nth-child(4){animation-delay:.18s}
+.image-gallery-card:nth-child(5){animation-delay:.24s}
+.image-gallery-card:nth-child(n+6){animation-delay:.3s}
+.msg.restored *{animation:none!important}          /* restored chats appear instantly */
+.msg-text{white-space:pre-wrap}
+.msg.user>.msg-text:not(:first-child){margin-top:2px}
+
+/* ---------- "Latest" pill: fades, slides, has its own tiny x ---------- */
+.jump-pill{position:absolute;left:50%;bottom:104px;z-index:5;display:flex;align-items:center;border-radius:20px;border:1px solid rgba(56,189,248,.5);background:rgba(15,23,42,.92);box-shadow:0 4px 18px rgba(0,0,0,.4);opacity:0;visibility:hidden;transform:translate(-50%,10px);transition:opacity .28s ease,transform .28s ease,visibility 0s linear .28s}
+.jump-pill.show{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:0s}
+.jump-main{padding:8px 6px 8px 16px;background:none;border:0;color:#e0f2fe;font-family:inherit;font-size:12px;font-weight:600;transition:color .15s}
+.jump-main:hover{color:#fff}
+.jump-close{width:16px;height:16px;margin:0 9px 0 2px;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:#7dd3fc;font-family:inherit;font-size:12px;line-height:1;transition:background .15s,color .15s}
+.jump-close:hover{background:rgba(255,255,255,.18);color:#fff}
+
+/* ---------- Image attachments ---------- */
+.attach-btn{flex-shrink:0;width:50px;height:50px;display:grid;place-items:center;border-radius:11px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#cbd5e1;transition:all .2s ease}
+.attach-btn:hover{background:rgba(56,189,248,.15);border-color:#38bdf8;color:#fff}
+.attach-preview{display:none;max-width:1200px;margin:0 auto 10px;gap:10px;flex-wrap:wrap}
+.attach-preview.has-items{display:flex}
+.attach-thumb{position:relative;width:64px;height:64px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.2);animation:blockFade .3s ease backwards}
+.attach-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.attach-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;font-size:12px;line-height:1;transition:background .15s}
+.attach-remove:hover{background:rgba(220,38,38,.9)}
+.msg-images{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.msg-images img{max-height:140px;max-width:100%;border-radius:10px;display:block}
+.msg-image-missing{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.1);font-size:12px;color:#cbd5e1}
+.chat-container.dragging::after{content:"Drop images to attach";position:absolute;inset:0;z-index:20;display:grid;place-items:center;border:2px dashed #38bdf8;border-radius:18px;background:rgba(0,0,0,.6);color:#e0f2fe;font-weight:600;pointer-events:none}
+img{-webkit-user-drag:none}
+
+/* ---------- Saved chats panel ---------- */
+#chats-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;padding:10px 14px;border-radius:9px;font-family:inherit;font-size:13px;font-weight:600;transition:all .2s ease}
+#chats-btn:hover{background:rgba(56,189,248,.15);border-color:#38bdf8}
+.chats-panel{position:absolute;top:72px;right:20px;z-index:30;width:min(320px,calc(100% - 40px));padding:8px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(12,15,25,.98);box-shadow:0 12px 35px rgba(0,0,0,.5);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s}
+.chats-panel.show{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.chat-row{display:flex;align-items:center;border-radius:9px;transition:background .15s}
+.chat-row:hover{background:rgba(255,255,255,.07)}
+.chat-row.active{background:rgba(56,189,248,.14)}
+.chat-open{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:9px 10px;border:0;background:none;color:#e4e4e7;font-family:inherit;text-align:left}
+.chat-title{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-time{font-size:11px;color:#858595}
+.chat-delete{width:24px;height:24px;margin-right:6px;padding:0;border:0;border-radius:50%;background:transparent;color:#8b8b9a;font-size:15px;line-height:1;transition:background .15s,color .15s}
+.chat-delete:hover{background:rgba(248,113,113,.2);color:#fca5a5}
+.chats-empty,.chats-hint{padding:8px 10px;font-size:11px;color:#858595}
+
+/* ---------- Custom cursor ON: also hide scrollbars, because the browser always draws its own
+   arrow over them. Wheel / touchpad / keyboard scrolling still work. ---------- */
+@media (hover:hover) and (pointer:fine){
+  html.custom-cursor,html.custom-cursor *{scrollbar-width:none!important}
+  html.custom-cursor::-webkit-scrollbar,html.custom-cursor ::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+}
+
+/* ---------- Smoother small things ---------- */
+.msg-action,.code-copy,#new-chat,#chat-send,#chat-input,.source-card{transition-duration:.2s}
+
+@media (prefers-reduced-motion:reduce){
+  .fi,.image-gallery-section,.image-gallery-card,.sources-section,.msg-actions,.msg-note,.pending-text,.attach-thumb{animation:none!important}
+  .jump-pill,.chats-panel{transition:none}
+}
 
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
@@ -491,8 +540,6 @@ const chatMessages = document.getElementById("chat-messages");
 const chatSend = document.getElementById("chat-send");
 const newChat = document.getElementById("new-chat");
 const statusEl = document.getElementById("status");
-
-let chatHistory = [];
 
 /* =========================================
    SMALL HELPERS
@@ -1023,72 +1070,328 @@ function addImageGallery(container, images) {
 }
 
 /* =====================================================================
-   REPLACE everything from the "MESSAGES" comment block (function addMessage...)
-   down to (but NOT including) the "CUSTOM CURSOR" comment block with this.
-
-   Also delete these two lines near the top of the script, they are replaced below:
-     let chatHistory = [];
-   and make sure your <script> still has WORKER_URL, MAX_HISTORY_MESSAGES,
-   NOTICE_TEXT, el(), renderMarkdown(), formatCodeBlocks(), addSources(),
-   addImageGallery(), chatForm, chatInput, chatMessages, chatSend, newChat, statusEl.
+   WHERE THIS GOES (in your page's <script>):
+   - Delete `let chatHistory = [];` near the top.
+   - Replace everything from the "MESSAGES" comment block (function addMessage...)
+     down to, but NOT including, the "CUSTOM CURSOR" comment block with this file.
+   - Keep your original CUSTOM CURSOR (dot/ring animation) and NOTIFICATION POPUP code.
+   Keep these existing pieces: WORKER_URL, MAX_HISTORY_MESSAGES, NOTICE_TEXT, el(),
+   renderMarkdown(), formatCodeBlocks(), addSources(), addImageGallery() and the
+   chatForm/chatInput/chatMessages/chatSend/newChat/statusEl constants.
 ===================================================================== */
 
 /* =========================================
-   STATE + STORAGE
+   CONSTANTS + STATE
 ========================================= */
-const STORAGE_KEY = "gemini-chat-v1";
+const STORE_KEY = "gemini-chats-v2";
+const LEGACY_KEY = "gemini-chat-v1";
+const MAX_CHATS = 5;
+const MAX_IMAGES = 4;                 // per message (the worker enforces the same limit)
+const FADE_MS = 320;                  // must match the .fi animation duration in the CSS
+const DEFAULT_IMAGE_PROMPT = "Please analyze the attached image(s).";
 const CITATION_STRIP = /\s*\[\s*Sources?\s+\d+(?:\s*(?:,|and|&)\s*(?:Sources?\s+)?\d+)*\s*\]/gi;
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const SVG_ATTRS = 'width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
 const ICON_COPY  = `<svg ${SVG_ATTRS}><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
 const ICON_CHECK = `<svg ${SVG_ATTRS}><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
 const ICON_REGEN = `<svg ${SVG_ATTRS}><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>`;
+const ICON_CLIP  = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6l8.3-8.3"/></svg>`;
 
-let records = [];            // { role: "user" | "model", text, sources, images }
+let store = { activeId: null, chats: [] };   // saved chats (max 5)
+let records = [];                             // messages of the ACTIVE chat
+let pendingImages = [];                       // attached, not yet sent
 let busy = false;
 let abortController = null;
-let stickToBottom = true;
+let genToken = 0;                             // bumps whenever a running generation must be ignored
 
-const toContents = () =>
-    records.slice(-MAX_HISTORY_MESSAGES).map(r => ({ role: r.role, parts: [{ text: r.text }] }));
+const newId = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + Math.random().toString(16).slice(2));
 
-function saveChat() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(records.slice(-MAX_HISTORY_MESSAGES)));
-    } catch { /* storage full or blocked: not critical */ }
+/* =========================================
+   REQUEST BODY
+   Images are sent only for the most recent message that has them (keeps requests small
+   and quota use low). Older images are replaced by a short note.
+========================================= */
+function toContents() {
+    const recent = records.slice(-MAX_HISTORY_MESSAGES);
+
+    let lastImageIndex = -1;
+    recent.forEach((r, i) => {
+        if (r.role === "user" && r.attachments?.some(a => a.data)) lastImageIndex = i;
+    });
+
+    return recent.map((r, i) => {
+        const parts = [];
+        let text = r.text || "";
+        const attachments = r.attachments || [];
+
+        if (attachments.length) {
+            if (i === lastImageIndex) {
+                for (const a of attachments) {
+                    if (a.data) parts.push({ inlineData: { mimeType: a.mime, data: a.data } });
+                }
+            } else {
+                text += `\n[${attachments.length} image(s) were attached here but are no longer available.]`;
+            }
+        }
+
+        if (!text.trim()) text = DEFAULT_IMAGE_PROMPT;
+        parts.push({ text });                       // images first, then text
+        return { role: r.role, parts };
+    });
 }
 
 /* =========================================
-   SCROLLING (only follow the stream if the user is at the bottom)
+   SAVED CHATS (up to 5, in localStorage)
+========================================= */
+function chatTitle(recs) {
+    const first = recs.find(r => r.role === "user");
+    const text = (first?.text || "").trim() || (first?.attachments?.length ? "Image chat" : "New chat");
+    return text.length > 40 ? text.slice(0, 40) + "…" : text;
+}
+
+// Full image data is never stored (too big); only small thumbnails.
+function persistable(recs) {
+    return recs.slice(-MAX_HISTORY_MESSAGES).map(r => ({
+        role: r.role,
+        text: r.text,
+        sources: r.sources,
+        images: r.images,
+        attachments: (r.attachments || []).map(a => ({ mime: a.mime, thumb: a.thumb }))
+    }));
+}
+
+function readStore() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+        if (saved && Array.isArray(saved.chats)) {
+            return {
+                activeId: saved.activeId || null,
+                chats: saved.chats.filter(c => c && c.id && Array.isArray(c.records))
+            };
+        }
+        const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || "[]");   // old single-chat format
+        if (Array.isArray(legacy) && legacy.length) {
+            return { activeId: null, chats: [{ id: newId(), title: chatTitle(legacy), updated: Date.now(), records: legacy }] };
+        }
+    } catch { /* corrupted: start fresh */ }
+    return { activeId: null, chats: [] };
+}
+
+function writeStore() {
+    for (let attempt = 0; attempt <= MAX_CHATS; attempt++) {
+        try {
+            localStorage.setItem(STORE_KEY, JSON.stringify(store));
+            return;
+        } catch {
+            // storage full: drop thumbnails from the oldest chat that still has some
+            const victim = [...store.chats].reverse().find(c => c.records.some(r => r.attachments?.some(a => a.thumb)));
+            if (!victim) return;
+            for (const r of victim.records) {
+                if (r.attachments) r.attachments = r.attachments.map(a => ({ mime: a.mime }));
+            }
+        }
+    }
+}
+
+function saveChat() {
+    if (records.length) {
+        const data = { id: store.activeId, title: chatTitle(records), updated: Date.now(), records: persistable(records) };
+        const existing = store.chats.find(c => c.id === store.activeId);
+
+        if (existing) Object.assign(existing, data);
+        else store.chats.push(data);
+
+        store.chats.sort((a, b) => b.updated - a.updated);
+        store.chats = store.chats.slice(0, MAX_CHATS);        // the oldest chat falls off
+    } else {
+        store.chats = store.chats.filter(c => c.id !== store.activeId);   // nothing left to save
+    }
+    writeStore();
+    renderChatPanel();
+}
+
+/* ---------- Chats panel ---------- */
+const chatsBtn = el("button", "", "Chats");
+chatsBtn.id = "chats-btn";
+chatsBtn.type = "button";
+chatsBtn.setAttribute("aria-haspopup", "true");
+
+const chatsPanel = el("div", "chats-panel");
+
+if (newChat.parentElement.classList.contains("header-actions")) {
+    newChat.before(chatsBtn);
+} else {
+    const wrap = el("div", "header-actions");
+    newChat.replaceWith(wrap);
+    wrap.append(chatsBtn, newChat);
+}
+document.querySelector(".chat-container").appendChild(chatsPanel);
+
+function timeAgo(t) {
+    const m = Math.floor((Date.now() - t) / 60000);
+    if (m < 1) return "Just now";
+    if (m < 60) return m + " min ago";
+    const h = Math.floor(m / 60);
+    if (h < 24) return h + " h ago";
+    return Math.floor(h / 24) + " d ago";
+}
+
+function renderChatPanel() {
+    chatsBtn.textContent = `Chats (${store.chats.length}/${MAX_CHATS})`;
+    chatsPanel.replaceChildren();
+
+    if (!store.chats.length) chatsPanel.appendChild(el("div", "chats-empty", "Your chats will appear here."));
+
+    for (const chat of store.chats) {
+        const row = el("div", "chat-row" + (chat.id === store.activeId ? " active" : ""));
+
+        const open = el("button", "chat-open");
+        open.type = "button";
+        open.append(el("span", "chat-title", chat.title), el("span", "chat-time", timeAgo(chat.updated)));
+        open.addEventListener("click", () => switchChat(chat.id));
+
+        const del = el("button", "chat-delete", "×");
+        del.type = "button";
+        del.title = "Delete chat";
+        del.setAttribute("aria-label", "Delete chat");
+        del.addEventListener("click", (e) => { e.stopPropagation(); deleteChat(chat.id); });
+
+        row.append(open, del);
+        chatsPanel.appendChild(row);
+    }
+
+    chatsPanel.appendChild(el("div", "chats-hint", `Up to ${MAX_CHATS} chats are saved. Saving a sixth replaces the oldest.`));
+}
+
+chatsBtn.addEventListener("click", () => chatsPanel.classList.toggle("show"));
+document.addEventListener("click", (e) => {
+    if (!chatsPanel.contains(e.target) && !chatsBtn.contains(e.target)) chatsPanel.classList.remove("show");
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") chatsPanel.classList.remove("show"); });
+
+function stopGeneration() {
+    genToken++;                       // anything still running from the old chat is ignored
+    abortController?.abort();
+    setBusy(false);
+}
+
+function switchChat(id) {
+    chatsPanel.classList.remove("show");
+    if (id === store.activeId) return;
+
+    const chat = store.chats.find(c => c.id === id);
+    if (!chat) return;
+
+    stopGeneration();
+    store.activeId = id;
+    records = chat.records.map(r => ({ ...r }));
+    pendingImages = [];
+    renderPending();
+    writeStore();
+    renderConversation();
+    renderChatPanel();
+}
+
+function deleteChat(id) {
+    store.chats = store.chats.filter(c => c.id !== id);
+    if (id === store.activeId) startNewChat();
+    else { writeStore(); renderChatPanel(); }
+}
+
+function startNewChat() {
+    stopGeneration();
+    store.activeId = newId();
+    records = [];
+    pendingImages = [];
+    renderPending();
+    writeStore();
+    chatMessages.replaceChildren();
+    statusEl.textContent = "● Ready to chat";
+    statusEl.className = "status";
+    addNotice("New conversation started. What would you like to know?");
+    renderChatPanel();
+    chatInput.focus();
+}
+
+/* =========================================
+   SCROLLING
+   - follows the stream only while you are at the bottom
+   - "Latest" pill fades in/out, scrolls smoothly, and can be dismissed with the x
 ========================================= */
 chatMessages.setAttribute("role", "log");
 chatMessages.setAttribute("aria-live", "polite");
 
-const jumpBtn = el("button", "jump-latest", "↓ Latest");
-jumpBtn.type = "button";
-jumpBtn.hidden = true;
-document.querySelector(".chat-container").appendChild(jumpBtn);
+const jumpPill = el("div", "jump-pill");
+const jumpMain = el("button", "jump-main", "↓ Latest");
+const jumpClose = el("button", "jump-close", "×");
+jumpMain.type = jumpClose.type = "button";
+jumpClose.title = "Dismiss";
+jumpClose.setAttribute("aria-label", "Dismiss");
+jumpPill.append(jumpMain, jumpClose);
+document.querySelector(".chat-container").appendChild(jumpPill);
 
-chatMessages.addEventListener("scroll", () => {
-    stickToBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 80;
-    jumpBtn.hidden = stickToBottom;
-});
+let stickToBottom = true;
+let autoScrolling = false;   // a smooth scroll is in flight
+let followIntent = true;     // we want to end up at the bottom
+let jumpDismissed = false;
 
-jumpBtn.addEventListener("click", () => scrollToBottom(true));
+function updateJump() {
+    const dist = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight;
+    stickToBottom = dist < 80;
 
-function scrollToBottom(force = false) {
-    if (force || stickToBottom) {
+    if (stickToBottom) jumpDismissed = false;
+    if (autoScrolling && dist < 3) autoScrolling = false;
+
+    jumpPill.style.bottom = (document.querySelector(".chat-footer").offsetHeight + 14) + "px";
+    jumpPill.classList.toggle("show", !stickToBottom && !jumpDismissed && !autoScrolling);
+}
+
+function scrollToBottom(force = false, smooth = false) {
+    if (!force && (!stickToBottom || autoScrolling)) return;
+
+    followIntent = true;
+
+    if (smooth) {
+        autoScrolling = true;
+        jumpPill.classList.remove("show");
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+
+        setTimeout(() => {
+            autoScrolling = false;
+            if (followIntent) chatMessages.scrollTop = chatMessages.scrollHeight;   // catch up with streamed text
+            updateJump();
+        }, 900);
+    } else {
         chatMessages.scrollTop = chatMessages.scrollHeight;
         stickToBottom = true;
     }
 }
 
+// The user took control: stop auto-following.
+const userTookOver = () => { autoScrolling = false; followIntent = false; };
+chatMessages.addEventListener("wheel", userTookOver, { passive: true });
+chatMessages.addEventListener("touchstart", userTookOver, { passive: true });
+chatMessages.addEventListener("scroll", updateJump, { passive: true });
+window.addEventListener("resize", updateJump);
+
+jumpMain.addEventListener("click", () => {
+    jumpDismissed = false;
+    scrollToBottom(true, true);
+});
+
+jumpClose.addEventListener("click", () => {
+    jumpDismissed = true;
+    jumpPill.classList.remove("show");
+});
+
 /* =========================================
-   INPUT (textarea: Enter sends, Shift+Enter = new line)
+   INPUT: textarea + image attachments
 ========================================= */
 function autosize() {
     chatInput.style.height = "auto";
     chatInput.style.height = Math.min(chatInput.scrollHeight, 200) + "px";
+    updateJump();
 }
 
 chatInput.addEventListener("input", autosize);
@@ -1108,6 +1411,134 @@ function setBusy(value) {
     chatSend.disabled = false;
 }
 
+function flashStatus(message) {
+    statusEl.textContent = "● " + message;
+    statusEl.className = "status error-status";
+    setTimeout(() => {
+        if (!busy) { statusEl.textContent = "● Ready to chat"; statusEl.className = "status"; }
+    }, 3500);
+}
+
+const fileInput = document.createElement("input");
+fileInput.type = "file";
+fileInput.accept = "image/*";
+fileInput.multiple = true;
+fileInput.hidden = true;
+
+const attachBtn = el("button", "attach-btn");
+attachBtn.type = "button";
+attachBtn.title = "Attach images";
+attachBtn.setAttribute("aria-label", "Attach images");
+attachBtn.innerHTML = ICON_CLIP;
+
+const previewStrip = el("div", "attach-preview");
+
+chatForm.insertBefore(attachBtn, chatInput);
+chatForm.appendChild(fileInput);
+chatForm.parentElement.insertBefore(previewStrip, chatForm);
+
+attachBtn.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", () => { addFiles(fileInput.files); fileInput.value = ""; });
+
+chatInput.addEventListener("paste", (e) => {
+    const files = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith("image/"));
+    if (files.length) { e.preventDefault(); addFiles(files); }
+});
+
+const dropZone = document.querySelector(".chat-container");
+dropZone.addEventListener("dragover", (e) => {
+    if ([...(e.dataTransfer?.types || [])].includes("Files")) { e.preventDefault(); dropZone.classList.add("dragging"); }
+});
+dropZone.addEventListener("dragleave", (e) => { if (!dropZone.contains(e.relatedTarget)) dropZone.classList.remove("dragging"); });
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragging");
+    addFiles(e.dataTransfer?.files || []);
+});
+
+function loadViaImg(file) {
+    return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Unreadable image")); };
+        img.src = url;
+    });
+}
+
+const loadBitmap = (file) =>
+    window.createImageBitmap ? createImageBitmap(file).catch(() => loadViaImg(file)) : loadViaImg(file);
+
+// Resize to max 1280px and re-encode as JPEG so uploads stay small and uniform.
+async function processImage(file) {
+    const bitmap = await loadBitmap(file);
+    const bw = bitmap.naturalWidth || bitmap.width;
+    const bh = bitmap.naturalHeight || bitmap.height;
+    const scale = Math.min(1, 1280 / Math.max(bw, bh));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bw * scale));
+    canvas.height = Math.max(1, Math.round(bh * scale));
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#fff";                              // transparent PNGs become white, not black
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+
+    let data = "";
+    for (const quality of [0.85, 0.7, 0.55]) {
+        data = canvas.toDataURL("image/jpeg", quality).split(",")[1];
+        if (data.length < 1800000) break;                // worker limit is 2,000,000 characters
+    }
+
+    const ts = Math.min(1, 240 / Math.max(canvas.width, canvas.height));
+    const thumb = document.createElement("canvas");
+    thumb.width = Math.max(1, Math.round(canvas.width * ts));
+    thumb.height = Math.max(1, Math.round(canvas.height * ts));
+    thumb.getContext("2d").drawImage(canvas, 0, 0, thumb.width, thumb.height);
+
+    return { mime: "image/jpeg", data, thumb: thumb.toDataURL("image/jpeg", 0.6) };
+}
+
+async function addFiles(fileList) {
+    const files = [...fileList].filter(f => f.type.startsWith("image/"));
+    if (!files.length) return;
+
+    const room = MAX_IMAGES - pendingImages.length;
+    if (files.length > room) flashStatus(`You can attach up to ${MAX_IMAGES} images per message.`);
+
+    for (const file of files.slice(0, Math.max(room, 0))) {
+        try {
+            pendingImages.push(await processImage(file));
+            renderPending();
+        } catch {
+            flashStatus("Couldn't read that image (try JPG, PNG or WebP).");
+        }
+    }
+}
+
+function renderPending() {
+    previewStrip.replaceChildren();
+    previewStrip.classList.toggle("has-items", pendingImages.length > 0);
+
+    pendingImages.forEach((img, index) => {
+        const box = el("div", "attach-thumb");
+        const thumb = el("img");
+        thumb.src = img.thumb;
+        thumb.alt = "Attached image";
+
+        const remove = el("button", "attach-remove", "×");
+        remove.type = "button";
+        remove.setAttribute("aria-label", "Remove image");
+        remove.addEventListener("click", () => { pendingImages.splice(index, 1); renderPending(); });
+
+        box.append(thumb, remove);
+        previewStrip.appendChild(box);
+    });
+    updateJump();
+}
+
 /* =========================================
    MESSAGE RENDERING
 ========================================= */
@@ -1117,10 +1548,27 @@ function createBubble(sender) {
     return bubble;
 }
 
-function addUserMessage(text) {
+function addUserMessage(rec, restored = false) {
     const bubble = createBubble("user");
-    bubble.textContent = text;
-    scrollToBottom(true);
+    if (restored) bubble.classList.add("restored");
+
+    if (rec.attachments?.length) {
+        const row = el("div", "msg-images");
+        for (const a of rec.attachments) {
+            if (a.thumb) {
+                const img = el("img");
+                img.src = a.thumb;
+                img.alt = "Attached image";
+                row.appendChild(img);
+            } else {
+                row.appendChild(el("span", "msg-image-missing", "🖼 Image"));
+            }
+        }
+        bubble.appendChild(row);
+    }
+
+    if (rec.text) bubble.appendChild(el("div", "msg-text", rec.text));
+    if (!restored) scrollToBottom(true, true);
     return bubble;
 }
 
@@ -1130,11 +1578,13 @@ function addNotice(text) {
     return bubble;
 }
 
-// Final (non-streaming) render of a finished answer. Also used when restoring saved chats.
-function fillBotBubble(bubble, rec) {
-    bubble.replaceChildren();
+// Final render of an answer. While streaming (animate = true) the gallery that already
+// faded in is KEPT, so it does not flash; sources and action buttons then fade in.
+function fillBotBubble(bubble, rec, animate = false) {
+    const gallery = animate ? bubble.querySelector(".image-gallery-section") : null;
+    [...bubble.children].forEach(child => { if (child !== gallery) child.remove(); });
 
-    addImageGallery(bubble, rec.images);
+    if (!gallery) addImageGallery(bubble, rec.images);
 
     const answer = el("div", "answer-content");
     answer.innerHTML = renderMarkdown(rec.text, rec.sources || []);
@@ -1163,11 +1613,7 @@ function addActions(bubble, rec) {
         } catch {
             copy.title = "Copy failed";
         }
-        setTimeout(() => {
-            copy.innerHTML = ICON_COPY;
-            copy.classList.remove("ok");
-            copy.title = "Copy";
-        }, 1500);
+        setTimeout(() => { copy.innerHTML = ICON_COPY; copy.classList.remove("ok"); copy.title = "Copy"; }, 1500);
     });
 
     const regen = el("button", "msg-action regen");
@@ -1181,10 +1627,111 @@ function addActions(bubble, rec) {
     bubble.appendChild(bar);
 }
 
+function renderConversation() {
+    chatMessages.replaceChildren();
+
+    for (const rec of records) {
+        if (rec.role === "user") {
+            addUserMessage(rec, true);
+        } else {
+            const bubble = createBubble("bot");
+            bubble.classList.add("restored");          // no fade-in animations for restored chats
+            fillBotBubble(bubble, rec);
+        }
+    }
+    followIntent = true;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    stickToBottom = true;
+    updateJump();
+}
+
 /* =========================================
-   GENERATION (streaming with smooth typewriter reveal)
+   LETTER-BY-LETTER FADE
+   Every render replaces the answer's HTML, so each recently revealed character is
+   wrapped in a <span class="fi"> whose animation-delay is set to minus its age: the fade
+   carries on seamlessly across renders instead of restarting.
 ========================================= */
-async function generate(restoreText = "") {
+function createFader() {
+    let log = [];          // { from, to, t0, t1 }: characters first rendered between t0 and t1
+    let lastTotal = 0;
+    let lastTime = 0;
+
+    return function applyFade(root, now) {
+
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+                const parent = node.parentElement;
+                if (!parent || !node.nodeValue || parent.closest("details, .katex, svg, script, style")) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        });
+
+        const nodes = [];
+        let total = 0;
+        while (walker.nextNode()) {
+            nodes.push([walker.currentNode, total]);
+            total += walker.currentNode.nodeValue.length;
+        }
+
+        if (total > lastTotal) {
+            log.push({ from: lastTotal, to: total, t0: lastTime || now, t1: now });
+        } else if (total < lastTotal) {                      // markdown reflowed: clip the log
+            log = log.map(c => ({ ...c, to: Math.min(c.to, total) })).filter(c => c.to > c.from);
+        }
+        lastTotal = total;
+        lastTime = now;
+        log = log.filter(c => now - c.t1 < FADE_MS);
+
+        if (!log.length) return;
+
+        // Characters are spread evenly over the time between two renders (true letter by letter).
+        const ageOf = (i) => {
+            for (const c of log) {
+                if (i >= c.from && i < c.to) {
+                    const f = (i - c.from + 1) / (c.to - c.from);
+                    return now - (c.t0 + f * (c.t1 - c.t0));
+                }
+            }
+            return Infinity;
+        };
+
+        const firstFading = log[0].from;
+
+        for (const [node, start] of nodes) {
+            const text = node.nodeValue;
+            if (start + text.length <= firstFading) continue;
+
+            let k = 0;
+            while (k < text.length && !(ageOf(start + k) < FADE_MS)) k++;
+            if (k >= text.length) continue;
+
+            const fragment = document.createDocumentFragment();
+            if (k > 0) fragment.appendChild(document.createTextNode(text.slice(0, k)));
+
+            for (let j = k; j < text.length; j++) {
+                let age = ageOf(start + j);
+                if (!isFinite(age)) age = FADE_MS - 1;
+
+                const span = document.createElement("span");
+                span.className = "fi";
+                span.style.animationDelay = (-Math.max(0, age)) + "ms";
+                span.textContent = text[j];
+                fragment.appendChild(span);
+            }
+            node.replaceWith(fragment);
+        }
+    };
+}
+
+/* =========================================
+   GENERATION (streaming)
+========================================= */
+async function generate(restore = null) {
+
+    const token = ++genToken;
+    const alive = () => token === genToken;
 
     setBusy(true);
     abortController = new AbortController();
@@ -1195,25 +1742,26 @@ async function generate(restoreText = "") {
     const bubble = createBubble("bot");
     const pending = el("div", "pending-text", "Thinking");
     bubble.appendChild(pending);
-    scrollToBottom(true);
+    scrollToBottom(true, true);
 
     const rec = { role: "model", text: "", sources: [], images: [] };
+    const fader = createFader();
 
     let received = "";     // everything the server has sent
-    let shown = 0;         // how much of it is revealed on screen
-    let ended = false;     // network stream finished
+    let shown = 0;         // how much of it is revealed
+    let ended = false;
     let raf = null;
     let lastDraw = 0;
     let lastTime = 0;
-    let carry = 0;         // fractional characters owed to the reveal
-    let drawGap = 33;      // minimum ms between redraws (adapts to render cost)
+    let carry = 0;
+    let drawGap = 16;
     let dirty = false;
     let answerEl = null;
     let doneEvent = null;
     let errorMessage = "";
     let aborted = false;
 
-    function draw() {
+    function draw(now) {
         if (!answerEl) {
             pending.remove();
             answerEl = el("div", "answer-content streaming");
@@ -1222,14 +1770,15 @@ async function generate(restoreText = "") {
         // hide a half-typed "[Source 1" marker until its closing bracket arrives
         const visible = received.slice(0, shown).replace(/\s*\[\s*S[^\]\n]*$/i, "");
         answerEl.innerHTML = renderMarkdown(visible, rec.sources);
+        fader(answerEl, now);
         scrollToBottom();
     }
 
-    // Time-based reveal: characters per SECOND scale with the backlog, so the pace
-    // is independent of frame rate and eases in and out instead of jumping per chunk.
-    // Redraws are throttled by how long the last draw took, so long answers stay smooth.
+    // Time-based reveal (characters per second scale with the backlog), so the pace is the
+    // same on any screen and eases in and out. Render throttle adapts to render cost.
     function tick(now) {
         raf = null;
+        if (!alive()) return;
 
         const dt = lastTime ? Math.min(now - lastTime, 100) : 16;
         lastTime = now;
@@ -1237,10 +1786,8 @@ async function generate(restoreText = "") {
         const backlog = received.length - shown;
 
         if (backlog > 0) {
-            const rate = Math.max(40, backlog * (ended ? 10 : 4));   // chars per second
-            carry += rate * dt / 1000;
+            carry += Math.max(40, backlog * (ended ? 10 : 4)) * dt / 1000;
             const step = Math.floor(carry);
-
             if (step > 0) {
                 carry -= step;
                 shown = Math.min(received.length, shown + step);
@@ -1250,8 +1797,8 @@ async function generate(restoreText = "") {
 
         if (dirty && (now - lastDraw >= drawGap || shown >= received.length)) {
             const t0 = performance.now();
-            draw();
-            drawGap = Math.max(33, (performance.now() - t0) * 2);
+            draw(now);
+            drawGap = Math.max(16, (performance.now() - t0) * 2);
             lastDraw = now;
             dirty = false;
         }
@@ -1261,6 +1808,7 @@ async function generate(restoreText = "") {
     }
 
     function handleEvent(evt) {
+        if (!alive()) return;
         switch (evt.type) {
             case "status":
                 if (!answerEl) pending.textContent = evt.text.replace(/…$/, "");
@@ -1269,7 +1817,7 @@ async function generate(restoreText = "") {
             case "meta":
                 rec.sources = Array.isArray(evt.sources) ? evt.sources : [];
                 rec.images = Array.isArray(evt.images) ? evt.images : [];
-                addImageGallery(bubble, rec.images);
+                addImageGallery(bubble, rec.images);        // fades in via CSS
                 break;
             case "delta":
                 received += evt.text;
@@ -1285,10 +1833,7 @@ async function generate(restoreText = "") {
     }
 
     function handleRaw(raw) {
-        const line = raw.split("\n")
-            .filter(l => l.startsWith("data:"))
-            .map(l => l.slice(5).trim())
-            .join("");
+        const line = raw.split("\n").filter(l => l.startsWith("data:")).map(l => l.slice(5).trim()).join("");
         if (!line) return;
         try { handleEvent(JSON.parse(line)); } catch { /* ignore malformed event */ }
     }
@@ -1328,11 +1873,12 @@ async function generate(restoreText = "") {
         ended = true;
         if (!raf && shown < received.length) raf = requestAnimationFrame(tick);
 
-        // let the typewriter finish (skip the wait if the tab is in the background)
+        // let the typewriter finish, then let the last letters finish fading
         await new Promise(resolve => {
-            const check = () => (shown >= received.length || document.hidden) ? resolve() : setTimeout(check, 30);
+            const check = () => (!alive() || shown >= received.length || document.hidden) ? resolve() : setTimeout(check, 30);
             check();
         });
+        if (alive() && received && !document.hidden) await wait(FADE_MS + 40);
 
     } catch (error) {
         if (error.name === "AbortError") aborted = true;
@@ -1340,6 +1886,7 @@ async function generate(restoreText = "") {
     }
 
     if (raf) cancelAnimationFrame(raf);
+    if (!alive()) { bubble.remove(); return; }       // the chat was switched or reset meanwhile
 
     // ----- Finish up -----
     const text = aborted ? received.slice(0, shown) : received;
@@ -1348,6 +1895,7 @@ async function generate(restoreText = "") {
         if (aborted) {
             bubble.remove();
             statusEl.textContent = "● Stopped";
+            statusEl.className = "status";
         } else {
             bubble.replaceChildren();
             bubble.textContent = "Error: " + (errorMessage || "No response received.");
@@ -1355,21 +1903,20 @@ async function generate(restoreText = "") {
             statusEl.textContent = "● Connection error";
             statusEl.className = "status error-status";
 
-            // give the user their message back so they can resend it
-            if (restoreText) {
+            if (restore) {                                   // give the message (and images) back
                 records.pop();
-                chatInput.value = restoreText;
+                chatInput.value = restore.text;
+                pendingImages = restore.attachments || [];
+                renderPending();
                 autosize();
                 saveChat();
             }
         }
-        if (aborted) statusEl.className = "status";
-
     } else {
         rec.text = text;
         if (doneEvent?.sources) rec.sources = doneEvent.sources;
 
-        fillBotBubble(bubble, rec);
+        fillBotBubble(bubble, rec, true);
 
         const note =
             aborted ? "Stopped." :
@@ -1404,61 +1951,94 @@ function regenerate() {
 }
 
 /* =========================================
-   SEND / STOP / NEW CHAT
+   SEND / STOP / NEW CHAT / RESTORE
 ========================================= */
 chatForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    if (busy) {                       // the send button is the Stop button while generating
+    if (busy) {                                  // the send button is the Stop button while generating
         abortController?.abort();
         return;
     }
 
     const message = chatInput.value.trim();
-    if (!message) return;
+    if (!message && !pendingImages.length) return;
+
+    const attachments = pendingImages;
+    pendingImages = [];
+    renderPending();
 
     chatInput.value = "";
     autosize();
 
-    addUserMessage(message);
-    records.push({ role: "user", text: message });
+    const rec = { role: "user", text: message };
+    if (attachments.length) rec.attachments = attachments;
+
+    addUserMessage(rec);
+    records.push(rec);
     saveChat();
 
-    generate(message);
+    generate({ text: message, attachments });
 });
 
 newChat.addEventListener("click", () => {
-    abortController?.abort();
-    records = [];
-    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    if (!records.length && !busy) { chatInput.focus(); return; }   // already an empty chat
+    startNewChat();
+});
 
-    chatMessages.replaceChildren();
-    statusEl.textContent = "● Ready to chat";
-    statusEl.className = "status";
-    addNotice("New conversation started. What would you like to know?");
-    chatInput.focus();
+window.addEventListener("DOMContentLoaded", () => {      // after the deferred marked/DOMPurify scripts
+    store = readStore();
+
+    const active = store.chats.find(c => c.id === store.activeId)
+        || [...store.chats].sort((a, b) => b.updated - a.updated)[0];
+
+    if (active) {
+        store.activeId = active.id;
+        records = active.records.map(r => ({ ...r }));
+        renderConversation();
+    } else {
+        store.activeId = newId();
+    }
+    renderChatPanel();
 });
 
 /* =========================================
-   RESTORE SAVED CHAT (waits for the deferred marked/DOMPurify scripts)
+   CUSTOM CURSOR
+   While it is ON, the real cursor is hidden everywhere in the page, and the browser's
+   scrollbars are hidden too (the browser always draws its own arrow over scrollbars, which
+   CSS cannot change). Wheel, touchpad and keyboard scrolling keep working.
+   The custom cursor only shows while the pointer is inside the window.
 ========================================= */
-window.addEventListener("DOMContentLoaded", () => {
-    try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-        if (!Array.isArray(saved) || !saved.length) return;
+const cursorToggle = document.getElementById("cursor-toggle");   // checkbox in the Notice popup
+let cursorOn = true;
+try { cursorOn = localStorage.getItem("custom-cursor") !== "off"; } catch { /* ignore */ }
 
-        records = saved.filter(r => r && (r.role === "user" || r.role === "model") && typeof r.text === "string");
-        if (!records.length) return;
+function applyCursor() {
+    document.documentElement.classList.toggle("custom-cursor", cursorOn);
+    document.body.classList.toggle("custom-cursor", cursorOn);
+    if (!cursorOn) document.body.classList.remove("cursor-visible");
+    if (cursorToggle) cursorToggle.checked = cursorOn;
+}
 
-        chatMessages.replaceChildren();
-
-        for (const r of records) {
-            if (r.role === "user") addUserMessage(r.text);
-            else fillBotBubble(createBubble("bot"), r);
-        }
-        scrollToBottom(true);
-    } catch { /* corrupted storage: start fresh */ }
+cursorToggle?.addEventListener("change", () => {
+    cursorOn = cursorToggle.checked;
+    try { localStorage.setItem("custom-cursor", cursorOn ? "on" : "off"); } catch { /* ignore */ }
+    applyCursor();
 });
+
+window.addEventListener("mousemove", (e) => {
+    if (!cursorOn || document.body.classList.contains("cursor-visible")) return;
+
+    // first move (or re-entry): start the trailing ring at the pointer instead of sliding in
+    try { ringX = e.clientX; ringY = e.clientY; } catch { /* variables not ready */ }
+    document.body.classList.add("cursor-visible");
+});
+
+const hideCustomCursor = () => document.body.classList.remove("cursor-visible");
+document.documentElement.addEventListener("mouseleave", hideCustomCursor);
+window.addEventListener("blur", hideCustomCursor);
+
+applyCursor();
 
 /* =========================================
    CUSTOM CURSOR: optional (switch lives in the Notice popup) and never doubled up.
