@@ -676,10 +676,11 @@ function renderMarkdown(text, sources = []) {
     return container.innerHTML;
 }
 
+
 function normalizeMathDelimiters(text) {
     if (typeof text !== "string") return text;
 
-    // Convert standalone square-bracket equations into display math.
+    // Convert standalone square-bracket expressions into display math.
     text = text.replace(
         /(^|\n)[ \t]*\[\s*([\s\S]*?)\s*\][ \t]*(?=\n|$)/g,
         (match, prefix, math) => {
@@ -687,16 +688,18 @@ function normalizeMathDelimiters(text) {
         }
     );
 
-    // Convert parenthesized LaTeX expressions into inline math.
-    // Requires a LaTeX command or mathematical operator to avoid
-    // converting ordinary prose parentheses.
+    // Convert ordinary parenthesized expressions into inline math.
+    // Excludes parentheses that already belong to LaTeX delimiters.
     text = text.replace(
-        /(?<!\\)\(([^()\n]*?(?:\\[a-zA-Z]+|[=^_])[^\n]*?)\)(?!\))/g,
-        (match, math) => `\\(${math.trim()}\\)`
+        /(?<!\\)\(([^()\n]+)\)(?!\))/g,
+        (match, math) => {
+            return `\\(${math.trim()}\\)`;
+        }
     );
 
     return text;
 }
+
 /* =========================================
    CODE BLOCKS
 ========================================= */
