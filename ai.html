@@ -658,18 +658,27 @@ function renderMarkdown(text, sources = []) {
         a.rel = "noopener noreferrer";
     });
 
-    if (window.renderMathInElement) {
-        renderMathInElement(container, {
-            // Single "$" is NOT a delimiter: it turned "$5 million ... $10" into broken math.
-            delimiters: [
-                { left: "$$", right: "$$", display: true },
-                { left: "\\(", right: "\\)", display: false },
-                { left: "\\[", right: "\\]", display: true }
-            ],
-            throwOnError: false,
-            ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
-        });
-    }
+ 
+if (window.renderMathInElement) {
+    renderMathInElement(container, {
+        delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "\\(", right: "\\)", display: false }
+        ],
+        throwOnError: false,
+        strict: "ignore",
+        ignoredTags: [
+            "script",
+            "noscript",
+            "style",
+            "textarea",
+            "pre",
+            "code"
+        ]
+    });
+}
+
 
     renderCitations(container, Array.isArray(sources) ? sources : []);
 
@@ -677,28 +686,54 @@ function renderMarkdown(text, sources = []) {
 }
 
 
+
 function normalizeMathDelimiters(text) {
     if (typeof text !== "string") return text;
 
-    // Convert standalone square-bracket expressions into display math.
+    // Protect existing LaTeX delimiters so they are not modified.
+    const protectedMath = [];
+
+    function protect(value) {
+        const index = protectedMath.length;
+        protectedMath.push(value);
+        return `MATHPLACEHOLDER${index}END`;
+    }
+
+    // Protect existing display math.
     text = text.replace(
-        /(^|\n)[ \t]*\[\s*([\s\S]*?)\s*\][ \t]*(?=\n|$)/g,
+        /\\\[([\s\S]*?)\\\]/g,
+        (match) => protect(match)
+    );
+
+    text = text.replace(
+        /\$\$([\s\S]*?)\$\$/g,
+        (match) => protect(match)
+    );
+
+    // Protect existing inline math.
+    text = text.replace(
+        /\\\(([\s\S]*?)\\\)/g,
+        (match) => protect(match)
+    );
+
+    // Convert standalone square-bracket expressions into display math.
+    // Only matches brackets occupying their own lines.
+    text = text.replace(
+        /(^|\n)[ \t]*\[\s*([^\[\]\n]+(?:\n[^\[\]]*)?)\s*\][ \t]*(?=\n|$)/g,
         (match, prefix, math) => {
             return `${prefix}\\[${math.trim()}\\]`;
         }
     );
 
-    // Convert ordinary parenthesized expressions into inline math.
-    // Excludes parentheses that already belong to LaTeX delimiters.
+    // Restore previously protected math.
     text = text.replace(
-        /(?<!\\)\(([^()\n]+)\)(?!\))/g,
-        (match, math) => {
-            return `\\(${math.trim()}\\)`;
-        }
+        /MATHPLACEHOLDER(\d+)END/g,
+        (match, index) => protectedMath[Number(index)]
     );
 
     return text;
 }
+
 
 /* =========================================
    CODE BLOCKS
