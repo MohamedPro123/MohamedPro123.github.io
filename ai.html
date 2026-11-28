@@ -654,8 +654,8 @@ document.addEventListener("click", (event) => {
 function protectMathForMarkdown(text) {
     const expressions = [];
 
-    const protectedText = text.replace(
-        /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g,
+const protectedText = text.replace(
+    /(\$\$[\s\S]+?\$\$|(?<!\\)\$(?!\$)[^\n$]+?(?<!\\)\$(?!\$)|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g,
         (match) => {
             const token = `MATHPROTECTEDTOKEN${expressions.length}END`;
             expressions.push(match);
@@ -784,10 +784,11 @@ function renderMarkdown(text, sources = []) {
 
         renderMathInElement(container, {
             delimiters: [
-                { left: "$$", right: "$$", display: true },
-                { left: "\\[", right: "\\]", display: true },
-                { left: "\\(", right: "\\)", display: false }
-            ],
+    { left: "$$", right: "$$", display: true },
+    { left: "\\[", right: "\\]", display: true },
+    { left: "\\(", right: "\\)", display: false },
+    { left: "$", right: "$", display: false }
+],
 
             throwOnError: false,
             strict: "ignore",
