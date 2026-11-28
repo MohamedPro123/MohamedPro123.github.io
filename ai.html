@@ -654,8 +654,8 @@ document.addEventListener("click", (event) => {
 function protectMathForMarkdown(text) {
     const expressions = [];
 
-const protectedText = text.replace(
-    /(\$\$[\s\S]+?\$\$|(?<!\\)\$(?!\$)[^\n$]+?(?<!\\)\$(?!\$)|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g,
+    const protectedText = text.replace(
+        /(\$\$[\s\S]+?\$\$|(?<!\\)\$(?!\$|\s)(?:\\\$|[^\n$])+?(?<!\\|\s)\$(?!\$|\d)|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g,
         (match) => {
             const token = `MATHPROTECTEDTOKEN${expressions.length}END`;
             expressions.push(match);
@@ -668,6 +668,7 @@ const protectedText = text.replace(
         expressions
     };
 }
+
 
 
 // Restore protected expressions inside the parsed HTML.
